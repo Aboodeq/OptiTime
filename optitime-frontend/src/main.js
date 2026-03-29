@@ -1,22 +1,21 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import Toast from 'vue-toastification'
+import router from '@/app/router'
+import { setupDocumentTitle } from '@/app/plugins/documentTitle'
+import { setupLocaleEffects } from '@/app/plugins/localeEffects'
+import i18n from '@/i18n'
+import { useUiStore } from '@/store/ui.store'
 import App from './App.vue'
-import router from '@/router'
-import { useAuthStore } from '@/stores/auth.store'
-import 'bootstrap/dist/css/bootstrap.min.css'
 import 'vue-toastification/dist/index.css'
-import '@/assets/styles/main.css'
+import '@/assets/main.css'
 
 const app = createApp(App)
 const pinia = createPinia()
 
 app.use(pinia)
-
-const authStore = useAuthStore(pinia)
-authStore.hydrate()
-
 app.use(router)
+app.use(i18n)
 app.use(Toast, {
   position: 'top-right',
   timeout: 3000,
@@ -27,5 +26,9 @@ app.use(Toast, {
   pauseOnHover: true,
   draggable: true,
 })
+
+const uiStore = useUiStore(pinia)
+setupLocaleEffects({ i18n, uiStore })
+setupDocumentTitle({ router, i18n })
 
 app.mount('#app')

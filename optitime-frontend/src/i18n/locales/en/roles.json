@@ -1,0 +1,10 @@
+{
+  "roles": {
+    "admin": "System admin",
+    "coordinator": "Resource coordinator",
+    "instructor": "Instructor",
+    "student": "Student",
+    "management": "Management",
+    "exams": "Exams office"
+  }
+}
