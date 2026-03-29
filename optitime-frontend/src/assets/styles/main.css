@@ -1,0 +1,173 @@
+:root {
+  font-family: 'Manrope', 'Segoe UI', sans-serif;
+  color: #132238;
+  background-color: #f3f7fc;
+  text-rendering: optimizeLegibility;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  --ot-navy: #132238;
+  --ot-blue: #1f5fbf;
+  --ot-blue-deep: #17488e;
+  --ot-ice: #eef5ff;
+  --ot-shadow: 0 24px 60px rgba(19, 34, 56, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ot-navy);
+  background:
+    radial-gradient(circle at top left, rgba(31, 95, 191, 0.16), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(98, 160, 255, 0.18), transparent 28%),
+    linear-gradient(180deg, #f7fbff 0%, #eef4fb 100%);
+}
+
+a {
+  color: inherit;
+}
+
+.page-shell {
+  min-height: 100vh;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow: var(--ot-shadow);
+  backdrop-filter: blur(14px);
+}
+
+.text-soft {
+  color: #5d6b7c;
+}
+
+.brand-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(31, 95, 191, 0.08);
+  color: var(--ot-blue);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.brand-dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1f5fbf 0%, #5aa8ff 100%);
+  box-shadow: 0 0 0 0.25rem rgba(31, 95, 191, 0.12);
+}
+
+.btn.optitime-btn {
+  border-radius: 0.95rem;
+  padding: 0.8rem 1rem;
+  font-weight: 700;
+  border-width: 1px;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.btn.optitime-btn:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
+.btn.optitime-btn-primary {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--ot-blue) 0%, var(--ot-blue-deep) 100%);
+  box-shadow: 0 16px 32px rgba(31, 95, 191, 0.18);
+}
+
+.btn.optitime-btn-primary:not(:disabled):hover,
+.btn.optitime-btn-primary:not(:disabled):focus {
+  color: #fff;
+  background: linear-gradient(135deg, #245bb0 0%, #143c7f 100%);
+}
+
+.btn.optitime-btn-secondary {
+  color: var(--ot-navy);
+  border-color: rgba(19, 34, 56, 0.08);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.btn.optitime-btn-secondary:not(:disabled):hover,
+.btn.optitime-btn-secondary:not(:disabled):focus {
+  color: var(--ot-navy);
+  border-color: rgba(31, 95, 191, 0.24);
+  background: rgba(238, 245, 255, 0.95);
+}
+
+.form-control,
+.form-control:focus {
+  border-radius: 0.95rem;
+}
+
+.form-control {
+  min-height: 3.2rem;
+  border-color: rgba(19, 34, 56, 0.14);
+  background-color: rgba(255, 255, 255, 0.92);
+}
+
+.form-control:focus {
+  border-color: rgba(31, 95, 191, 0.55);
+  box-shadow: 0 0 0 0.25rem rgba(31, 95, 191, 0.12);
+}
+
+.form-control.is-invalid:focus {
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.12);
+}
+
+.page-title {
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.page-panel {
+  border-radius: 1.5rem;
+}
+
+.stat-chip {
+  border-radius: 1rem;
+  border: 1px solid rgba(19, 34, 56, 0.08);
+  background: rgba(255, 255, 255, 0.7);
+  padding: 1rem;
+}
+
+.stat-chip strong {
+  display: block;
+  font-size: 1.3rem;
+  line-height: 1.1;
+}
+
+.dashboard-card {
+  border-radius: 1.5rem;
+  border: 1px solid rgba(19, 34, 56, 0.08);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 16px 40px rgba(19, 34, 56, 0.08);
+}
+
+@media (max-width: 991.98px) {
+  .page-shell {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+}
