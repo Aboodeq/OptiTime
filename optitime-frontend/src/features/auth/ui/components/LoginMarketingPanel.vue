@@ -12,22 +12,11 @@
       <p class="left-subtitle">{{ t('pages.login.leftSubtitle') }}</p>
 
       <div class="feature-list mt-5">
-        <div v-for="feature in features" :key="feature.key" class="feature-item">
-          <div class="feature-icon">
-            <i :class="feature.icon"></i>
-          </div>
-          <div>
-            <div class="feature-title">{{ feature.title }}</div>
-            <div class="feature-desc">{{ feature.desc }}</div>
-          </div>
-        </div>
+        <LoginFeatureCard v-for="feature in features" :key="feature.key" :feature="feature" />
       </div>
 
       <div class="stats-row mt-5">
-        <div v-for="stat in stats" :key="stat.key" class="stat-box">
-          <div class="stat-value">{{ stat.value }}</div>
-          <div class="stat-label">{{ stat.label }}</div>
-        </div>
+        <LoginStatCard v-for="stat in stats" :key="stat.key" :stat="stat" />
       </div>
     </div>
 
@@ -40,6 +29,8 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { useLoginPageContent } from '@/features/auth/model/composables/useLoginPageContent'
+import LoginFeatureCard from './LoginFeatureCard.vue'
+import LoginStatCard from './LoginStatCard.vue'
 
 const { t } = useI18n()
 const { features, stats } = useLoginPageContent()

@@ -28,6 +28,7 @@ export function useLoginForm() {
   const loadingMode = ref('')
 
   const isLoading = computed(() => Boolean(loadingMode.value))
+  const isLoginLoading = computed(() => loadingMode.value === 'login')
   const redirectTarget = computed(() => {
     const redirect = route.query.redirect
     return typeof redirect === 'string' && redirect.startsWith('/') && redirect !== '/login'
@@ -74,20 +75,11 @@ export function useLoginForm() {
     await router.push(redirectTarget.value)
   }
 
-  async function handleLogin() {
-    clearErrors()
-
-    if (!validate()) {
-      return false
-    }
-
-    loadingMode.value = 'login'
+  async function runAuthAction(mode, action) {
+    loadingMode.value = mode
 
     try {
-      await authStore.login({
-        email: form.email.trim(),
-        password: form.password,
-      })
+      await action()
       toast.success(t('pages.login.toasts.success'))
       await redirectAfterLogin()
       return true
@@ -100,22 +92,24 @@ export function useLoginForm() {
     }
   }
 
+  async function handleLogin() {
+    errors.form = ''
+
+    if (!validate()) {
+      return false
+    }
+
+    return runAuthAction('login', () =>
+      authStore.login({
+        email: form.email.trim(),
+        password: form.password,
+      }),
+    )
+  }
+
   async function loginAsDemoRole(role) {
     clearErrors()
-    loadingMode.value = role
-
-    try {
-      await authStore.loginAsDemoRole(role)
-      toast.success(t('pages.login.toasts.success'))
-      await redirectAfterLogin()
-      return true
-    } catch {
-      errors.form = t('pages.login.errors.invalidCredentials')
-      toast.error(t('pages.login.toasts.invalidCredentials'))
-      return false
-    } finally {
-      loadingMode.value = ''
-    }
+    return runAuthAction(role, () => authStore.loginAsDemoRole(role))
   }
 
   function setFocusedField(field) {
@@ -133,6 +127,10 @@ export function useLoginForm() {
 
   function togglePassword() {
     showPassword.value = !showPassword.value
+  }
+
+  function isRoleLoading(role) {
+    return loadingMode.value === role
   }
 
   watch(
@@ -156,12 +154,12 @@ export function useLoginForm() {
     errors,
     focusedField,
     showPassword,
-    loadingMode,
     isLoading,
+    isLoginLoading,
     handleLogin,
     loginAsDemoRole,
+    isRoleLoading,
     setFocusedField,
-    clearFocusedField,
     handleFieldBlur,
     togglePassword,
   }

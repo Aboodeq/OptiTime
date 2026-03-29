@@ -22,75 +22,56 @@
     </transition>
 
     <form @submit.prevent="handleLogin">
-      <div class="form-group-custom mb-4">
-        <label class="form-label-custom">{{ t('pages.login.emailLabel') }}</label>
-        <div
-          class="input-wrapper"
-          :class="{ focused: focusedField === 'email', filled: form.email, invalid: errors.email }"
-        >
-          <i class="bi bi-envelope input-icon"></i>
-          <input
-            v-model="form.email"
-            type="email"
-            class="custom-input"
-            :placeholder="t('pages.login.emailPlaceholder')"
-            :disabled="isLoading"
-            @focus="setFocusedField('email')"
-            @blur="handleFieldBlur('email')"
-          />
-        </div>
-        <div v-if="errors.email" class="field-error">{{ errors.email }}</div>
-      </div>
+      <div class="d-grid gap-4">
+        <AppInputField
+          v-model="form.email"
+          autocomplete="email"
+          :disabled="isLoading"
+          :error="errors.email"
+          :focused="focusedField === 'email'"
+          icon="bi bi-envelope"
+          input-id="login-email"
+          input-type="email"
+          :label="t('pages.login.emailLabel')"
+          :placeholder="t('pages.login.emailPlaceholder')"
+          @blur="handleFieldBlur('email')"
+          @focus="setFocusedField('email')"
+        />
 
-      <div class="form-group-custom mb-2">
-        <label class="form-label-custom">{{ t('pages.login.passwordLabel') }}</label>
-        <div
-          class="input-wrapper"
-          :class="{
-            focused: focusedField === 'password',
-            filled: form.password,
-            invalid: errors.password,
-          }"
-        >
-          <i class="bi bi-lock input-icon"></i>
-          <input
-            v-model="form.password"
-            :type="showPassword ? 'text' : 'password'"
-            class="custom-input"
-            :placeholder="t('pages.login.passwordPlaceholder')"
-            :disabled="isLoading"
-            @focus="setFocusedField('password')"
-            @blur="handleFieldBlur('password')"
-          />
-          <button
-            class="toggle-password"
-            type="button"
-            :disabled="isLoading"
-            @click="togglePassword"
-          >
-            <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
-          </button>
-        </div>
-        <div v-if="errors.password" class="field-error">{{ errors.password }}</div>
+        <AppInputField
+          v-model="form.password"
+          autocomplete="current-password"
+          :disabled="isLoading"
+          :error="errors.password"
+          :focused="focusedField === 'password'"
+          icon="bi bi-lock"
+          input-id="login-password"
+          :input-type="showPassword ? 'text' : 'password'"
+          :label="t('pages.login.passwordLabel')"
+          :placeholder="t('pages.login.passwordPlaceholder')"
+          revealable
+          :revealed="showPassword"
+          @blur="handleFieldBlur('password')"
+          @focus="setFocusedField('password')"
+          @toggle-visibility="togglePassword"
+        />
       </div>
 
       <div class="text-end mb-4">
         <a href="#" class="forgot-link" @click.prevent>{{ t('pages.login.forgotPassword') }}</a>
       </div>
 
-      <button class="btn-login w-100 mb-4" :disabled="isLoading" type="submit">
-        <span
-          v-if="loadingMode !== 'login'"
-          class="d-flex align-items-center justify-content-center gap-2"
-        >
-          <i class="bi bi-box-arrow-in-right"></i>
-          {{ t('pages.login.login') }}
-        </span>
-        <span v-else class="d-flex align-items-center justify-content-center gap-2">
-          <span class="spinner-border spinner-border-sm"></span>
-          {{ t('pages.login.verifying') }}
-        </span>
-      </button>
+      <AppButton
+        block
+        class="mb-4"
+        :disabled="isLoading"
+        icon="bi bi-box-arrow-in-right"
+        :loading="isLoginLoading"
+        :loading-label="t('pages.login.verifying')"
+        type="submit"
+      >
+        {{ t('pages.login.login') }}
+      </AppButton>
     </form>
 
     <div class="divider mb-4">
@@ -98,23 +79,14 @@
     </div>
 
     <div class="demo-roles">
-      <button
+      <DemoRoleButton
         v-for="role in demoRoles"
         :key="role.value"
-        class="role-btn"
-        :style="{ '--role-color': role.color, '--role-bg': role.bg }"
         :disabled="isLoading"
-        type="button"
-        @click="loginAsDemoRole(role.value)"
-      >
-        <span
-          v-if="loadingMode === role.value"
-          class="spinner-border spinner-border-sm"
-          aria-hidden="true"
-        ></span>
-        <i v-else :class="role.icon"></i>
-        <span>{{ role.label }}</span>
-      </button>
+        :loading="isRoleLoading(role.value)"
+        :role="role"
+        @select="loginAsDemoRole"
+      />
     </div>
 
     <p class="login-footer mt-5">{{ t('pages.login.footer') }}</p>
@@ -123,8 +95,11 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import AppButton from '@/components/common/AppButton.vue'
+import AppInputField from '@/components/common/AppInputField.vue'
 import { useLoginForm } from '@/features/auth/model/composables/useLoginForm'
 import { useLoginPageContent } from '@/features/auth/model/composables/useLoginPageContent'
+import DemoRoleButton from './DemoRoleButton.vue'
 import LocaleSwitcher from './LocaleSwitcher.vue'
 
 const { t } = useI18n()
@@ -134,10 +109,11 @@ const {
   errors,
   focusedField,
   showPassword,
-  loadingMode,
   isLoading,
+  isLoginLoading,
   handleLogin,
   loginAsDemoRole,
+  isRoleLoading,
   setFocusedField,
   handleFieldBlur,
   togglePassword,
