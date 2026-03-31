@@ -122,6 +122,17 @@ export const notificationsRoute = {
   },
 }
 
+export const auditLogsRoute = {
+  path: '/admin/audit-logs',
+  name: 'audit-logs',
+  component: () => import('@/features/audit-logs/ui/pages/AuditLogsPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['auditLogs.view'],
+    titleKey: 'routes.auditLogs',
+  },
+}
+
 export const fallbackRoutes = [
   { path: '/', redirect: '/login' },
   { path: '/:pathMatch(.*)*', redirect: '/login' },

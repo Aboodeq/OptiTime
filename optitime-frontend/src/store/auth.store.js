@@ -74,6 +74,9 @@ function normalizePermissions(permissions) {
       if (permission === 'constraints.manage') {
         return ['constraints.create', 'constraints.update', 'constraints.delete', 'constraints.view']
       }
+      if (permission === 'auditLogs.manage') {
+        return ['auditLogs.create', 'auditLogs.update', 'auditLogs.delete', 'auditLogs.view']
+      }
       if (permission === 'settings.manage') {
         return [
           'settings.view',

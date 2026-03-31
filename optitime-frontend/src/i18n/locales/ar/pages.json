@@ -635,6 +635,45 @@
         "delete": "حذف"
       }
     },
+    "auditLogs": {
+      "title": "سجل التدقيق",
+      "subtitle": "متابعة إجراءات النظام والجهة المنفذة وتتبع الطلبات لتعزيز المساءلة.",
+      "stats": {
+        "total": "إجمالي السجلات",
+        "success": "ناجحة",
+        "warning": "تحذير",
+        "error": "خطأ"
+      },
+      "filters": {
+        "allEventTypes": "كل أنواع الأحداث",
+        "allModules": "كل الوحدات",
+        "eventType": "نوع الحدث",
+        "eventTypePlaceholder": "اختر نوع الحدث",
+        "noEventTypeFound": "لا يوجد نوع حدث مطابق",
+        "module": "الوحدة",
+        "modulePlaceholder": "اختر الوحدة",
+        "noModuleFound": "لا توجد وحدة مطابقة"
+      },
+      "eventTypes": {
+        "success": "ناجح",
+        "info": "معلومة",
+        "warning": "تحذير",
+        "error": "خطأ"
+      },
+      "table": {
+        "createdAt": "وقت الإنشاء",
+        "actor": "المنفذ",
+        "eventType": "نوع الحدث",
+        "module": "الوحدة",
+        "action": "الإجراء",
+        "target": "الهدف",
+        "request": "الطلب/IP",
+        "empty": "لا توجد سجلات تدقيق"
+      },
+      "actions": {
+        "searchPlaceholder": "ابحث بالمنفذ أو الوحدة أو الإجراء أو الهدف أو الطلب أو عنوان IP"
+      }
+    },
     "sidebar": {
       "empty": "لا توجد عناصر تنقل متاحة لهذا الدور."
     }

@@ -10,6 +10,7 @@
     "specialitiesManagement": "إدارة الاختصاصات",
     "semestersManagement": "إدارة الفصول الدراسية",
     "constraintsManagement": "إدارة القيود",
+    "auditLogs": "سجل التدقيق",
     "userSettings": "إعدادات المستخدم",
     "notifications": "الإشعارات"
   }
