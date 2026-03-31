@@ -13,7 +13,11 @@
       <table class="table align-middle mb-0 app-data-table__table">
         <thead>
           <tr>
-            <th v-for="column in columns" :key="column.key" :class="['text-start', column.headerClass]">
+            <th
+              v-for="column in columns"
+              :key="column.key"
+              :class="['text-start', column.headerClass]"
+            >
               {{ column.label }}
             </th>
           </tr>
@@ -83,5 +87,4 @@ defineEmits(['update:searchValue'])
   padding: 0.75rem 0.9rem;
   border-bottom: 1px solid #f1f5f9;
 }
-
 </style>

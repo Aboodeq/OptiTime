@@ -4,9 +4,14 @@
       <div class="roles-toolbar">
         <h1 class="h4 fw-bold mb-0">{{ t('pages.rolesManagement.title') }}</h1>
         <AppCan permission="roles.create">
-          <button class="new-role-btn" type="button" @click="startCreateRole">
+          <AppButton
+            class="new-role-btn"
+            type="button"
+            :tone-color="authStore.roleColor"
+            @click="startCreateRole"
+          >
             + {{ t('pages.rolesManagement.actions.newRole') }}
-          </button>
+          </AppButton>
         </AppCan>
       </div>
       <p class="dashboard-card__meta mb-3">{{ t('pages.rolesManagement.subtitle') }}</p>
@@ -45,24 +50,23 @@
           <template #cell-actions="{ row }">
             <div class="text-start">
               <AppCan permission="roles.update">
-                <button
-                  class="btn btn-sm btn-outline-primary me-2"
+                <AppIconButton
+                  class="me-2"
+                  icon="bi bi-pencil-square"
+                  variant="primary"
                   :title="t('pages.rolesManagement.actions.edit')"
                   :aria-label="t('pages.rolesManagement.actions.edit')"
                   @click="startEditRole(row)"
-                >
-                  <i class="bi bi-pencil-square"></i>
-                </button>
+                />
               </AppCan>
               <AppCan permission="roles.delete">
-                <button
-                  class="btn btn-sm btn-outline-danger"
+                <AppIconButton
+                  icon="bi bi-trash3"
+                  variant="danger"
                   :title="t('pages.rolesManagement.actions.delete')"
                   :aria-label="t('pages.rolesManagement.actions.delete')"
                   @click="requestDeleteRole(row)"
-                >
-                  <i class="bi bi-trash3"></i>
-                </button>
+                />
               </AppCan>
             </div>
           </template>
@@ -91,7 +95,9 @@
     <AppConfirmDialog
       :open="Boolean(rolePendingDelete)"
       :title="t('pages.rolesManagement.confirmDelete.title')"
-      :message="t('pages.rolesManagement.confirmDelete.message', { role: rolePendingDelete?.name_en ?? '' })"
+      :message="
+        t('pages.rolesManagement.confirmDelete.message', { role: rolePendingDelete?.name_en ?? '' })
+      "
       :confirm-text="t('pages.rolesManagement.confirmDelete.confirm')"
       :cancel-text="t('pages.rolesManagement.confirmDelete.cancel')"
       @cancel="rolePendingDelete = null"
@@ -104,8 +110,10 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppCan from '@/components/common/AppCan.vue'
+import AppButton from '@/components/common/AppButton.vue'
 import AppConfirmDialog from '@/components/common/AppConfirmDialog.vue'
 import AppDataTable from '@/components/common/AppDataTable.vue'
+import AppIconButton from '@/components/common/AppIconButton.vue'
 import AppStatsGrid from '@/components/common/AppStatsGrid.vue'
 import AppShell from '@/components/layout/AppShell.vue'
 import RoleFormDialog from '@/features/roles/ui/components/RoleFormDialog.vue'
@@ -224,12 +232,7 @@ function handleSaveRole() {
 }
 
 .new-role-btn {
-  background: linear-gradient(135deg, #ef4444, #be123c);
-  color: #fff;
-  border: none;
-  border-radius: 12px;
   padding: 0.6rem 1rem;
-  font-weight: 700;
 }
 
 .roles-table-card {
@@ -243,5 +246,4 @@ function handleSaveRole() {
 .table td {
   vertical-align: middle;
 }
-
 </style>

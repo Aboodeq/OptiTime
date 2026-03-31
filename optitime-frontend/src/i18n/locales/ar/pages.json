@@ -112,6 +112,8 @@
         "faculty": "الكلية",
         "identifier": "المعرف",
         "departments": "الأقسام",
+        "graduationHours": "ساعات التخرج",
+        "studyingLevel": "سنوات الدراسة",
         "status": "الحالة",
         "actions": "الإجراءات",
         "empty": "لا توجد كليات"
@@ -145,6 +147,8 @@
         "code": "الرمز",
         "nameAr": "الاسم (عربي)",
         "nameEn": "الاسم (إنجليزي)",
+        "graduationHours": "ساعات التخرج",
+        "studyingLevel": "المستوى الدراسي (سنوات)",
         "color": "لون الكلية",
         "icon": "الأيقونة",
         "iconHint": "اسحب وأفلت الأيقونة أو اضغط للرفع",
@@ -277,6 +281,71 @@
         "invalidForm": "يرجى تعبئة جميع الحقول المطلوبة والتأكد من صحة حدود ساعات العمل الأسبوعية."
       }
     },
+    "studentsManagement": {
+      "title": "إدارة الطلاب",
+      "subtitle": "إدارة حسابات الطلاب مع الساعات المنجزة والمستوى الدراسي.",
+      "table": {
+        "student": "الطالب",
+        "universityNumber": "الرقم الجامعي",
+        "completedHours": "الساعات المنجزة",
+        "yearLevel": "المستوى الدراسي",
+        "studyStatus": "الوضع الدراسي",
+        "faculty": "الكلية",
+        "department": "القسم",
+        "status": "الحالة",
+        "actions": "الإجراءات",
+        "empty": "لا يوجد طلاب"
+      },
+      "stats": {
+        "totalStudents": "إجمالي الطلاب",
+        "activeStudents": "الطلاب النشطون",
+        "inactiveStudents": "الطلاب غير النشطين"
+      },
+      "status": {
+        "active": "نشط",
+        "inactive": "غير نشط"
+      },
+      "studyStatus": {
+        "regular": "منتظم",
+        "suspended": "موقوف",
+        "graduated": "متخرج"
+      },
+      "form": {
+        "createTitle": "إنشاء طالب",
+        "editTitle": "تعديل طالب",
+        "name": "الاسم الكامل",
+        "email": "البريد الإلكتروني",
+        "password": "كلمة المرور",
+        "universityNumber": "الرقم الجامعي",
+        "universityNumberAuto": "يتم توليده تلقائياً عند الإنشاء",
+        "completedHours": "الساعات المنجزة",
+        "yearLevel": "المستوى الدراسي",
+        "yearLevelPlaceholder": "أدخل المستوى (1-6)",
+        "studyStatus": "الوضع الدراسي",
+        "faculty": "الكلية",
+        "facultyPlaceholder": "اختر الكلية",
+        "noFacultyFound": "لا توجد كلية مطابقة",
+        "department": "القسم",
+        "departmentPlaceholder": "اختر القسم",
+        "noDepartmentFound": "لا يوجد قسم مطابق",
+        "isActive": "حساب نشط"
+      },
+      "actions": {
+        "newStudent": "طالب جديد",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "save": "حفظ الطالب"
+      },
+      "confirmDelete": {
+        "title": "حذف الطالب",
+        "message": "هل أنت متأكد من حذف \"{student}\"؟",
+        "confirm": "حذف",
+        "cancel": "إلغاء"
+      },
+      "errors": {
+        "invalidForm": "يرجى تعبئة جميع الحقول المطلوبة والتأكد من صحة الساعات المنجزة والمستوى الدراسي."
+      }
+    },
     "specialitiesManagement": {
       "title": "إدارة الاختصاصات",
       "subtitle": "إدارة الاختصاصات التدريسية المستخدمة في حسابات المدرسين.",
@@ -318,6 +387,54 @@
       },
       "errors": {
         "invalidForm": "يرجى تعبئة الحقول المطلوبة: الرمز، اسم الاختصاص (عربي)، واسم الاختصاص (إنجليزي)."
+      }
+    },
+    "semestersManagement": {
+      "title": "إدارة الفصول الدراسية",
+      "subtitle": "إدارة الفصول الأكاديمية والنطاقات الزمنية المستخدمة في دورات التخطيط.",
+      "table": {
+        "semester": "الفصل",
+        "academicYear": "العام الأكاديمي",
+        "dateRange": "النطاق الزمني",
+        "status": "الحالة",
+        "actions": "الإجراءات",
+        "empty": "لا توجد فصول دراسية"
+      },
+      "stats": {
+        "totalSemesters": "إجمالي الفصول",
+        "activeSemesters": "الفصول النشطة",
+        "inactiveSemesters": "الفصول غير النشطة"
+      },
+      "status": {
+        "active": "نشط",
+        "inactive": "غير نشط"
+      },
+      "form": {
+        "createTitle": "إنشاء فصل دراسي",
+        "editTitle": "تعديل فصل دراسي",
+        "name": "اسم الفصل",
+        "code": "الرمز",
+        "codePlaceholder": "مثال: 2026-s1",
+        "academicYear": "العام الأكاديمي",
+        "academicYearPlaceholder": "مثال: 2026-2027",
+        "startDate": "تاريخ البدء",
+        "endDate": "تاريخ الانتهاء",
+        "isActive": "فصل نشط"
+      },
+      "actions": {
+        "newSemester": "فصل جديد",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "save": "حفظ الفصل"
+      },
+      "confirmDelete": {
+        "title": "حذف الفصل",
+        "message": "هل أنت متأكد من حذف \"{semester}\"؟",
+        "confirm": "حذف",
+        "cancel": "إلغاء"
+      },
+      "errors": {
+        "invalidForm": "يرجى تعبئة جميع الحقول المطلوبة والتأكد من أن تاريخ البدء لا يأتي بعد تاريخ الانتهاء."
       }
     },
     "sidebar": {

@@ -32,7 +32,10 @@ export function useSpecialitiesManagementPage() {
 
   async function saveSpeciality() {
     if (activeSpecialityId.value) {
-      const updated = await specialitiesStore.updateSpecialityFromDraft(activeSpecialityId.value, draft.value)
+      const updated = await specialitiesStore.updateSpecialityFromDraft(
+        activeSpecialityId.value,
+        draft.value,
+      )
       if (!updated) return false
       closeDialog()
       return true

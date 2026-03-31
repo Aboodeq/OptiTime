@@ -64,7 +64,9 @@ export const useSpecialitiesStore = defineStore('specialities', () => {
     if (!normalized) return false
     const updated = await specialitiesService.updateSpeciality(specialityId, normalized)
     if (!updated) return false
-    specialities.value = specialities.value.map((item) => (item.id === specialityId ? updated : item))
+    specialities.value = specialities.value.map((item) =>
+      item.id === specialityId ? updated : item,
+    )
     return true
   }
 

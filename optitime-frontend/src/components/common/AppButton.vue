@@ -2,6 +2,7 @@
   <button
     class="app-button"
     :class="[variantClass, { 'app-button--block': block }]"
+    :style="inlineStyle"
     :disabled="disabled || loading"
     :type="type"
     :aria-busy="loading ? 'true' : 'false'"
@@ -52,9 +53,56 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  toneColor: {
+    type: String,
+    default: '',
+  },
 })
 
 const variantClass = computed(() => `app-button--${props.variant}`)
+const inlineStyle = computed(() => {
+  if (props.variant !== 'brand' || !props.toneColor) return undefined
+  return {
+    '--app-button-brand-start': props.toneColor,
+    '--app-button-brand-end': shadeHexColor(props.toneColor, -16),
+    '--app-button-brand-shadow': hexToRgba(props.toneColor, 0.35),
+    '--app-button-brand-shadow-hover': hexToRgba(props.toneColor, 0.45),
+  }
+})
+
+function hexToRgba(hex, alpha) {
+  const normalized = normalizeHex(hex)
+  if (!normalized) return `rgba(67, 97, 238, ${alpha})`
+  const intVal = Number.parseInt(normalized, 16)
+  const r = (intVal >> 16) & 255
+  const g = (intVal >> 8) & 255
+  const b = intVal & 255
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
+function shadeHexColor(hex, percent) {
+  const normalized = normalizeHex(hex)
+  if (!normalized) return '#3a0ca3'
+  const num = Number.parseInt(normalized, 16)
+  const amt = Math.round(2.55 * percent)
+  const r = Math.min(255, Math.max(0, (num >> 16) + amt))
+  const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00ff) + amt))
+  const b = Math.min(255, Math.max(0, (num & 0x0000ff) + amt))
+  return `#${(0x1000000 + (r << 16) + (g << 8) + b).toString(16).slice(1)}`
+}
+
+function normalizeHex(hex) {
+  if (typeof hex !== 'string') return null
+  const cleaned = hex.replace('#', '')
+  if (!/^[0-9a-fA-F]{3}([0-9a-fA-F]{3})?$/.test(cleaned)) return null
+  if (cleaned.length === 3) {
+    return cleaned
+      .split('')
+      .map((char) => char + char)
+      .join('')
+  }
+  return cleaned
+}
 </script>
 
 <style scoped>
@@ -80,29 +128,33 @@ const variantClass = computed(() => `app-button--${props.variant}`)
 }
 
 .app-button--brand {
-  background: linear-gradient(135deg, #4361ee, #3a0ca3);
+  background: linear-gradient(
+    135deg,
+    var(--app-button-brand-start, #4361ee),
+    var(--app-button-brand-end, #3a0ca3)
+  );
   color: #fff;
   border-radius: 12px;
   padding: 14px;
   font-size: 15px;
-  box-shadow: 0 4px 15px rgba(67, 97, 238, 0.35);
+  box-shadow: 0 4px 15px var(--app-button-brand-shadow, rgba(67, 97, 238, 0.35));
 }
 
 .app-button--brand:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(67, 97, 238, 0.45);
+  box-shadow: 0 6px 20px var(--app-button-brand-shadow-hover, rgba(67, 97, 238, 0.45));
 }
 
 .app-button--outline {
   background: transparent;
-  color: #4361ee;
-  border: 1px solid rgba(67, 97, 238, 0.35);
+  color: var(--app-button-outline-color, #4361ee);
+  border: 1px solid var(--app-button-outline-border, rgba(67, 97, 238, 0.35));
   border-radius: 12px;
   padding: 12px 18px;
 }
 
 .app-button--outline:hover:not(:disabled) {
-  background: rgba(67, 97, 238, 0.06);
+  background: var(--app-button-outline-hover-bg, rgba(67, 97, 238, 0.06));
 }
 
 .app-button--plain {

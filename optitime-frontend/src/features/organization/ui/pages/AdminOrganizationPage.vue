@@ -4,9 +4,14 @@
       <div class="organization-toolbar">
         <h1 class="h4 fw-bold mb-0">{{ t('pages.organization.title') }}</h1>
         <AppCan permission="organization.create">
-          <button class="new-entity-btn" type="button" @click="startCreateFaculty">
+          <AppButton
+            class="new-entity-btn"
+            type="button"
+            :tone-color="authStore.roleColor"
+            @click="startCreateFaculty"
+          >
             + {{ t('pages.organization.actions.newFaculty') }}
-          </button>
+          </AppButton>
         </AppCan>
       </div>
       <p class="dashboard-card__meta mb-3">{{ t('pages.organization.subtitle') }}</p>
@@ -26,6 +31,7 @@
         <template #item="{ item: faculty }">
           <OrganizationFacultyCard
             :faculty="faculty"
+            :role-color="authStore.roleColor"
             :preview-departments="getDepartmentPreview(faculty)"
             :hidden-departments-count="getHiddenDepartmentsCount(faculty)"
             @add-department="startCreateDepartment(faculty.id)"
@@ -36,7 +42,6 @@
           />
         </template>
       </AppEntityGrid>
-
     </section>
 
     <FacultyFormDialog
@@ -49,6 +54,8 @@
       @update:code="facultyDraft.code = $event"
       @update:name-ar="facultyDraft.name_ar = $event"
       @update:name-en="facultyDraft.name_en = $event"
+      @update:graduation-hours="facultyDraft.graduation_hours = $event"
+      @update:studying-level="facultyDraft.studying_level = $event"
       @update:color="facultyDraft.color = $event"
       @update:icon-url="facultyDraft.icon_url = $event"
       @update:is-active="facultyDraft.is_active = $event"
@@ -84,6 +91,7 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppCan from '@/components/common/AppCan.vue'
+import AppButton from '@/components/common/AppButton.vue'
 import AppEntityGrid from '@/components/common/AppEntityGrid.vue'
 import AppConfirmDialog from '@/components/common/AppConfirmDialog.vue'
 import AppStatsGrid from '@/components/common/AppStatsGrid.vue'
@@ -261,11 +269,6 @@ function getHiddenDepartmentsCount(faculty) {
 }
 
 .new-entity-btn {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: #fff;
-  border: none;
-  border-radius: 12px;
   padding: 0.6rem 1rem;
-  font-weight: 700;
 }
 </style>

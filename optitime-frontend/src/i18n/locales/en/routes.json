@@ -6,6 +6,8 @@
     "organizationManagement": "Organization",
     "usersManagement": "Users management",
     "instructorsManagement": "Instructors management",
-    "specialitiesManagement": "Specialities management"
+    "studentsManagement": "Students management",
+    "specialitiesManagement": "Specialities management",
+    "semestersManagement": "Semesters management"
   }
 }

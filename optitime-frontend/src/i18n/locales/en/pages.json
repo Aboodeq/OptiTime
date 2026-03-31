@@ -112,6 +112,8 @@
         "faculty": "Faculty",
         "identifier": "Identifier",
         "departments": "Departments",
+        "graduationHours": "graduation hours",
+        "studyingLevel": "study years",
         "status": "Status",
         "actions": "Actions",
         "empty": "No faculties found"
@@ -145,6 +147,8 @@
         "code": "Code",
         "nameAr": "Name (Arabic)",
         "nameEn": "Name (English)",
+        "graduationHours": "Graduation hours",
+        "studyingLevel": "Studying level (years)",
         "color": "Faculty color",
         "icon": "Icon",
         "iconHint": "Drag and drop icon or click to upload",
@@ -277,6 +281,71 @@
         "invalidForm": "Please complete all required fields and ensure min/max weekly work hours are valid."
       }
     },
+    "studentsManagement": {
+      "title": "Students management",
+      "subtitle": "Manage student accounts including completed hours and academic level.",
+      "table": {
+        "student": "Student",
+        "universityNumber": "University number",
+        "completedHours": "Completed hours",
+        "yearLevel": "Year level",
+        "studyStatus": "Study status",
+        "faculty": "Faculty",
+        "department": "Department",
+        "status": "Status",
+        "actions": "Actions",
+        "empty": "No students found"
+      },
+      "stats": {
+        "totalStudents": "Total students",
+        "activeStudents": "Active students",
+        "inactiveStudents": "Inactive students"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "studyStatus": {
+        "regular": "Regular",
+        "suspended": "Suspended",
+        "graduated": "Graduated"
+      },
+      "form": {
+        "createTitle": "Create student",
+        "editTitle": "Edit student",
+        "name": "Full name",
+        "email": "Email",
+        "password": "Password",
+        "universityNumber": "University number",
+        "universityNumberAuto": "Generated automatically on create",
+        "completedHours": "Completed hours",
+        "yearLevel": "Year level",
+        "yearLevelPlaceholder": "Enter year (1-6)",
+        "studyStatus": "Study status",
+        "faculty": "Faculty",
+        "facultyPlaceholder": "Select faculty",
+        "noFacultyFound": "No matching faculty",
+        "department": "Department",
+        "departmentPlaceholder": "Select department",
+        "noDepartmentFound": "No matching department",
+        "isActive": "Active account"
+      },
+      "actions": {
+        "newStudent": "New student",
+        "edit": "Edit",
+        "delete": "Delete",
+        "save": "Save student"
+      },
+      "confirmDelete": {
+        "title": "Delete student",
+        "message": "Are you sure you want to delete \"{student}\"?",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "errors": {
+        "invalidForm": "Please complete all required fields and ensure completed hours and year level are valid."
+      }
+    },
     "specialitiesManagement": {
       "title": "Specialities management",
       "subtitle": "Manage teaching specialities used by instructor accounts.",
@@ -318,6 +387,54 @@
       },
       "errors": {
         "invalidForm": "Please complete required fields: code, speciality name (Arabic), and speciality name (English)."
+      }
+    },
+    "semestersManagement": {
+      "title": "Semesters management",
+      "subtitle": "Manage academic semesters and date ranges used across planning cycles.",
+      "table": {
+        "semester": "Semester",
+        "academicYear": "Academic year",
+        "dateRange": "Date range",
+        "status": "Status",
+        "actions": "Actions",
+        "empty": "No semesters found"
+      },
+      "stats": {
+        "totalSemesters": "Total semesters",
+        "activeSemesters": "Active semesters",
+        "inactiveSemesters": "Inactive semesters"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "form": {
+        "createTitle": "Create semester",
+        "editTitle": "Edit semester",
+        "name": "Semester name",
+        "code": "Code",
+        "codePlaceholder": "e.g. 2026-s1",
+        "academicYear": "Academic year",
+        "academicYearPlaceholder": "e.g. 2026-2027",
+        "startDate": "Start date",
+        "endDate": "End date",
+        "isActive": "Active semester"
+      },
+      "actions": {
+        "newSemester": "New semester",
+        "edit": "Edit",
+        "delete": "Delete",
+        "save": "Save semester"
+      },
+      "confirmDelete": {
+        "title": "Delete semester",
+        "message": "Are you sure you want to delete \"{semester}\"?",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "errors": {
+        "invalidForm": "Please complete all required fields and ensure start date is not after end date."
       }
     },
     "sidebar": {

@@ -5,9 +5,11 @@ const AVAILABLE_PERMISSIONS = Object.freeze([
   'roles.delete',
   'roles.view',
   'users.manage',
+  'students.manage',
   'courses.manage',
   'schedule.generate',
   'reports.view',
+  'semesters.manage',
 ])
 
 const INITIAL_ROLES = Object.freeze([

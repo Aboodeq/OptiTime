@@ -4,9 +4,14 @@
       <div class="users-toolbar">
         <h1 class="h4 fw-bold mb-0">{{ t('pages.usersManagement.title') }}</h1>
         <AppCan permission="users.create">
-          <button class="new-user-btn" type="button" @click="startCreateUser">
+          <AppButton
+            class="new-user-btn"
+            type="button"
+            :tone-color="authStore.roleColor"
+            @click="startCreateUser"
+          >
             + {{ t('pages.usersManagement.actions.newUser') }}
-          </button>
+          </AppButton>
         </AppCan>
       </div>
       <p class="dashboard-card__meta mb-3">{{ t('pages.usersManagement.subtitle') }}</p>
@@ -56,24 +61,23 @@
           <template #cell-actions="{ row }">
             <div class="text-start">
               <AppCan permission="users.update">
-                <button
-                  class="btn btn-sm btn-outline-primary me-2"
+                <AppIconButton
+                  class="me-2"
+                  icon="bi bi-pencil-square"
+                  variant="primary"
                   :title="t('pages.usersManagement.actions.edit')"
                   :aria-label="t('pages.usersManagement.actions.edit')"
                   @click="startEditUser(row)"
-                >
-                  <i class="bi bi-pencil-square"></i>
-                </button>
+                />
               </AppCan>
               <AppCan permission="users.delete">
-                <button
-                  class="btn btn-sm btn-outline-danger"
+                <AppIconButton
+                  icon="bi bi-trash3"
+                  variant="danger"
                   :title="t('pages.usersManagement.actions.delete')"
                   :aria-label="t('pages.usersManagement.actions.delete')"
                   @click="requestDeleteUser(row)"
-                >
-                  <i class="bi bi-trash3"></i>
-                </button>
+                />
               </AppCan>
             </div>
           </template>
@@ -113,6 +117,8 @@
       @update:code="facultyDraft.code = $event"
       @update:name-ar="facultyDraft.name_ar = $event"
       @update:name-en="facultyDraft.name_en = $event"
+      @update:graduation-hours="facultyDraft.graduation_hours = $event"
+      @update:studying-level="facultyDraft.studying_level = $event"
       @update:color="facultyDraft.color = $event"
       @update:icon-url="facultyDraft.icon_url = $event"
       @update:is-active="facultyDraft.is_active = $event"
@@ -135,7 +141,9 @@
     <AppConfirmDialog
       :open="Boolean(userPendingDelete)"
       :title="t('pages.usersManagement.confirmDelete.title')"
-      :message="t('pages.usersManagement.confirmDelete.message', { user: userPendingDelete?.name ?? '' })"
+      :message="
+        t('pages.usersManagement.confirmDelete.message', { user: userPendingDelete?.name ?? '' })
+      "
       :confirm-text="t('pages.usersManagement.confirmDelete.confirm')"
       :cancel-text="t('pages.usersManagement.confirmDelete.cancel')"
       @cancel="userPendingDelete = null"
@@ -149,8 +157,10 @@ import { computed, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useI18n } from 'vue-i18n'
 import AppCan from '@/components/common/AppCan.vue'
+import AppButton from '@/components/common/AppButton.vue'
 import AppConfirmDialog from '@/components/common/AppConfirmDialog.vue'
 import AppDataTable from '@/components/common/AppDataTable.vue'
+import AppIconButton from '@/components/common/AppIconButton.vue'
 import AppStatsGrid from '@/components/common/AppStatsGrid.vue'
 import AppShell from '@/components/layout/AppShell.vue'
 import { useOrganizationStore } from '@/features/organization/model/stores/organization.store'
@@ -377,12 +387,7 @@ function handleSaveDepartment() {
 }
 
 .new-user-btn {
-  background: linear-gradient(135deg, #0f766e, #0d9488);
-  color: #fff;
-  border: none;
-  border-radius: 12px;
   padding: 0.6rem 1rem;
-  font-weight: 700;
 }
 
 .users-table-card {

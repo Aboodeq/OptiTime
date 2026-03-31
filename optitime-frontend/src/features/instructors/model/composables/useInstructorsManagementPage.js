@@ -65,7 +65,10 @@ export function useInstructorsManagementPage() {
 
   async function saveInstructor() {
     if (activeInstructorId.value) {
-      const updated = await instructorsStore.updateInstructorFromDraft(activeInstructorId.value, draft.value)
+      const updated = await instructorsStore.updateInstructorFromDraft(
+        activeInstructorId.value,
+        draft.value,
+      )
       if (!updated) return false
       closeDialog()
       return true

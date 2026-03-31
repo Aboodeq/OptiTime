@@ -4,9 +4,14 @@
       <div class="instructors-toolbar">
         <h1 class="h4 fw-bold mb-0">{{ t('pages.instructorsManagement.title') }}</h1>
         <AppCan permission="instructors.create">
-          <button class="new-instructor-btn" type="button" @click="startCreateInstructor">
+          <AppButton
+            class="new-instructor-btn"
+            type="button"
+            :tone-color="authStore.roleColor"
+            @click="startCreateInstructor"
+          >
             + {{ t('pages.instructorsManagement.actions.newInstructor') }}
-          </button>
+          </AppButton>
         </AppCan>
       </div>
       <p class="dashboard-card__meta mb-3">{{ t('pages.instructorsManagement.subtitle') }}</p>
@@ -60,24 +65,23 @@
           <template #cell-actions="{ row }">
             <div class="text-start">
               <AppCan permission="instructors.update">
-                <button
-                  class="btn btn-sm btn-outline-primary me-2"
+                <AppIconButton
+                  class="me-2"
+                  icon="bi bi-pencil-square"
+                  variant="primary"
                   :title="t('pages.instructorsManagement.actions.edit')"
                   :aria-label="t('pages.instructorsManagement.actions.edit')"
                   @click="startEditInstructor(row)"
-                >
-                  <i class="bi bi-pencil-square"></i>
-                </button>
+                />
               </AppCan>
               <AppCan permission="instructors.delete">
-                <button
-                  class="btn btn-sm btn-outline-danger"
+                <AppIconButton
+                  icon="bi bi-trash3"
+                  variant="danger"
                   :title="t('pages.instructorsManagement.actions.delete')"
                   :aria-label="t('pages.instructorsManagement.actions.delete')"
                   @click="requestDeleteInstructor(row)"
-                >
-                  <i class="bi bi-trash3"></i>
-                </button>
+                />
               </AppCan>
             </div>
           </template>
@@ -134,6 +138,8 @@
       @update:code="facultyDraft.code = $event"
       @update:name-ar="facultyDraft.name_ar = $event"
       @update:name-en="facultyDraft.name_en = $event"
+      @update:graduation-hours="facultyDraft.graduation_hours = $event"
+      @update:studying-level="facultyDraft.studying_level = $event"
       @update:color="facultyDraft.color = $event"
       @update:icon-url="facultyDraft.icon_url = $event"
       @update:is-active="facultyDraft.is_active = $event"
@@ -174,8 +180,10 @@ import { computed, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useI18n } from 'vue-i18n'
 import AppCan from '@/components/common/AppCan.vue'
+import AppButton from '@/components/common/AppButton.vue'
 import AppConfirmDialog from '@/components/common/AppConfirmDialog.vue'
 import AppDataTable from '@/components/common/AppDataTable.vue'
+import AppIconButton from '@/components/common/AppIconButton.vue'
 import AppStatsGrid from '@/components/common/AppStatsGrid.vue'
 import AppShell from '@/components/layout/AppShell.vue'
 import { useInstructorsManagementPage } from '@/features/instructors/model/composables/useInstructorsManagementPage'
@@ -451,12 +459,7 @@ async function handleSaveSpeciality() {
 }
 
 .new-instructor-btn {
-  background: linear-gradient(135deg, #0f766e, #0d9488);
-  color: #fff;
-  border: none;
-  border-radius: 12px;
   padding: 0.6rem 1rem;
-  font-weight: 700;
 }
 
 .instructors-table-card {

@@ -91,12 +91,18 @@ export function useUsersManagementPage() {
   function createFacultyByName(nameEn) {
     const normalized = nameEn.trim()
     if (!normalized) return
-    const existing = faculties.value.find((faculty) => faculty.name_en.toLowerCase() === normalized.toLowerCase())
+    const existing = faculties.value.find(
+      (faculty) => faculty.name_en.toLowerCase() === normalized.toLowerCase(),
+    )
     if (existing) {
       setFacultyId(existing.id)
       return
     }
-    const code = normalized.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || `faculty-${Date.now()}`
+    const code =
+      normalized
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '') || `faculty-${Date.now()}`
     const created = organizationStore.createFacultyFromDraft({
       code,
       name_ar: normalized,
@@ -123,8 +129,10 @@ export function useUsersManagementPage() {
       return
     }
     const code =
-      normalized.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') ||
-      `department-${Date.now()}`
+      normalized
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '') || `department-${Date.now()}`
     const created = organizationStore.createDepartmentFromDraft(draft.value.faculty_id, {
       code,
       name_ar: normalized,

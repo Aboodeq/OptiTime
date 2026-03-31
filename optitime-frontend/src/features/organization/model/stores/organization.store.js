@@ -7,6 +7,8 @@ function createEmptyFacultyDraft() {
     code: '',
     name_ar: '',
     name_en: '',
+    graduation_hours: 0,
+    studying_level: 4,
     color: '#4361ee',
     icon_url: '',
     is_active: true,
@@ -27,13 +29,26 @@ function normalizeFacultyDraft(draft) {
   const code = draft.code.trim().toLowerCase()
   const nameAr = draft.name_ar.trim()
   const nameEn = draft.name_en.trim()
+  const graduationHours = Number.parseInt(draft.graduation_hours, 10)
+  const studyingLevel = Number.parseInt(draft.studying_level, 10)
 
-  if (!code || !nameAr || !nameEn) return null
+  if (
+    !code ||
+    !nameAr ||
+    !nameEn ||
+    Number.isNaN(graduationHours) ||
+    graduationHours < 0 ||
+    Number.isNaN(studyingLevel) ||
+    studyingLevel < 1
+  )
+    return null
 
   return {
     code,
     name_ar: nameAr,
     name_en: nameEn,
+    graduation_hours: graduationHours,
+    studying_level: studyingLevel,
     color: typeof draft.color === 'string' && draft.color ? draft.color : '#4361ee',
     icon_url: typeof draft.icon_url === 'string' ? draft.icon_url : '',
     is_active: Boolean(draft.is_active),
@@ -86,6 +101,8 @@ export const useOrganizationStore = defineStore('organization', () => {
       code: faculty.code,
       name_ar: faculty.name_ar,
       name_en: faculty.name_en,
+      graduation_hours: Number.isFinite(faculty.graduation_hours) ? faculty.graduation_hours : 0,
+      studying_level: Number.isFinite(faculty.studying_level) ? faculty.studying_level : 4,
       color: faculty.color ?? '#4361ee',
       icon_url: faculty.icon_url ?? '',
       is_active: Boolean(faculty.is_active),

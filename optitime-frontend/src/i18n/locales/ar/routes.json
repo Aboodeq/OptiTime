@@ -6,6 +6,8 @@
     "organizationManagement": "الهيكل التنظيمي",
     "usersManagement": "إدارة المستخدمين",
     "instructorsManagement": "إدارة المدرسين",
-    "specialitiesManagement": "إدارة الاختصاصات"
+    "studentsManagement": "إدارة الطلاب",
+    "specialitiesManagement": "إدارة الاختصاصات",
+    "semestersManagement": "إدارة الفصول الدراسية"
   }
 }

@@ -4,9 +4,14 @@
       <div class="specialities-toolbar">
         <h1 class="h4 fw-bold mb-0">{{ t('pages.specialitiesManagement.title') }}</h1>
         <AppCan permission="specialities.create">
-          <button class="new-speciality-btn" type="button" @click="startCreateSpeciality">
+          <AppButton
+            class="new-speciality-btn"
+            type="button"
+            :tone-color="authStore.roleColor"
+            @click="startCreateSpeciality"
+          >
             + {{ t('pages.specialitiesManagement.actions.newSpeciality') }}
-          </button>
+          </AppButton>
         </AppCan>
       </div>
       <p class="dashboard-card__meta mb-3">{{ t('pages.specialitiesManagement.subtitle') }}</p>
@@ -48,24 +53,23 @@
           <template #cell-actions="{ row }">
             <div class="text-start">
               <AppCan permission="specialities.update">
-                <button
-                  class="btn btn-sm btn-outline-primary me-2"
+                <AppIconButton
+                  class="me-2"
+                  icon="bi bi-pencil-square"
+                  variant="primary"
                   :title="t('pages.specialitiesManagement.actions.edit')"
                   :aria-label="t('pages.specialitiesManagement.actions.edit')"
                   @click="startEditSpeciality(row)"
-                >
-                  <i class="bi bi-pencil-square"></i>
-                </button>
+                />
               </AppCan>
               <AppCan permission="specialities.delete">
-                <button
-                  class="btn btn-sm btn-outline-danger"
+                <AppIconButton
+                  icon="bi bi-trash3"
+                  variant="danger"
                   :title="t('pages.specialitiesManagement.actions.delete')"
                   :aria-label="t('pages.specialitiesManagement.actions.delete')"
                   @click="requestDeleteSpeciality(row)"
-                >
-                  <i class="bi bi-trash3"></i>
-                </button>
+                />
               </AppCan>
             </div>
           </template>
@@ -107,8 +111,10 @@ import { computed, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useI18n } from 'vue-i18n'
 import AppCan from '@/components/common/AppCan.vue'
+import AppButton from '@/components/common/AppButton.vue'
 import AppConfirmDialog from '@/components/common/AppConfirmDialog.vue'
 import AppDataTable from '@/components/common/AppDataTable.vue'
+import AppIconButton from '@/components/common/AppIconButton.vue'
 import AppStatsGrid from '@/components/common/AppStatsGrid.vue'
 import AppShell from '@/components/layout/AppShell.vue'
 import { useSpecialitiesManagementPage } from '@/features/specialities/model/composables/useSpecialitiesManagementPage'
@@ -217,12 +223,7 @@ async function handleSaveSpeciality() {
 }
 
 .new-speciality-btn {
-  background: linear-gradient(135deg, #7c3aed, #5b21b6);
-  color: #fff;
-  border: none;
-  border-radius: 12px;
   padding: 0.6rem 1rem;
-  font-weight: 700;
 }
 
 .specialities-table-card {

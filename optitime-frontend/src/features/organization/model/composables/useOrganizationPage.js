@@ -6,8 +6,13 @@ export function useOrganizationPage() {
   const organizationStore = useOrganizationStore()
   organizationStore.ensureInitialized()
 
-  const { faculties, facultiesCount, departmentsCount, activeFacultiesCount, activeDepartmentsCount } =
-    storeToRefs(organizationStore)
+  const {
+    faculties,
+    facultiesCount,
+    departmentsCount,
+    activeFacultiesCount,
+    activeDepartmentsCount,
+  } = storeToRefs(organizationStore)
 
   const facultyDialogOpen = ref(false)
   const activeFacultyId = ref(null)
@@ -39,7 +44,10 @@ export function useOrganizationPage() {
 
   function saveFaculty() {
     if (activeFacultyId.value) {
-      const updated = organizationStore.updateFacultyFromDraft(activeFacultyId.value, facultyDraft.value)
+      const updated = organizationStore.updateFacultyFromDraft(
+        activeFacultyId.value,
+        facultyDraft.value,
+      )
       if (!updated) return false
       closeFacultyDialog()
       return true

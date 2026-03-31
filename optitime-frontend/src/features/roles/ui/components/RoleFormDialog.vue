@@ -55,19 +55,26 @@
       />
 
       <div>
-        <label class="form-label fw-semibold">{{ t('pages.rolesManagement.form.permissions') }}</label>
+        <label class="form-label fw-semibold">{{
+          t('pages.rolesManagement.form.permissions')
+        }}</label>
         <div class="d-flex flex-wrap gap-2">
-          <button
+          <AppButton
             v-for="permission in permissionCatalog"
             :key="permission"
             type="button"
-            class="btn btn-sm"
-            :class="draft.permissions.includes(permission) ? 'btn-primary' : 'btn-outline-secondary'"
+            variant="plain"
+            class="role-permission-btn"
+            :class="
+              draft.permissions.includes(permission)
+                ? 'role-permission-btn--active'
+                : 'role-permission-btn--inactive'
+            "
             :disabled="!canEditPermissions"
             @click="$emit('toggle-permission', permission)"
           >
             {{ permission }}
-          </button>
+          </AppButton>
         </div>
       </div>
 
@@ -121,3 +128,29 @@ const title = computed(() =>
     : t('pages.rolesManagement.form.createTitle'),
 )
 </script>
+
+<style scoped>
+.role-permission-btn {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  border: 1px solid transparent;
+  font-size: 0.875rem;
+  line-height: 1.2;
+}
+
+.role-permission-btn--active {
+  background: #0d6efd;
+  border-color: #0d6efd;
+  color: #fff;
+}
+
+.role-permission-btn--inactive {
+  background: #fff;
+  border-color: #6c757d;
+  color: #6c757d;
+}
+
+.role-permission-btn--inactive:hover:not(:disabled) {
+  background: #f8f9fa;
+}
+</style>

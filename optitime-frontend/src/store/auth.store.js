@@ -57,6 +57,9 @@ function normalizePermissions(permissions) {
           'instructors.view',
         ]
       }
+      if (permission === 'students.manage') {
+        return ['students.create', 'students.update', 'students.delete', 'students.view']
+      }
       if (permission === 'specialities.manage') {
         return [
           'specialities.create',
@@ -64,6 +67,9 @@ function normalizePermissions(permissions) {
           'specialities.delete',
           'specialities.view',
         ]
+      }
+      if (permission === 'semesters.manage') {
+        return ['semesters.create', 'semesters.update', 'semesters.delete', 'semesters.view']
       }
       if (permission === 'roled.delete') {
         return ['roles.delete']

@@ -16,8 +16,15 @@
         <div class="faculty-card__code">{{ faculty.code }}</div>
       </div>
       <div class="faculty-card__head-actions">
-        <span class="badge rounded-pill" :class="faculty.is_active ? 'text-bg-success' : 'text-bg-secondary'">
-          {{ faculty.is_active ? t('pages.organization.status.active') : t('pages.organization.status.inactive') }}
+        <span
+          class="badge rounded-pill"
+          :class="faculty.is_active ? 'text-bg-success' : 'text-bg-secondary'"
+        >
+          {{
+            faculty.is_active
+              ? t('pages.organization.status.active')
+              : t('pages.organization.status.inactive')
+          }}
         </span>
       </div>
     </header>
@@ -25,7 +32,21 @@
     <div class="faculty-card__stats">
       <div class="faculty-stat">
         <i class="bi bi-diagram-3"></i>
-        <span>{{ faculty.departments.length }} {{ t('pages.organization.faculties.departments') }}</span>
+        <span
+          >{{ faculty.departments.length }}
+          {{ t('pages.organization.faculties.departments') }}</span
+        >
+      </div>
+      <div class="faculty-stat">
+        <i class="bi bi-mortarboard"></i>
+        <span
+          >{{ faculty.graduation_hours ?? 0 }}
+          {{ t('pages.organization.faculties.graduationHours') }}</span
+        >
+      </div>
+      <div class="faculty-stat">
+        <i class="bi bi-layers"></i>
+        <span>{{ faculty.studying_level ?? 1 }} {{ t('pages.organization.faculties.studyingLevel') }}</span>
       </div>
       <div class="faculty-stat">
         <i class="bi bi-check2-circle"></i>
@@ -35,37 +56,39 @@
 
     <div class="faculty-card__actions">
       <AppCan permission="organization.create">
-        <button
+        <AppIconButton
           class="fac-btn"
-          type="button"
+          icon="bi bi-plus-circle"
+          variant="primary"
+          size="md"
+          :tone-color="roleColor"
           :title="t('pages.organization.actions.newDepartment')"
           :aria-label="t('pages.organization.actions.newDepartment')"
           @click="$emit('add-department')"
-        >
-          <i class="bi bi-plus-circle"></i>
-        </button>
+        />
       </AppCan>
       <AppCan permission="organization.update">
-        <button
+        <AppIconButton
           class="fac-btn"
-          type="button"
+          icon="bi bi-pencil-square"
+          variant="primary"
+          size="md"
+          :tone-color="roleColor"
           :title="t('pages.organization.actions.edit')"
           :aria-label="t('pages.organization.actions.edit')"
           @click="$emit('edit-faculty')"
-        >
-          <i class="bi bi-pencil-square"></i>
-        </button>
+        />
       </AppCan>
       <AppCan permission="organization.delete">
-        <button
+        <AppIconButton
           class="fac-btn fac-btn--danger"
-          type="button"
+          icon="bi bi-trash3"
+          variant="danger"
+          size="md"
           :title="t('pages.organization.actions.delete')"
           :aria-label="t('pages.organization.actions.delete')"
           @click="$emit('delete-faculty')"
-        >
-          <i class="bi bi-trash3"></i>
-        </button>
+        />
       </AppCan>
     </div>
 
@@ -79,7 +102,11 @@
       </div>
 
       <ul v-else class="faculty-card__departments-list">
-        <li v-for="department in previewDepartments" :key="department.id" class="faculty-card__department-item">
+        <li
+          v-for="department in previewDepartments"
+          :key="department.id"
+          class="faculty-card__department-item"
+        >
           <div class="dept-icon">
             <img
               v-if="department.icon_url"
@@ -95,26 +122,27 @@
           </div>
           <div class="dept-actions">
             <AppCan permission="organization.update">
-              <button
+              <AppIconButton
                 class="dept-btn"
-                type="button"
+                icon="bi bi-pencil-square"
+                variant="primary"
+                size="sm"
+                :tone-color="roleColor"
                 :title="t('pages.organization.actions.edit')"
                 :aria-label="t('pages.organization.actions.edit')"
                 @click="$emit('edit-department', department)"
-              >
-                <i class="bi bi-pencil-square"></i>
-              </button>
+              />
             </AppCan>
             <AppCan permission="organization.delete">
-              <button
+              <AppIconButton
                 class="dept-btn dept-btn--danger"
-                type="button"
+                icon="bi bi-trash3"
+                variant="danger"
+                size="sm"
                 :title="t('pages.organization.actions.delete')"
                 :aria-label="t('pages.organization.actions.delete')"
                 @click="$emit('delete-department', department)"
-              >
-                <i class="bi bi-trash3"></i>
-              </button>
+              />
             </AppCan>
           </div>
         </li>
@@ -131,9 +159,11 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppCan from '@/components/common/AppCan.vue'
+import AppIconButton from '@/components/common/AppIconButton.vue'
 
 const props = defineProps({
   faculty: { type: Object, required: true },
+  roleColor: { type: String, default: '#4f46e5' },
   previewDepartments: { type: Array, default: () => [] },
   hiddenDepartmentsCount: { type: Number, default: 0 },
 })
@@ -148,7 +178,13 @@ defineEmits([
 
 const { t } = useI18n()
 
-const iconPalette = ['bi bi-building', 'bi bi-bank', 'bi bi-mortarboard', 'bi bi-diagram-3', 'bi bi-columns-gap']
+const iconPalette = [
+  'bi bi-building',
+  'bi bi-bank',
+  'bi bi-mortarboard',
+  'bi bi-diagram-3',
+  'bi bi-columns-gap',
+]
 
 function hashCode(value) {
   return value.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
@@ -285,19 +321,6 @@ function shadeHexColor(hex, percent) {
   width: 32px;
   height: 32px;
   border-radius: 9px;
-  border: 1px solid #dbe2f3;
-  background: #fff;
-  color: #4f46e5;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  transition: all 0.2s ease;
-}
-
-.fac-btn:hover {
-  background: #eef2ff;
-  border-color: #a5b4fc;
 }
 
 .fac-btn--danger {
@@ -386,13 +409,6 @@ function shadeHexColor(hex, percent) {
   width: 26px;
   height: 26px;
   border-radius: 7px;
-  border: 1px solid #dbe2f3;
-  background: #fff;
-  color: #4f46e5;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
 }
 
 .dept-btn--danger {

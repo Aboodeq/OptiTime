@@ -85,7 +85,9 @@ export const useRolesStore = defineStore('roles', () => {
     const normalized = normalizeDraft(draft)
     if (!normalized) return false
 
-    roles.value = roles.value.map((role) => (role.id === roleId ? { ...role, ...normalized } : role))
+    roles.value = roles.value.map((role) =>
+      role.id === roleId ? { ...role, ...normalized } : role,
+    )
     return true
   }
 
