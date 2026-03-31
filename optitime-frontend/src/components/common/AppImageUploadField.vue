@@ -38,21 +38,23 @@
 
     <div class="d-flex justify-content-between mt-2">
       <small class="text-secondary">{{ acceptedText }}</small>
-      <button
+      <AppButton
         v-if="modelValue"
-        class="btn btn-sm btn-outline-secondary"
+        class="app-image-upload-field__clear-btn"
+        variant="outline"
         type="button"
         :disabled="disabled"
         @click="$emit('update:modelValue', '')"
       >
         {{ clearText }}
-      </button>
+      </AppButton>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import AppButton from '@/components/common/AppButton.vue'
 
 const props = defineProps({
   modelValue: { type: String, default: '' },
@@ -175,5 +177,10 @@ function handleFile(file) {
 .app-image-upload-field__text small {
   font-size: 0.75rem;
   color: #64748b;
+}
+
+.app-image-upload-field__clear-btn {
+  padding: 0.2rem 0.6rem;
+  border-radius: 8px;
 }
 </style>

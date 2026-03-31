@@ -88,7 +88,9 @@ export const useUsersStore = defineStore('users', () => {
   function updateUserFromDraft(userId, draft) {
     const normalized = normalizeDraft(draft)
     if (!normalized) return false
-    users.value = users.value.map((user) => (user.id === userId ? { ...user, ...normalized } : user))
+    users.value = users.value.map((user) =>
+      user.id === userId ? { ...user, ...normalized } : user,
+    )
     return true
   }
 

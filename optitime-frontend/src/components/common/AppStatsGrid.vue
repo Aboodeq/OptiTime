@@ -2,7 +2,11 @@
   <div class="app-stats-grid">
     <article v-for="card in cards" :key="card.id" class="app-stats-grid__card">
       <div class="app-stats-grid__top">
-        <i v-if="card.icon" :class="[card.icon, 'app-stats-grid__icon']" :style="{ color: card.iconColor }"></i>
+        <i
+          v-if="card.icon"
+          :class="[card.icon, 'app-stats-grid__icon']"
+          :style="{ color: card.iconColor }"
+        ></i>
       </div>
       <div class="app-stats-grid__content">
         <div class="app-stats-grid__value">{{ card.value }}</div>

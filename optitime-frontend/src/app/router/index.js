@@ -3,9 +3,13 @@ import { useAuthStore } from '@/store/auth.store'
 import {
   dashboardRoute,
   fallbackRoutes,
+  instructorsManagementRoute,
   loginRoute,
   organizationManagementRoute,
   rolesManagementRoute,
+  semestersManagementRoute,
+  specialitiesManagementRoute,
+  studentsManagementRoute,
   usersManagementRoute,
 } from './routes/public.routes'
 
@@ -17,6 +21,10 @@ const router = createRouter({
     rolesManagementRoute,
     organizationManagementRoute,
     usersManagementRoute,
+    instructorsManagementRoute,
+    studentsManagementRoute,
+    specialitiesManagementRoute,
+    semestersManagementRoute,
     ...fallbackRoutes,
   ],
 })
@@ -37,7 +45,10 @@ router.beforeEach((to) => {
     return { path: redirect === '/login' ? '/dashboard' : redirect }
   }
 
-  if (to.meta?.requiredPermissions?.length && !authStore.hasAnyPermission(to.meta.requiredPermissions)) {
+  if (
+    to.meta?.requiredPermissions?.length &&
+    !authStore.hasAnyPermission(to.meta.requiredPermissions)
+  ) {
     return { name: 'dashboard' }
   }
 

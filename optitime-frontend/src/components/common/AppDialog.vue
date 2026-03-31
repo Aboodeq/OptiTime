@@ -2,13 +2,30 @@
   <Teleport to="body">
     <Transition name="dialog-fade">
       <div v-if="open" class="app-dialog" @keydown.esc="$emit('close')">
-        <button class="app-dialog__overlay" type="button" @click="$emit('close')"></button>
-        <section class="app-dialog__panel" role="dialog" aria-modal="true" :aria-label="title">
+        <AppButton
+          class="app-dialog__overlay"
+          variant="plain"
+          type="button"
+          :aria-label="title"
+          @click="$emit('close')"
+        />
+        <section
+          class="app-dialog__panel"
+          role="dialog"
+          aria-modal="true"
+          :aria-label="title"
+          :style="dialogToneStyle"
+        >
           <header class="app-dialog__header">
             <h2 class="app-dialog__title">{{ title }}</h2>
-            <button class="app-dialog__close" type="button" @click="$emit('close')">
-              <i class="bi bi-x-lg"></i>
-            </button>
+            <AppIconButton
+              class="app-dialog__close"
+              icon="bi bi-x-lg"
+              variant="primary"
+              size="md"
+              :title="title"
+              @click="$emit('close')"
+            />
           </header>
           <div class="app-dialog__body">
             <slot />
@@ -20,12 +37,70 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import AppButton from '@/components/common/AppButton.vue'
+import AppIconButton from '@/components/common/AppIconButton.vue'
+import { useAuthStore } from '@/store/auth.store'
+
 defineProps({
   open: { type: Boolean, default: false },
   title: { type: String, default: '' },
 })
 
 defineEmits(['close'])
+
+const authStore = useAuthStore()
+const dialogToneStyle = computed(() => {
+  const tone = authStore.roleColor
+  if (!tone) return undefined
+  return {
+    '--app-button-brand-start': tone,
+    '--app-button-brand-end': shadeHexColor(tone, -16),
+    '--app-button-brand-shadow': hexToRgba(tone, 0.35),
+    '--app-button-brand-shadow-hover': hexToRgba(tone, 0.45),
+    '--app-button-outline-color': tone,
+    '--app-button-outline-border': hexToRgba(tone, 0.35),
+    '--app-button-outline-hover-bg': hexToRgba(tone, 0.08),
+    '--app-icon-color': tone,
+    '--app-icon-border': hexToRgba(tone, 0.26),
+    '--app-icon-bg-hover': hexToRgba(tone, 0.08),
+    '--app-icon-border-hover': hexToRgba(tone, 0.42),
+  }
+})
+
+function hexToRgba(hex, alpha) {
+  const normalized = normalizeHex(hex)
+  if (!normalized) return `rgba(67, 97, 238, ${alpha})`
+  const intVal = Number.parseInt(normalized, 16)
+  const r = (intVal >> 16) & 255
+  const g = (intVal >> 8) & 255
+  const b = intVal & 255
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
+function shadeHexColor(hex, percent) {
+  const normalized = normalizeHex(hex)
+  if (!normalized) return '#3a0ca3'
+  const num = Number.parseInt(normalized, 16)
+  const amt = Math.round(2.55 * percent)
+  const r = Math.min(255, Math.max(0, (num >> 16) + amt))
+  const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00ff) + amt))
+  const b = Math.min(255, Math.max(0, (num & 0x0000ff) + amt))
+  return `#${(0x1000000 + (r << 16) + (g << 8) + b).toString(16).slice(1)}`
+}
+
+function normalizeHex(hex) {
+  if (typeof hex !== 'string') return null
+  const cleaned = hex.replace('#', '')
+  if (!/^[0-9a-fA-F]{3}([0-9a-fA-F]{3})?$/.test(cleaned)) return null
+  if (cleaned.length === 3) {
+    return cleaned
+      .split('')
+      .map((char) => char + char)
+      .join('')
+  }
+  return cleaned
+}
 </script>
 
 <style scoped>
@@ -42,6 +117,7 @@ defineEmits(['close'])
   inset: 0;
   border: none;
   background: rgba(15, 23, 42, 0.48);
+  border-radius: 0;
 }
 .app-dialog__panel {
   position: relative;
@@ -66,11 +142,7 @@ defineEmits(['close'])
   font-weight: 800;
 }
 .app-dialog__close {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  border: 1px solid #e2e8f0;
-  background: #fff;
+  border-color: #e2e8f0;
 }
 .app-dialog__body {
   padding: 1rem;

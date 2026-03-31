@@ -31,6 +31,28 @@
         @update:model-value="$emit('update:nameEn', $event)"
       />
 
+      <AppInputField
+        input-id="faculty-graduation-hours"
+        :label="t('pages.organization.form.graduationHours')"
+        icon="bi bi-mortarboard"
+        input-type="number"
+        :model-value="String(draft.graduation_hours ?? 0)"
+        :placeholder="t('pages.organization.form.graduationHours')"
+        :disabled="!canEdit"
+        @update:model-value="$emit('update:graduationHours', $event)"
+      />
+
+      <AppInputField
+        input-id="faculty-studying-level"
+        :label="t('pages.organization.form.studyingLevel')"
+        icon="bi bi-layers"
+        input-type="number"
+        :model-value="String(draft.studying_level ?? 1)"
+        :placeholder="t('pages.organization.form.studyingLevel')"
+        :disabled="!canEdit"
+        @update:model-value="$emit('update:studyingLevel', $event)"
+      />
+
       <AppColorField
         :label="t('pages.organization.form.color')"
         :model-value="draft.color"
@@ -91,6 +113,8 @@ defineEmits([
   'update:code',
   'update:nameAr',
   'update:nameEn',
+  'update:graduationHours',
+  'update:studyingLevel',
   'update:color',
   'update:iconUrl',
   'update:isActive',

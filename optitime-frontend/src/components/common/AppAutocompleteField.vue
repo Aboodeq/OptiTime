@@ -17,10 +17,11 @@
     </div>
 
     <div v-if="isOpen && !disabled" class="app-autocomplete-field__menu">
-      <button
+      <AppButton
         v-for="option in filteredOptions"
         :key="option.value"
         type="button"
+        variant="plain"
         class="app-autocomplete-field__option"
         @mousedown.prevent="selectOption(option)"
       >
@@ -31,16 +32,20 @@
         >
           {{ part.text }}
         </span>
-      </button>
-      <button
+      </AppButton>
+      <AppButton
         v-if="allowCreate && canCreate"
         type="button"
+        variant="plain"
         class="app-autocomplete-field__create"
         @mousedown.prevent="createOption"
       >
         + {{ createText }}
-      </button>
-      <div v-if="filteredOptions.length === 0 && !(allowCreate && canCreate)" class="app-autocomplete-field__empty">
+      </AppButton>
+      <div
+        v-if="filteredOptions.length === 0 && !(allowCreate && canCreate)"
+        class="app-autocomplete-field__empty"
+      >
         {{ emptyText }}
       </div>
     </div>
@@ -49,6 +54,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
+import AppButton from '@/components/common/AppButton.vue'
 
 const props = defineProps({
   inputId: { type: String, required: true },
@@ -68,7 +74,9 @@ const searchValue = ref('')
 
 const normalizedOptions = computed(() =>
   props.options
-    .filter((option) => option && typeof option.value === 'string' && typeof option.label === 'string')
+    .filter(
+      (option) => option && typeof option.value === 'string' && typeof option.label === 'string',
+    )
     .map((option) => ({ value: option.value, label: option.label })),
 )
 

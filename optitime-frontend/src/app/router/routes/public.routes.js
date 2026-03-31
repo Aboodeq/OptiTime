@@ -45,6 +45,50 @@ export const usersManagementRoute = {
   },
 }
 
+export const instructorsManagementRoute = {
+  path: '/admin/instructors',
+  name: 'instructors-management',
+  component: () => import('@/features/instructors/ui/pages/InstructorsManagementPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['instructors.view'],
+    titleKey: 'routes.instructorsManagement',
+  },
+}
+
+export const studentsManagementRoute = {
+  path: '/admin/students',
+  name: 'students-management',
+  component: () => import('@/features/students/ui/pages/StudentsManagementPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['students.view'],
+    titleKey: 'routes.studentsManagement',
+  },
+}
+
+export const specialitiesManagementRoute = {
+  path: '/admin/specialities',
+  name: 'specialities-management',
+  component: () => import('@/features/specialities/ui/pages/SpecialitiesManagementPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['specialities.view'],
+    titleKey: 'routes.specialitiesManagement',
+  },
+}
+
+export const semestersManagementRoute = {
+  path: '/admin/semesters',
+  name: 'semesters-management',
+  component: () => import('@/features/semesters/ui/pages/SemestersManagementPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['semesters.view'],
+    titleKey: 'routes.semestersManagement',
+  },
+}
+
 export const fallbackRoutes = [
   { path: '/', redirect: '/login' },
   { path: '/:pathMatch(.*)*', redirect: '/login' },

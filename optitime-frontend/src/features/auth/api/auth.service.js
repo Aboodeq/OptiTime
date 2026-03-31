@@ -27,6 +27,10 @@ const DEMO_USERS = Object.freeze({
       'organization.delete',
       'organization.view',
       'users.manage',
+      'instructors.manage',
+      'students.manage',
+      'specialities.manage',
+      'semesters.manage',
     ],
   },
   coordinator: {
@@ -71,7 +75,14 @@ const DEMO_USERS = Object.freeze({
       name: 'Management',
       color: '#0f766e',
     },
-    permissions: ['dashboard.view', 'sidebar.view', 'users.view'],
+    permissions: [
+      'dashboard.view',
+      'sidebar.view',
+      'users.view',
+      'instructors.view',
+      'students.view',
+      'specialities.view',
+    ],
   },
   exams: {
     id: 'demo-exams',

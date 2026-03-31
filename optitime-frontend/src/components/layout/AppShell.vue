@@ -36,18 +36,20 @@
       </div>
     </div>
 
-    <button
+    <AppButton
       v-if="isMobileSidebarOpen"
+      variant="plain"
       type="button"
       class="mobile-sidebar-overlay"
       :aria-label="t('common.actions.close')"
       @click="closeMobileSidebar"
-    ></button>
+    />
   </main>
 </template>
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import AppButton from '@/components/common/AppButton.vue'
 import AppSidebar from '@/components/layout/AppSidebar.vue'
 import AppTopBar from '@/components/layout/AppTopBar.vue'
 import { useDashboardPage } from '@/features/dashboard/model/composables/useDashboardPage'
