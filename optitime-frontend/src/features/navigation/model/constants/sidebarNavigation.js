@@ -12,4 +12,17 @@ export const BASE_SIDEBAR_SECTIONS = Object.freeze([
       },
     ],
   },
+  {
+    id: 'system',
+    titleKey: 'nav.sections.system',
+    items: [
+      {
+        id: 'roles-management',
+        routeName: 'roles-management',
+        icon: 'bi bi-shield-lock-fill',
+        labelKey: 'routes.rolesManagement',
+        permissions: ['roles.view'],
+      },
+    ],
+  },
 ])

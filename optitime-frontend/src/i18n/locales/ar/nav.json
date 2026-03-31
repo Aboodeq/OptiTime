@@ -9,7 +9,8 @@
       "languageToggle": "تبديل اللغة"
     },
     "sections": {
-      "home": "الرئيسية"
+      "home": "الرئيسية",
+      "system": "النظام"
     }
   }
 }
