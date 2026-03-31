@@ -1,0 +1,7 @@
+{
+  "routes": {
+    "login": "Login",
+    "dashboard": "Dashboard",
+    "rolesManagement": "Roles management"
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "pages": {
+    "login": {
+      "leftTitle": "Smart educational resource scheduling",
+      "leftSubtitle": "An integrated platform to manage academic schedules and distribute resources efficiently with zero conflicts.",
+      "welcomeTitle": "Welcome back",
+      "welcomeSubtitle": "Sign in to access your dashboard",
+      "emailLabel": "Email",
+      "emailPlaceholder": "example\\@university.edu",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "forgotPassword": "Forgot password?",
+      "login": "Sign in",
+      "verifying": "Verifying...",
+      "quickDemo": "Quick demo login",
+      "footer": "Al-Sham Private University - Faculty of Informatics Engineering",
+      "errors": {
+        "emailRequired": "Please enter your email",
+        "emailInvalid": "Please enter a valid email address",
+        "passwordRequired": "Please enter your password",
+        "invalidCredentials": "Email or password is incorrect"
+      },
+      "toasts": {
+        "success": "Login successful",
+        "invalidCredentials": "Invalid credentials"
+      },
+      "features": {
+        "autoScheduling": {
+          "title": "Automatic smart scheduling",
+          "desc": "Generate schedules in seconds with no conflicts"
+        },
+        "zeroConflicts": {
+          "title": "Guaranteed conflict-free",
+          "desc": "Advanced algorithms maximize compatibility"
+        },
+        "instantNotifications": {
+          "title": "Real-time notifications",
+          "desc": "Instant alerts when your schedule changes"
+        }
+      },
+      "stats": {
+        "generationTime": {
+          "value": "60s",
+          "label": "Generation time"
+        },
+        "conflictFree": {
+          "value": "100%",
+          "label": "Conflict-free"
+        },
+        "concurrentUsers": {
+          "value": "200+",
+          "label": "Concurrent users"
+        }
+      }
+    },
+    "dashboard": {
+      "title": "Dashboard placeholder",
+      "subtitle": "Auth is working. This page only exists as a protected landing point after login.",
+      "role": "Role",
+      "email": "Email",
+      "permissionCount": "Granted permissions: {count}"
+    },
+    "rolesManagement": {
+      "title": "Roles management",
+      "subtitle": "Create role templates and assign exact permissions for each role.",
+      "table": {
+        "role": "Role",
+        "identifier": "Identifier",
+        "permissions": "Permissions",
+        "actions": "Actions",
+        "total": "{count} total",
+        "empty": "No roles found"
+      },
+      "stats": {
+        "adminRoles": "Admin access roles"
+      },
+      "form": {
+        "createTitle": "Create role",
+        "editTitle": "Edit role",
+        "code": "Role code",
+        "nameAr": "Role name (Arabic)",
+        "nameEn": "Role name (English)",
+        "color": "Sidebar color",
+        "description": "Description",
+        "isActive": "Active role",
+        "permissions": "Permissions",
+        "dialogHint": "Use the New role button or Edit action to open the role form dialog."
+      },
+      "actions": {
+        "newRole": "New role",
+        "edit": "Edit",
+        "delete": "Delete",
+        "save": "Save role"
+      },
+      "confirmDelete": {
+        "title": "Delete role",
+        "message": "Are you sure you want to delete \"{role}\"? This action cannot be undone.",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      }
+    },
+    "sidebar": {
+      "empty": "No navigation items available for this role."
+    }
+  }
+}

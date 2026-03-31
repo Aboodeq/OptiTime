@@ -1,0 +1,106 @@
+{
+  "pages": {
+    "login": {
+      "leftTitle": "نظام جدولة الموارد التعليمية الذكي",
+      "leftSubtitle": "منصة متكاملة لإدارة الجداول الدراسية وتوزيع الموارد الأكاديمية بكفاءة عالية وبدون تعارضات.",
+      "welcomeTitle": "مرحباً بعودتك",
+      "welcomeSubtitle": "سجّل دخولك للوصول إلى لوحة التحكم",
+      "emailLabel": "البريد الإلكتروني",
+      "emailPlaceholder": "example\\@university.edu",
+      "passwordLabel": "كلمة المرور",
+      "passwordPlaceholder": "أدخل كلمة المرور",
+      "forgotPassword": "نسيت كلمة المرور؟",
+      "login": "تسجيل الدخول",
+      "verifying": "جارٍ التحقق...",
+      "quickDemo": "دخول سريع للتجربة",
+      "footer": "جامعة الشام الخاصة - كلية الهندسة المعلوماتية",
+      "errors": {
+        "emailRequired": "يرجى إدخال البريد الإلكتروني",
+        "emailInvalid": "يرجى إدخال بريد إلكتروني صحيح",
+        "passwordRequired": "يرجى إدخال كلمة المرور",
+        "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+      },
+      "toasts": {
+        "success": "تم تسجيل الدخول بنجاح",
+        "invalidCredentials": "بيانات الدخول غير صحيحة"
+      },
+      "features": {
+        "autoScheduling": {
+          "title": "جدولة ذكية تلقائية",
+          "desc": "توليد الجداول خلال ثوانٍ بدون تعارضات"
+        },
+        "zeroConflicts": {
+          "title": "صفر تعارضات مضمون",
+          "desc": "خوارزميات متقدمة تضمن توافقاً عالياً"
+        },
+        "instantNotifications": {
+          "title": "إشعارات لحظية",
+          "desc": "تنبيهات فورية عند أي تغيير في الجدول"
+        }
+      },
+      "stats": {
+        "generationTime": {
+          "value": "60ث",
+          "label": "وقت التوليد"
+        },
+        "conflictFree": {
+          "value": "100%",
+          "label": "بدون تعارض"
+        },
+        "concurrentUsers": {
+          "value": "200+",
+          "label": "مستخدم متزامن"
+        }
+      }
+    },
+    "dashboard": {
+      "title": "لوحة تحكم تجريبية",
+      "subtitle": "المصادقة تعمل. هذه الصفحة موجودة فقط كنقطة وصول محمية بعد تسجيل الدخول.",
+      "role": "الدور",
+      "email": "البريد الإلكتروني",
+      "permissionCount": "الصلاحيات الممنوحة: {count}"
+    },
+    "rolesManagement": {
+      "title": "إدارة الأدوار",
+      "subtitle": "أنشئ قوالب الأدوار وحدد الصلاحيات الدقيقة لكل دور.",
+      "table": {
+        "role": "الدور",
+        "identifier": "المعرف",
+        "permissions": "الصلاحيات",
+        "actions": "الإجراءات",
+        "total": "الإجمالي {count}",
+        "empty": "لا توجد أدوار"
+      },
+      "stats": {
+        "adminRoles": "أدوار وصول الإدارة"
+      },
+      "form": {
+        "createTitle": "إنشاء دور",
+        "editTitle": "تعديل دور",
+        "code": "رمز الدور",
+        "nameAr": "اسم الدور (عربي)",
+        "nameEn": "اسم الدور (إنجليزي)",
+        "color": "لون الشريط الجانبي",
+        "description": "الوصف",
+        "isActive": "دور نشط",
+        "permissions": "الصلاحيات",
+        "dialogHint": "استخدم زر دور جديد أو إجراء التعديل لفتح نافذة نموذج الدور."
+      },
+      "actions": {
+        "newRole": "دور جديد",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "save": "حفظ الدور"
+      },
+      "confirmDelete": {
+        "title": "حذف الدور",
+        "message": "هل أنت متأكد من حذف \"{role}\"؟ لا يمكن التراجع عن هذا الإجراء.",
+        "confirm": "حذف",
+        "cancel": "إلغاء"
+      }
+    },
+    "sidebar": {
+      "empty": "لا توجد عناصر تنقل متاحة لهذا الدور."
+    }
+  }
+}

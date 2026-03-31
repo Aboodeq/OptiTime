@@ -1,0 +1,16 @@
+{
+  "nav": {
+    "sidebar": {
+      "collapse": "Collapse menu",
+      "open": "Open menu"
+    },
+    "topbar": {
+      "quickSearch": "Quick search...",
+      "languageToggle": "Switch language"
+    },
+    "sections": {
+      "home": "Home",
+      "system": "System"
+    }
+  }
+}
