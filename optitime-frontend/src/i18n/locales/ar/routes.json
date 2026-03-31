@@ -1,6 +1,7 @@
 {
   "routes": {
     "login": "تسجيل الدخول",
-    "dashboard": "لوحة التحكم"
+    "dashboard": "لوحة التحكم",
+    "rolesManagement": "إدارة الأدوار"
   }
 }

@@ -60,6 +60,41 @@
       "email": "Email",
       "permissionCount": "Granted permissions: {count}"
     },
+    "rolesManagement": {
+      "title": "Roles management",
+      "subtitle": "Create role templates and assign exact permissions for each role.",
+      "table": {
+        "role": "Role",
+        "identifier": "Identifier",
+        "permissions": "Permissions",
+        "actions": "Actions",
+        "total": "{count} total",
+        "empty": "No roles found"
+      },
+      "stats": {
+        "adminRoles": "Admin access roles"
+      },
+      "form": {
+        "createTitle": "Create role",
+        "editTitle": "Edit role",
+        "name": "Role name",
+        "color": "Sidebar color",
+        "permissions": "Permissions",
+        "dialogHint": "Use the New role button or Edit action to open the role form dialog."
+      },
+      "actions": {
+        "newRole": "New role",
+        "edit": "Edit",
+        "delete": "Delete",
+        "save": "Save role"
+      },
+      "confirmDelete": {
+        "title": "Delete role",
+        "message": "Are you sure you want to delete \"{role}\"? This action cannot be undone.",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      }
+    },
     "sidebar": {
       "empty": "No navigation items available for this role."
     }

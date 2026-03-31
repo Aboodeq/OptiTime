@@ -31,7 +31,20 @@ function saveUser(user) {
 
 function normalizePermissions(permissions) {
   if (!Array.isArray(permissions)) return []
-  return [...new Set(permissions.filter((permission) => typeof permission === 'string'))]
+  const mapped = permissions
+    .filter((permission) => typeof permission === 'string')
+    .map((permission) => permission.replace(/\s+/g, ''))
+    .flatMap((permission) => {
+      if (permission === 'roles.manage') {
+        return ['roles.create', 'roles.update', 'roles.delete', 'roles.view']
+      }
+      if (permission === 'roled.delete') {
+        return ['roles.delete']
+      }
+      return [permission]
+    })
+
+  return [...new Set(mapped)]
 }
 
 function normalizeUser(userData) {

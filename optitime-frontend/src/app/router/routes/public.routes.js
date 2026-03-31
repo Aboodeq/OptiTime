@@ -12,6 +12,17 @@ export const dashboardRoute = {
   meta: { requiresAuth: true, titleKey: 'routes.dashboard' },
 }
 
+export const rolesManagementRoute = {
+  path: '/admin/roles',
+  name: 'roles-management',
+  component: () => import('@/views/RolesManagementView.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['roles.view'],
+    titleKey: 'routes.rolesManagement',
+  },
+}
+
 export const fallbackRoutes = [
   { path: '/', redirect: '/login' },
   { path: '/:pathMatch(.*)*', redirect: '/login' },

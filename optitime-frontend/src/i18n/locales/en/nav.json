@@ -9,7 +9,8 @@
       "languageToggle": "Switch language"
     },
     "sections": {
-      "home": "Home"
+      "home": "Home",
+      "system": "System"
     }
   }
 }

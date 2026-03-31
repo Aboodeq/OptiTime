@@ -15,7 +15,14 @@ const DEMO_USERS = Object.freeze({
       name: 'System admin',
       color: '#e63946',
     },
-    permissions: ['dashboard.view', 'sidebar.view'],
+    permissions: [
+      'dashboard.view',
+      'sidebar.view',
+      'roles.create',
+      'roles.update',
+      'roles.delete',
+      'roles.view',
+    ],
   },
   coordinator: {
     id: 'demo-coordinator',
