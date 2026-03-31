@@ -3,6 +3,7 @@
     "login": "Login",
     "dashboard": "Dashboard",
     "rolesManagement": "Roles management",
-    "organizationManagement": "Organization"
+    "organizationManagement": "Organization",
+    "usersManagement": "Users management"
   }
 }

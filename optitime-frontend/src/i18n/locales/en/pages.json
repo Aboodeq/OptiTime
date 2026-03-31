@@ -168,6 +168,58 @@
         "cancel": "Cancel"
       }
     },
+    "usersManagement": {
+      "title": "Users management",
+      "subtitle": "Manage admin and staff accounts only. Students and instructors are excluded.",
+      "table": {
+        "user": "User",
+        "faculty": "Faculty",
+        "role": "Role",
+        "department": "Department",
+        "status": "Status",
+        "actions": "Actions",
+        "empty": "No users found"
+      },
+      "stats": {
+        "totalUsers": "Total users",
+        "activeUsers": "Active users",
+        "inactiveUsers": "Inactive users"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "form": {
+        "createTitle": "Create user",
+        "editTitle": "Edit user",
+        "name": "Full name",
+        "email": "Email",
+        "password": "Password",
+        "faculty": "Faculty",
+        "facultyPlaceholder": "Select faculty",
+        "noFacultyFound": "No matching faculty",
+        "role": "Role",
+        "department": "Department",
+        "departmentPlaceholder": "Select department",
+        "noDepartmentFound": "No matching department",
+        "isActive": "Active account"
+      },
+      "actions": {
+        "newUser": "New user",
+        "edit": "Edit",
+        "delete": "Delete",
+        "save": "Save user"
+      },
+      "confirmDelete": {
+        "title": "Delete user",
+        "message": "Are you sure you want to delete \"{user}\"?",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "errors": {
+        "invalidForm": "Please complete all required fields: name, email, password, faculty, department, and role."
+      }
+    },
     "sidebar": {
       "empty": "No navigation items available for this role."
     }

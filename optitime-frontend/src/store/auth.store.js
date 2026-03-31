@@ -46,6 +46,9 @@ function normalizePermissions(permissions) {
           'organization.view',
         ]
       }
+      if (permission === 'users.manage') {
+        return ['users.create', 'users.update', 'users.delete', 'users.view']
+      }
       if (permission === 'roled.delete') {
         return ['roles.delete']
       }

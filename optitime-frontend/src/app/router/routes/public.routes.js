@@ -34,6 +34,17 @@ export const organizationManagementRoute = {
   },
 }
 
+export const usersManagementRoute = {
+  path: '/admin/users',
+  name: 'users-management',
+  component: () => import('@/features/users/ui/pages/UsersManagementPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['users.view'],
+    titleKey: 'routes.usersManagement',
+  },
+}
+
 export const fallbackRoutes = [
   { path: '/', redirect: '/login' },
   { path: '/:pathMatch(.*)*', redirect: '/login' },
