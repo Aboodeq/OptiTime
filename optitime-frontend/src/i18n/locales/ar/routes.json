@@ -1,0 +1,8 @@
+{
+  "routes": {
+    "login": "تسجيل الدخول",
+    "dashboard": "لوحة التحكم",
+    "rolesManagement": "إدارة الأدوار",
+    "organizationManagement": "الهيكل التنظيمي"
+  }
+}
