@@ -9,6 +9,7 @@
     "studentsManagement": "Students management",
     "specialitiesManagement": "Specialities management",
     "semestersManagement": "Semesters management",
-    "constraintsManagement": "Constraints management"
+    "constraintsManagement": "Constraints management",
+    "userSettings": "User settings"
   }
 }

@@ -538,6 +538,79 @@
         "exportQueued": "Print/export request prepared"
       }
     },
+    "userSettings": {
+      "title": "User settings",
+      "subtitle": "Manage your profile, password, notifications, and backups.",
+      "sections": {
+        "profile": {
+          "title": "Profile management",
+          "subtitle": "Update your display information."
+        },
+        "security": {
+          "title": "Security",
+          "subtitle": "Update your account password."
+        },
+        "notifications": {
+          "title": "Notification settings",
+          "subtitle": "Choose how and when you receive alerts."
+        },
+        "backup": {
+          "title": "System backup",
+          "subtitle": "Admin-only backup export."
+        }
+      },
+      "profile": {
+        "avatar": "Avatar",
+        "avatarHint": "Upload avatar or drop it here",
+        "avatarAccepted": "Accepted: JPG, JPEG, PNG, WEBP, SVG",
+        "avatarClear": "Remove avatar",
+        "name": "Full name",
+        "namePlaceholder": "Enter your full name",
+        "email": "Email",
+        "emailPlaceholder": "Enter your email"
+      },
+      "security": {
+        "currentPassword": "Current password",
+        "newPassword": "New password",
+        "confirmPassword": "Confirm new password"
+      },
+      "notifications": {
+        "emailScheduleUpdates": "Email schedule updates",
+        "emailScheduleUpdatesHint": "Receive an email when timetable assignments change.",
+        "emailReminders": "Email reminders",
+        "emailRemindersHint": "Get reminder emails before key scheduling deadlines.",
+        "pushAnnouncements": "Push announcements",
+        "pushAnnouncementsHint": "Get in-app push messages for broadcast updates.",
+        "pushSystemAlerts": "Push system alerts",
+        "pushSystemAlertsHint": "Receive critical alert banners and warnings.",
+        "weeklyDigest": "Weekly digest",
+        "weeklyDigestHint": "Receive a weekly summary of system activity."
+      },
+      "backup": {
+        "note": "Export a local JSON backup of current settings and metadata."
+      },
+      "actions": {
+        "saveProfile": "Save profile",
+        "updatePassword": "Update password",
+        "saveNotifications": "Save notifications",
+        "createBackup": "Create backup"
+      },
+      "errors": {
+        "profileInvalid": "Please provide a valid full name and email.",
+        "passwordMismatch": "New password and confirmation do not match.",
+        "invalidCurrentPassword": "Current password is incorrect.",
+        "weakPassword": "New password must be at least 8 characters.",
+        "samePassword": "New password must be different from current password.",
+        "passwordUpdateFailed": "Unable to update password.",
+        "notificationsSaveFailed": "Unable to save notification settings."
+      },
+      "toasts": {
+        "profileSaved": "Profile updated",
+        "passwordUpdated": "Password updated",
+        "notificationsSaved": "Notification settings saved",
+        "backupCreated": "System backup generated"
+      }
+    },
     "sidebar": {
       "empty": "No navigation items available for this role."
     }

@@ -537,6 +537,79 @@
         "exportQueued": "تم تجهيز طلب الطباعة/التصدير"
       }
     },
+    "userSettings": {
+      "title": "إعدادات المستخدم",
+      "subtitle": "إدارة الملف الشخصي وكلمة المرور والإشعارات والنسخ الاحتياطي.",
+      "sections": {
+        "profile": {
+          "title": "إدارة الملف الشخصي",
+          "subtitle": "تحديث معلومات العرض الخاصة بك."
+        },
+        "security": {
+          "title": "الأمان",
+          "subtitle": "تحديث كلمة مرور الحساب."
+        },
+        "notifications": {
+          "title": "إعدادات الإشعارات",
+          "subtitle": "اختر كيف ومتى تصلك التنبيهات."
+        },
+        "backup": {
+          "title": "النسخ الاحتياطي للنظام",
+          "subtitle": "تصدير احتياطي متاح للمسؤول فقط."
+        }
+      },
+      "profile": {
+        "avatar": "الصورة الشخصية",
+        "avatarHint": "ارفع الصورة الشخصية أو اسحبها هنا",
+        "avatarAccepted": "الامتدادات المدعومة: JPG, JPEG, PNG, WEBP, SVG",
+        "avatarClear": "إزالة الصورة",
+        "name": "الاسم الكامل",
+        "namePlaceholder": "أدخل الاسم الكامل",
+        "email": "البريد الإلكتروني",
+        "emailPlaceholder": "أدخل البريد الإلكتروني"
+      },
+      "security": {
+        "currentPassword": "كلمة المرور الحالية",
+        "newPassword": "كلمة المرور الجديدة",
+        "confirmPassword": "تأكيد كلمة المرور الجديدة"
+      },
+      "notifications": {
+        "emailScheduleUpdates": "إيميلات تحديثات الجدول",
+        "emailScheduleUpdatesHint": "استلام بريد عند حدوث تغييرات في جدول المحاضرات.",
+        "emailReminders": "إيميلات التذكير",
+        "emailRemindersHint": "استلام تذكيرات قبل المواعيد المهمة للجدولة.",
+        "pushAnnouncements": "إعلانات فورية",
+        "pushAnnouncementsHint": "استلام رسائل داخل التطبيق للتحديثات العامة.",
+        "pushSystemAlerts": "تنبيهات النظام الفورية",
+        "pushSystemAlertsHint": "استلام تحذيرات وتنبيهات النظام الحرجة.",
+        "weeklyDigest": "ملخص أسبوعي",
+        "weeklyDigestHint": "استلام ملخص أسبوعي لنشاط النظام."
+      },
+      "backup": {
+        "note": "تصدير نسخة JSON محلية من الإعدادات والبيانات الوصفية الحالية."
+      },
+      "actions": {
+        "saveProfile": "حفظ الملف الشخصي",
+        "updatePassword": "تحديث كلمة المرور",
+        "saveNotifications": "حفظ الإشعارات",
+        "createBackup": "إنشاء نسخة احتياطية"
+      },
+      "errors": {
+        "profileInvalid": "يرجى إدخال اسم كامل وبريد إلكتروني صالح.",
+        "passwordMismatch": "كلمة المرور الجديدة وتأكيدها غير متطابقين.",
+        "invalidCurrentPassword": "كلمة المرور الحالية غير صحيحة.",
+        "weakPassword": "يجب أن تكون كلمة المرور الجديدة 8 أحرف على الأقل.",
+        "samePassword": "يجب أن تختلف كلمة المرور الجديدة عن الحالية.",
+        "passwordUpdateFailed": "تعذر تحديث كلمة المرور.",
+        "notificationsSaveFailed": "تعذر حفظ إعدادات الإشعارات."
+      },
+      "toasts": {
+        "profileSaved": "تم تحديث الملف الشخصي",
+        "passwordUpdated": "تم تحديث كلمة المرور",
+        "notificationsSaved": "تم حفظ إعدادات الإشعارات",
+        "backupCreated": "تم إنشاء النسخة الاحتياطية"
+      }
+    },
     "sidebar": {
       "empty": "لا توجد عناصر تنقل متاحة لهذا الدور."
     }

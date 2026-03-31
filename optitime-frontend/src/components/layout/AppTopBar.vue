@@ -40,7 +40,13 @@
         <span class="lang-code">{{ uiStore.locale.toUpperCase() }}</span>
       </AppButton>
 
-      <div class="av-btn" :style="{ background: roleColor }">{{ userInitial }}</div>
+      <img
+        v-if="userAvatar"
+        class="av-btn av-btn--image"
+        :src="userAvatar"
+        alt="User avatar"
+      />
+      <div v-else class="av-btn" :style="{ background: roleColor }">{{ userInitial }}</div>
     </div>
   </header>
 </template>
@@ -57,6 +63,7 @@ defineProps({
   pageTitle: { type: String, required: true },
   roleColor: { type: String, default: '#334155' },
   userInitial: { type: String, default: '?' },
+  userAvatar: { type: String, default: '' },
   isMobile: { type: Boolean, default: false },
 })
 
@@ -155,6 +162,12 @@ function toggleLocale() {
   font-size: 14px;
   font-weight: 700;
   color: #fff;
+}
+
+.av-btn--image {
+  object-fit: cover;
+  background: #fff;
+  border: 1px solid #eef0f7;
 }
 @media (max-width: 992px) {
   .topbar {

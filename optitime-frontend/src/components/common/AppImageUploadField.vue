@@ -18,7 +18,7 @@
         ref="fileInputRef"
         class="d-none"
         type="file"
-        accept="image/png,image/svg+xml"
+        :accept="accept"
         :disabled="disabled"
         @change="onFileInputChange"
       />
@@ -63,6 +63,11 @@ const props = defineProps({
   acceptedText: { type: String, default: 'SVG, PNG only' },
   clearText: { type: String, default: 'Remove' },
   disabled: { type: Boolean, default: false },
+  accept: { type: String, default: 'image/png,image/svg+xml' },
+  allowedMimeTypes: {
+    type: Array,
+    default: () => ['image/png', 'image/svg+xml'],
+  },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -99,7 +104,7 @@ function onFileInputChange(event) {
 }
 
 function handleFile(file) {
-  const isSupported = ['image/png', 'image/svg+xml'].includes(file.type)
+  const isSupported = props.allowedMimeTypes.includes(file.type)
   if (!isSupported) return
 
   const reader = new FileReader()

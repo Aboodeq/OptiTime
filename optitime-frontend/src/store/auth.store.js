@@ -74,6 +74,15 @@ function normalizePermissions(permissions) {
       if (permission === 'constraints.manage') {
         return ['constraints.create', 'constraints.update', 'constraints.delete', 'constraints.view']
       }
+      if (permission === 'settings.manage') {
+        return [
+          'settings.view',
+          'settings.profile.update',
+          'settings.security.update',
+          'settings.notifications.update',
+          'settings.backup.create',
+        ]
+      }
       if (permission === 'roled.delete') {
         return ['roles.delete']
       }
@@ -121,6 +130,11 @@ export const useAuthStore = defineStore('auth', () => {
     saveUser(normalizedUser)
   }
 
+  function patchCurrentUser(partial) {
+    if (!user.value) return
+    setUser({ ...user.value, ...(partial && typeof partial === 'object' ? partial : {}) })
+  }
+
   function hasPermission(permission) {
     if (!permission) return true
     return permissions.value.includes(permission)
@@ -155,6 +169,7 @@ export const useAuthStore = defineStore('auth', () => {
     roleColor,
     permissions,
     setUser,
+    patchCurrentUser,
     hasPermission,
     hasAnyPermission,
     login,

@@ -58,7 +58,13 @@
       </AppButton>
 
       <div class="user-row">
-        <div class="user-av" :style="{ background: roleColor }">{{ userInitial }}</div>
+        <img
+          v-if="userAvatar"
+          class="user-av user-av--image"
+          :src="userAvatar"
+          :alt="userName || 'User avatar'"
+        />
+        <div v-else class="user-av" :style="{ background: roleColor }">{{ userInitial }}</div>
         <transition name="fade-text">
           <div v-if="!collapsed" class="user-info">
             <div class="user-nm">{{ userName }}</div>
@@ -122,6 +128,10 @@ const props = defineProps({
   userInitial: {
     type: String,
     default: '?',
+  },
+  userAvatar: {
+    type: String,
+    default: '',
   },
 })
 
@@ -369,6 +379,12 @@ function toggleCollapse() {
   color: #fff;
   font-weight: 800;
   font-size: 14px;
+}
+
+.user-av--image {
+  object-fit: cover;
+  background: #fff;
+  border: 1px solid #eef0f7;
 }
 .user-info {
   overflow: hidden;

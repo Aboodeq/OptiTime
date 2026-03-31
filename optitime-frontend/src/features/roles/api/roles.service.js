@@ -11,6 +11,12 @@ const AVAILABLE_PERMISSIONS = Object.freeze([
   'reports.view',
   'semesters.manage',
   'constraints.manage',
+  'settings.manage',
+  'settings.view',
+  'settings.profile.update',
+  'settings.security.update',
+  'settings.notifications.update',
+  'settings.backup.create',
 ])
 
 const INITIAL_ROLES = Object.freeze([
@@ -22,7 +28,14 @@ const INITIAL_ROLES = Object.freeze([
     sidebar_color: '#e63946',
     description: 'System role with full role-management access.',
     is_active: true,
-    permissions: ['dashboard.view', 'roles.create', 'roles.update', 'roles.delete', 'roles.view'],
+    permissions: [
+      'dashboard.view',
+      'roles.create',
+      'roles.update',
+      'roles.delete',
+      'roles.view',
+      'settings.manage',
+    ],
   },
   {
     id: 'role-coordinator',
@@ -32,7 +45,15 @@ const INITIAL_ROLES = Object.freeze([
     sidebar_color: '#4361ee',
     description: '',
     is_active: true,
-    permissions: ['dashboard.view', 'courses.manage', 'schedule.generate'],
+    permissions: [
+      'dashboard.view',
+      'courses.manage',
+      'schedule.generate',
+      'settings.view',
+      'settings.profile.update',
+      'settings.security.update',
+      'settings.notifications.update',
+    ],
   },
   {
     id: 'role-student',
@@ -42,7 +63,13 @@ const INITIAL_ROLES = Object.freeze([
     sidebar_color: '#f8961e',
     description: '',
     is_active: true,
-    permissions: ['dashboard.view'],
+    permissions: [
+      'dashboard.view',
+      'settings.view',
+      'settings.profile.update',
+      'settings.security.update',
+      'settings.notifications.update',
+    ],
   },
 ])
 
