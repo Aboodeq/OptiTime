@@ -6,7 +6,11 @@
     },
     "topbar": {
       "quickSearch": "بحث سريع...",
-      "languageToggle": "تبديل اللغة"
+      "languageToggle": "تبديل اللغة",
+      "notifications": "الإشعارات",
+      "markAllRead": "تعيين الكل كمقروء",
+      "viewAllNotifications": "عرض جميع الإشعارات",
+      "userMenu": "قائمة المستخدم"
     },
     "sections": {
       "home": "الرئيسية",

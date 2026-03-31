@@ -12,6 +12,7 @@ const AVAILABLE_PERMISSIONS = Object.freeze([
   'semesters.manage',
   'constraints.manage',
   'settings.manage',
+  'notifications.view',
   'settings.view',
   'settings.profile.update',
   'settings.security.update',

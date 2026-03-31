@@ -6,6 +6,7 @@ import {
   fallbackRoutes,
   instructorsManagementRoute,
   loginRoute,
+  notificationsRoute,
   organizationManagementRoute,
   rolesManagementRoute,
   semestersManagementRoute,
@@ -29,6 +30,7 @@ const router = createRouter({
     semestersManagementRoute,
     constraintsManagementRoute,
     userSettingsRoute,
+    notificationsRoute,
     ...fallbackRoutes,
   ],
 })

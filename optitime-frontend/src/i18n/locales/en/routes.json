@@ -10,6 +10,7 @@
     "specialitiesManagement": "Specialities management",
     "semestersManagement": "Semesters management",
     "constraintsManagement": "Constraints management",
-    "userSettings": "User settings"
+    "userSettings": "User settings",
+    "notifications": "Notifications"
   }
 }

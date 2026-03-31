@@ -48,6 +48,7 @@ const DEMO_USERS = Object.freeze({
       'semesters.view',
       'constraints.manage',
       'settings.manage',
+      'notifications.view',
     ],
   },
   coordinator: {
@@ -62,6 +63,7 @@ const DEMO_USERS = Object.freeze({
     permissions: [
       'dashboard.view',
       'sidebar.view',
+      'notifications.view',
       'settings.view',
       'settings.profile.update',
       'settings.security.update',
@@ -80,6 +82,7 @@ const DEMO_USERS = Object.freeze({
     permissions: [
       'dashboard.view',
       'sidebar.view',
+      'notifications.view',
       'settings.view',
       'settings.profile.update',
       'settings.security.update',
@@ -98,6 +101,7 @@ const DEMO_USERS = Object.freeze({
     permissions: [
       'dashboard.view',
       'sidebar.view',
+      'notifications.view',
       'settings.view',
       'settings.profile.update',
       'settings.security.update',
@@ -121,6 +125,7 @@ const DEMO_USERS = Object.freeze({
       'students.view',
       'specialities.view',
       'constraints.view',
+      'notifications.view',
       'settings.view',
       'settings.profile.update',
       'settings.security.update',
@@ -139,6 +144,7 @@ const DEMO_USERS = Object.freeze({
     permissions: [
       'dashboard.view',
       'sidebar.view',
+      'notifications.view',
       'settings.view',
       'settings.profile.update',
       'settings.security.update',

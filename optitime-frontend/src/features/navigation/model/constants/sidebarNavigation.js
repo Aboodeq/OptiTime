@@ -17,6 +17,13 @@ export const BASE_SIDEBAR_SECTIONS = Object.freeze([
         labelKey: 'routes.userSettings',
         permissions: ['settings.view'],
       },
+      {
+        id: 'notifications',
+        routeName: 'notifications',
+        icon: 'bi bi-bell-fill',
+        labelKey: 'routes.notifications',
+        permissions: ['notifications.view'],
+      },
     ],
   },
   {
