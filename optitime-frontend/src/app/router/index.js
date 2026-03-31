@@ -6,6 +6,7 @@ import {
   loginRoute,
   organizationManagementRoute,
   rolesManagementRoute,
+  usersManagementRoute,
 } from './routes/public.routes'
 
 const router = createRouter({
@@ -15,6 +16,7 @@ const router = createRouter({
     dashboardRoute,
     rolesManagementRoute,
     organizationManagementRoute,
+    usersManagementRoute,
     ...fallbackRoutes,
   ],
 })

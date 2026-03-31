@@ -168,6 +168,58 @@
         "cancel": "إلغاء"
       }
     },
+    "usersManagement": {
+      "title": "إدارة المستخدمين",
+      "subtitle": "إدارة حسابات الإدارة والموظفين فقط. الطلاب والمدرسون مستثنون.",
+      "table": {
+        "user": "المستخدم",
+        "faculty": "الكلية",
+        "role": "الدور",
+        "department": "القسم",
+        "status": "الحالة",
+        "actions": "الإجراءات",
+        "empty": "لا يوجد مستخدمون"
+      },
+      "stats": {
+        "totalUsers": "إجمالي المستخدمين",
+        "activeUsers": "المستخدمون النشطون",
+        "inactiveUsers": "المستخدمون غير النشطين"
+      },
+      "status": {
+        "active": "نشط",
+        "inactive": "غير نشط"
+      },
+      "form": {
+        "createTitle": "إنشاء مستخدم",
+        "editTitle": "تعديل مستخدم",
+        "name": "الاسم الكامل",
+        "email": "البريد الإلكتروني",
+        "password": "كلمة المرور",
+        "faculty": "الكلية",
+        "facultyPlaceholder": "اختر الكلية",
+        "noFacultyFound": "لا توجد كلية مطابقة",
+        "role": "الدور",
+        "department": "القسم",
+        "departmentPlaceholder": "اختر القسم",
+        "noDepartmentFound": "لا يوجد قسم مطابق",
+        "isActive": "حساب نشط"
+      },
+      "actions": {
+        "newUser": "مستخدم جديد",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "save": "حفظ المستخدم"
+      },
+      "confirmDelete": {
+        "title": "حذف المستخدم",
+        "message": "هل أنت متأكد من حذف \"{user}\"؟",
+        "confirm": "حذف",
+        "cancel": "إلغاء"
+      },
+      "errors": {
+        "invalidForm": "يرجى تعبئة جميع الحقول المطلوبة: الاسم، البريد الإلكتروني، كلمة المرور، الكلية، القسم، والدور."
+      }
+    },
     "sidebar": {
       "empty": "لا توجد عناصر تنقل متاحة لهذا الدور."
     }

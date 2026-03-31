@@ -30,6 +30,13 @@ export const BASE_SIDEBAR_SECTIONS = Object.freeze([
         labelKey: 'routes.organizationManagement',
         permissions: ['organization.view'],
       },
+      {
+        id: 'users-management',
+        routeName: 'users-management',
+        icon: 'bi bi-people-fill',
+        labelKey: 'routes.usersManagement',
+        permissions: ['users.view'],
+      },
     ],
   },
 ])
