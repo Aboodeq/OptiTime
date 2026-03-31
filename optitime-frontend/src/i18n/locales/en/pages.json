@@ -437,6 +437,107 @@
         "invalidForm": "Please complete all required fields and ensure start date is not after end date."
       }
     },
+    "constraintsManagement": {
+      "title": "Constraints management",
+      "subtitle": "Configure global timetable constraints using local presets.",
+      "sections": {
+        "general": "General settings",
+        "hardConstraints": "Hard constraints",
+        "softConstraints": "Soft constraints",
+        "studyDays": "Study days",
+        "breakTimes": "Break times",
+        "roomConstraints": "Room constraints"
+      },
+      "form": {
+        "dayStart": "Day start",
+        "dayEnd": "Day end",
+        "capacityThreshold": "Capacity threshold (%)",
+        "slotMinutes": "Slot minutes",
+        "gapMinutes": "Gap minutes",
+        "maxDailyLectures": "Max daily lectures"
+      },
+      "formHints": {
+        "dayStart": "First allowed lecture start time",
+        "dayEnd": "Last allowed lecture end time",
+        "slotMinutes": "Default duration of each lecture",
+        "gapMinutes": "Required break time between lectures",
+        "maxDailyLectures": "Maximum lectures per instructor per day"
+      },
+      "actions": {
+        "saveAll": "Save all settings",
+        "resetDefaults": "Reset defaults",
+        "resetUnsaved": "Reset unsaved"
+      },
+      "stats": {
+        "studyDays": "Study days"
+      },
+      "panelHints": {
+        "soft": "Preferred rules (best-effort optimization)",
+        "hard": "Mandatory rules (must be enforced)",
+        "time": "Working hours and break periods",
+        "studyDays": "Select allowed working/study days",
+        "room": "Room distribution and usage rules"
+      },
+      "constraintLabels": {
+        "no_instructor_overlap": "No instructor overlap",
+        "no_room_overlap": "No room overlap",
+        "room_capacity": "Room capacity must fit enrollment",
+        "lab_for_lab": "Lab courses require lab rooms",
+        "working_hours": "Respect working hours",
+        "instructor_pref": "Instructor preference",
+        "load_balance": "Balance teaching load",
+        "student_gap": "Reduce student gaps",
+        "avoid_back_to_back": "Avoid back-to-back lectures",
+        "morning_preference": "Prefer morning times",
+        "department_proximity": "Department lecture proximity",
+        "prayer_noon": "Noon break",
+        "prayer_asr": "Afternoon break",
+        "lunch_break": "Lunch break",
+        "match_type": "Match room type",
+        "room_proximity": "Room proximity",
+        "avoid_floor_scatter": "Avoid floor scattering",
+        "equipment_match": "Match room equipment",
+        "max_occupancy_threshold": "Maximum occupancy threshold",
+        "instructor_load": "Instructor load",
+        "coordinator_load": "Coordinator load"
+      },
+      "constraintDescriptions": {
+        "no_instructor_overlap": "Avoid assigning an instructor to two classes at the same time.",
+        "no_room_overlap": "Avoid assigning the same room to overlapping classes.",
+        "room_capacity": "Ensure room seats cover enrolled students.",
+        "lab_for_lab": "Place lab sessions in lab-capable rooms only.",
+        "working_hours": "Keep sessions inside configured working hours.",
+        "instructor_pref": "Prefer instructor availability and time choices.",
+        "load_balance": "Distribute teaching load fairly across staff.",
+        "student_gap": "Reduce large gaps between student classes.",
+        "avoid_back_to_back": "Keep a break between consecutive instructor lectures.",
+        "morning_preference": "Prioritize scheduling classes in morning slots when possible.",
+        "department_proximity": "Keep department courses scheduled on nearby days.",
+        "match_type": "Keep each course in the correct room type.",
+        "room_proximity": "Group department sessions in nearby rooms/buildings.",
+        "avoid_floor_scatter": "Avoid consecutive sessions on different floors.",
+        "equipment_match": "Ensure required equipment exists in selected rooms."
+        ,
+        "max_occupancy_threshold": "Respect the configured maximum room occupancy ratio."
+      },
+      "days": {
+        "sun": "Sunday",
+        "mon": "Monday",
+        "tue": "Tuesday",
+        "wed": "Wednesday",
+        "thu": "Thursday",
+        "fri": "Friday",
+        "sat": "Saturday"
+      },
+      "errors": {
+        "invalidForm": "Please fix invalid settings (time ranges, numeric bounds, and min/max load values)."
+      },
+      "toasts": {
+        "saved": "Constraints saved",
+        "defaultsReset": "Defaults restored",
+        "exportQueued": "Print/export request prepared"
+      }
+    },
     "sidebar": {
       "empty": "No navigation items available for this role."
     }

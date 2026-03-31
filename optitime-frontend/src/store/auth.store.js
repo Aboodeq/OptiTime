@@ -71,6 +71,9 @@ function normalizePermissions(permissions) {
       if (permission === 'semesters.manage') {
         return ['semesters.create', 'semesters.update', 'semesters.delete', 'semesters.view']
       }
+      if (permission === 'constraints.manage') {
+        return ['constraints.create', 'constraints.update', 'constraints.delete', 'constraints.view']
+      }
       if (permission === 'roled.delete') {
         return ['roles.delete']
       }
