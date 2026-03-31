@@ -1,0 +1,16 @@
+{
+  "routes": {
+    "login": "تسجيل الدخول",
+    "dashboard": "لوحة التحكم",
+    "rolesManagement": "إدارة الأدوار",
+    "organizationManagement": "الهيكل التنظيمي",
+    "usersManagement": "إدارة المستخدمين",
+    "instructorsManagement": "إدارة المدرسين",
+    "studentsManagement": "إدارة الطلاب",
+    "specialitiesManagement": "إدارة الاختصاصات",
+    "semestersManagement": "إدارة الفصول الدراسية",
+    "constraintsManagement": "إدارة القيود",
+    "userSettings": "إعدادات المستخدم",
+    "notifications": "الإشعارات"
+  }
+}
