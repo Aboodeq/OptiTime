@@ -47,6 +47,7 @@ const DEMO_USERS = Object.freeze({
       'semesters.delete',
       'semesters.view',
       'constraints.manage',
+      'auditLogs.view',
       'settings.manage',
       'notifications.view',
     ],

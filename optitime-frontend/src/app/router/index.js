@@ -3,6 +3,7 @@ import { useAuthStore } from '@/store/auth.store'
 import {
   constraintsManagementRoute,
   dashboardRoute,
+  auditLogsRoute,
   fallbackRoutes,
   instructorsManagementRoute,
   loginRoute,
@@ -29,6 +30,7 @@ const router = createRouter({
     specialitiesManagementRoute,
     semestersManagementRoute,
     constraintsManagementRoute,
+    auditLogsRoute,
     userSettingsRoute,
     notificationsRoute,
     ...fallbackRoutes,

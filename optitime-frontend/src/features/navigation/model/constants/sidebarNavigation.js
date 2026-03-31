@@ -86,6 +86,13 @@ export const BASE_SIDEBAR_SECTIONS = Object.freeze([
         labelKey: 'routes.constraintsManagement',
         permissions: ['constraints.view'],
       },
+      {
+        id: 'audit-logs',
+        routeName: 'audit-logs',
+        icon: 'bi bi-journal-text',
+        labelKey: 'routes.auditLogs',
+        permissions: ['auditLogs.view'],
+      },
     ],
   },
 ])

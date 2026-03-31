@@ -636,6 +636,45 @@
         "delete": "Delete"
       }
     },
+    "auditLogs": {
+      "title": "Audit logs",
+      "subtitle": "Track system actions, actors, and request traces for accountability.",
+      "stats": {
+        "total": "Total logs",
+        "success": "Success",
+        "warning": "Warning",
+        "error": "Error"
+      },
+      "filters": {
+        "allEventTypes": "All event types",
+        "allModules": "All modules",
+        "eventType": "Event type",
+        "eventTypePlaceholder": "Select event type",
+        "noEventTypeFound": "No matching event type",
+        "module": "Module",
+        "modulePlaceholder": "Select module",
+        "noModuleFound": "No matching module"
+      },
+      "eventTypes": {
+        "success": "Success",
+        "info": "Info",
+        "warning": "Warning",
+        "error": "Error"
+      },
+      "table": {
+        "createdAt": "Created at",
+        "actor": "Actor",
+        "eventType": "Event type",
+        "module": "Module",
+        "action": "Action",
+        "target": "Target",
+        "request": "Request/IP",
+        "empty": "No audit logs found"
+      },
+      "actions": {
+        "searchPlaceholder": "Search by actor, module, action, target, request, or IP"
+      }
+    },
     "sidebar": {
       "empty": "No navigation items available for this role."
     }
