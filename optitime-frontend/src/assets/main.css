@@ -47,6 +47,25 @@ input {
   font: inherit;
 }
 
+/* Consistent elevated inputs across system pages */
+.form-control,
+.form-select,
+.form-check-input,
+input.form-control,
+textarea.form-control,
+select.form-select {
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+  border-color: #e2e8f0;
+}
+
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+  box-shadow:
+    0 0 0 0.2rem rgba(67, 97, 238, 0.18),
+    0 10px 24px rgba(15, 23, 42, 0.12);
+}
+
 .dashboard-shell {
   min-height: 100vh;
   display: grid;

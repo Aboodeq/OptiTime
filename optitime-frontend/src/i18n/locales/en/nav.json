@@ -11,6 +11,9 @@
     "sections": {
       "home": "Home",
       "system": "System"
+    },
+    "items": {
+      "organization": "Organization"
     }
   }
 }

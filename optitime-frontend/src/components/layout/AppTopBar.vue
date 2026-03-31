@@ -22,8 +22,12 @@
       </button>
 
       <div class="search-bar">
-        <i class="bi bi-search"></i>
-        <input type="text" :placeholder="t('nav.topbar.quickSearch')" />
+        <AppSearchField
+          :model-value="quickSearch"
+          :placeholder="t('nav.topbar.quickSearch')"
+          compact
+          @update:model-value="quickSearch = $event"
+        />
       </div>
 
       <button
@@ -42,8 +46,9 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import AppSearchField from '@/components/common/AppSearchField.vue'
 import { useUiStore } from '@/store/ui.store'
 
 defineProps({
@@ -57,6 +62,7 @@ defineEmits(['open-sidebar'])
 
 const { t } = useI18n()
 const uiStore = useUiStore()
+const quickSearch = ref('')
 const crumbIcon = computed(() => (uiStore.isRtl ? 'bi bi-chevron-left' : 'bi bi-chevron-right'))
 
 function toggleLocale() {
@@ -70,8 +76,7 @@ function toggleLocale() {
 .breadcrumb-custom { display:flex; align-items:center; gap:5px; margin-top:3px; font-size:11px; color:#b0b8cc; }
 .bc-active { color:#4361ee; font-weight:600; }
 .topbar-actions { display:flex; align-items:center; gap:10px; flex:1; justify-content:flex-end; min-width:0; }
-.search-bar { display:flex; align-items:center; gap:8px; background:#f7f8fc; border:1.5px solid #eef0f7; border-radius:11px; padding:7px 12px; min-width:160px; max-width:420px; width:100%; }
-.search-bar input { background:none; border:none; outline:none; width:100%; font-size:13px; min-width:0; }
+.search-bar { min-width:160px; max-width:420px; width:100%; }
 .action-btn { width:38px; height:38px; border-radius:11px; background:#f7f8fc; border:1.5px solid #eef0f7; color:#8090a8; }
 .lang-btn { height:38px; border-radius:11px; background:#f7f8fc; border:1.5px solid #eef0f7; display:inline-flex; align-items:center; gap:8px; padding:0 10px; font-weight:800; color:#6b7280; }
 .lang-code { font-size:12px; letter-spacing:0.4px; }

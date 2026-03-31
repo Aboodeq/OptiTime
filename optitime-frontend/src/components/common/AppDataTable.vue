@@ -1,12 +1,11 @@
 <template>
   <div class="app-data-table">
     <div v-if="showSearch" class="app-data-table__toolbar">
-      <input
-        type="search"
-        class="form-control form-control-sm app-data-table__search"
+      <AppSearchField
+        compact
         :placeholder="searchPlaceholder"
-        :value="searchValue"
-        @input="$emit('update:searchValue', $event.target.value)"
+        :model-value="searchValue"
+        @update:model-value="$emit('update:searchValue', $event)"
       />
     </div>
 
@@ -43,6 +42,8 @@
 </template>
 
 <script setup>
+import AppSearchField from '@/components/common/AppSearchField.vue'
+
 defineProps({
   columns: {
     type: Array,
@@ -83,9 +84,4 @@ defineEmits(['update:searchValue'])
   border-bottom: 1px solid #f1f5f9;
 }
 
-.app-data-table__search {
-  width: 100%;
-  border: 1px solid #e2e8f0;
-  border-radius: 10px;
-}
 </style>

@@ -99,6 +99,75 @@
         "cancel": "إلغاء"
       }
     },
+    "organization": {
+      "title": "الهيكل التنظيمي",
+      "subtitle": "إدارة الكليات والأقسام وفق صلاحيات دقيقة مبنية على الدور.",
+      "stats": {
+        "faculties": "الكليات",
+        "departments": "الأقسام",
+        "activeFaculties": "الكليات النشطة",
+        "activeDepartments": "الأقسام النشطة"
+      },
+      "faculties": {
+        "faculty": "الكلية",
+        "identifier": "المعرف",
+        "departments": "الأقسام",
+        "status": "الحالة",
+        "actions": "الإجراءات",
+        "empty": "لا توجد كليات"
+      },
+      "cards": {
+        "departmentsPreview": "معاينة الأقسام",
+        "moreDepartments": "+{count} أقسام إضافية",
+        "noDepartments": "لا توجد أقسام في هذه الكلية"
+      },
+      "departments": {
+        "title": "الأقسام",
+        "department": "القسم",
+        "identifier": "المعرف",
+        "status": "الحالة",
+        "actions": "الإجراءات",
+        "empty": "لا توجد أقسام"
+      },
+      "entities": {
+        "faculty": "كلية",
+        "department": "قسم"
+      },
+      "status": {
+        "active": "نشط",
+        "inactive": "غير نشط"
+      },
+      "form": {
+        "createFacultyTitle": "إنشاء كلية",
+        "editFacultyTitle": "تعديل كلية",
+        "createDepartmentTitle": "إنشاء قسم",
+        "editDepartmentTitle": "تعديل قسم",
+        "code": "الرمز",
+        "nameAr": "الاسم (عربي)",
+        "nameEn": "الاسم (إنجليزي)",
+        "color": "لون الكلية",
+        "icon": "الأيقونة",
+        "iconHint": "اسحب وأفلت الأيقونة أو اضغط للرفع",
+        "iconAccepted": "الامتدادات المدعومة: SVG, PNG",
+        "iconClear": "إزالة الأيقونة",
+        "isActive": "نشط"
+      },
+      "actions": {
+        "newFaculty": "كلية جديدة",
+        "newDepartment": "قسم جديد",
+        "viewDepartments": "عرض الأقسام",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "saveFaculty": "حفظ الكلية",
+        "saveDepartment": "حفظ القسم"
+      },
+      "confirmDelete": {
+        "title": "حذف عنصر",
+        "message": "هل أنت متأكد من حذف هذا {type}: \"{name}\"؟",
+        "confirm": "حذف",
+        "cancel": "إلغاء"
+      }
+    },
     "sidebar": {
       "empty": "لا توجد عناصر تنقل متاحة لهذا الدور."
     }

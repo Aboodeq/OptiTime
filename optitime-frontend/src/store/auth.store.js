@@ -38,6 +38,14 @@ function normalizePermissions(permissions) {
       if (permission === 'roles.manage') {
         return ['roles.create', 'roles.update', 'roles.delete', 'roles.view']
       }
+      if (permission === 'organization.manage') {
+        return [
+          'organization.create',
+          'organization.update',
+          'organization.delete',
+          'organization.view',
+        ]
+      }
       if (permission === 'roled.delete') {
         return ['roles.delete']
       }

@@ -23,6 +23,17 @@ export const rolesManagementRoute = {
   },
 }
 
+export const organizationManagementRoute = {
+  path: '/admin/organization',
+  name: 'organization-management',
+  component: () => import('@/features/organization/ui/pages/AdminOrganizationPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['organization.view'],
+    titleKey: 'routes.organizationManagement',
+  },
+}
+
 export const fallbackRoutes = [
   { path: '/', redirect: '/login' },
   { path: '/:pathMatch(.*)*', redirect: '/login' },

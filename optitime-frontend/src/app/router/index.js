@@ -4,12 +4,19 @@ import {
   dashboardRoute,
   fallbackRoutes,
   loginRoute,
+  organizationManagementRoute,
   rolesManagementRoute,
 } from './routes/public.routes'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [loginRoute, dashboardRoute, rolesManagementRoute, ...fallbackRoutes],
+  routes: [
+    loginRoute,
+    dashboardRoute,
+    rolesManagementRoute,
+    organizationManagementRoute,
+    ...fallbackRoutes,
+  ],
 })
 
 router.beforeEach((to) => {

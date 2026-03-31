@@ -11,6 +11,9 @@
     "sections": {
       "home": "الرئيسية",
       "system": "النظام"
+    },
+    "items": {
+      "organization": "الهيكل التنظيمي"
     }
   }
 }

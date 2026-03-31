@@ -99,6 +99,75 @@
         "cancel": "Cancel"
       }
     },
+    "organization": {
+      "title": "Organization structure",
+      "subtitle": "Manage faculties and departments with role-based permissions.",
+      "stats": {
+        "faculties": "Faculties",
+        "departments": "Departments",
+        "activeFaculties": "Active faculties",
+        "activeDepartments": "Active departments"
+      },
+      "faculties": {
+        "faculty": "Faculty",
+        "identifier": "Identifier",
+        "departments": "Departments",
+        "status": "Status",
+        "actions": "Actions",
+        "empty": "No faculties found"
+      },
+      "cards": {
+        "departmentsPreview": "Departments preview",
+        "moreDepartments": "+{count} more departments",
+        "noDepartments": "No departments in this faculty"
+      },
+      "departments": {
+        "title": "Departments",
+        "department": "Department",
+        "identifier": "Identifier",
+        "status": "Status",
+        "actions": "Actions",
+        "empty": "No departments found"
+      },
+      "entities": {
+        "faculty": "faculty",
+        "department": "department"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "form": {
+        "createFacultyTitle": "Create faculty",
+        "editFacultyTitle": "Edit faculty",
+        "createDepartmentTitle": "Create department",
+        "editDepartmentTitle": "Edit department",
+        "code": "Code",
+        "nameAr": "Name (Arabic)",
+        "nameEn": "Name (English)",
+        "color": "Faculty color",
+        "icon": "Icon",
+        "iconHint": "Drag and drop icon or click to upload",
+        "iconAccepted": "Accepted: SVG, PNG",
+        "iconClear": "Remove icon",
+        "isActive": "Active"
+      },
+      "actions": {
+        "newFaculty": "New faculty",
+        "newDepartment": "New department",
+        "viewDepartments": "View departments",
+        "edit": "Edit",
+        "delete": "Delete",
+        "saveFaculty": "Save faculty",
+        "saveDepartment": "Save department"
+      },
+      "confirmDelete": {
+        "title": "Delete item",
+        "message": "Are you sure you want to delete this {type}: \"{name}\"?",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      }
+    },
     "sidebar": {
       "empty": "No navigation items available for this role."
     }
