@@ -111,6 +111,17 @@ export const userSettingsRoute = {
   },
 }
 
+export const notificationsRoute = {
+  path: '/notifications',
+  name: 'notifications',
+  component: () => import('@/features/notifications/ui/pages/NotificationsPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['notifications.view'],
+    titleKey: 'routes.notifications',
+  },
+}
+
 export const fallbackRoutes = [
   { path: '/', redirect: '/login' },
   { path: '/:pathMatch(.*)*', redirect: '/login' },

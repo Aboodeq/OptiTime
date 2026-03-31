@@ -10,6 +10,7 @@
     "specialitiesManagement": "إدارة الاختصاصات",
     "semestersManagement": "إدارة الفصول الدراسية",
     "constraintsManagement": "إدارة القيود",
-    "userSettings": "إعدادات المستخدم"
+    "userSettings": "إعدادات المستخدم",
+    "notifications": "الإشعارات"
   }
 }

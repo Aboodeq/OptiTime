@@ -611,6 +611,31 @@
         "backupCreated": "System backup generated"
       }
     },
+    "notifications": {
+      "title": "Notifications center",
+      "subtitle": "Track schedule alerts, reminders, and system announcements.",
+      "empty": "No notifications available.",
+      "stats": {
+        "total": "Total notifications",
+        "unread": "Unread",
+        "read": "Read"
+      },
+      "types": {
+        "schedule": "Schedule",
+        "announcement": "Announcement",
+        "reminder": "Reminder"
+      },
+      "priority": {
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
+      },
+      "actions": {
+        "markAsRead": "Mark as read",
+        "markAllAsRead": "Mark all as read",
+        "delete": "Delete"
+      }
+    },
     "sidebar": {
       "empty": "No navigation items available for this role."
     }

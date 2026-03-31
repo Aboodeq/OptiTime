@@ -6,7 +6,11 @@
     },
     "topbar": {
       "quickSearch": "Quick search...",
-      "languageToggle": "Switch language"
+      "languageToggle": "Switch language",
+      "notifications": "Notifications",
+      "markAllRead": "Mark all read",
+      "viewAllNotifications": "View all notifications",
+      "userMenu": "User menu"
     },
     "sections": {
       "home": "Home",
