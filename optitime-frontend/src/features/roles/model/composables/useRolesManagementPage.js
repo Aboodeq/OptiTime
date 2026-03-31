@@ -1,68 +1,27 @@
+import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
-
-const AVAILABLE_PERMISSIONS = Object.freeze([
-  'dashboard.view',
-  'roles.create',
-  'roles.update',
-  'roles.delete',
-  'roles.view',
-  'users.manage',
-  'courses.manage',
-  'schedule.generate',
-  'reports.view',
-])
-
-const INITIAL_ROLES = Object.freeze([
-  {
-    id: 'role-admin',
-    name: 'System admin',
-    color: '#e63946',
-    permissions: ['dashboard.view', 'roles.create', 'roles.update', 'roles.delete', 'roles.view'],
-  },
-  {
-    id: 'role-coordinator',
-    name: 'Resource coordinator',
-    color: '#4361ee',
-    permissions: ['dashboard.view', 'courses.manage', 'schedule.generate'],
-  },
-  {
-    id: 'role-student',
-    name: 'Student',
-    color: '#f8961e',
-    permissions: ['dashboard.view'],
-  },
-])
+import { useRolesStore } from '@/features/roles/model/stores/roles.store'
 
 export function useRolesManagementPage() {
-  const roles = ref(INITIAL_ROLES.map((role) => ({ ...role, permissions: [...role.permissions] })))
+  const rolesStore = useRolesStore()
+  rolesStore.ensureInitialized()
+
+  const { roles, permissionCatalog } = storeToRefs(rolesStore)
   const activeRoleId = ref(null)
-  const draft = ref(createEmptyDraft())
+  const draft = ref(rolesStore.createEmptyDraft())
   const isDialogOpen = ref(false)
 
   const isEditing = computed(() => Boolean(activeRoleId.value))
-  const permissionCatalog = AVAILABLE_PERMISSIONS
-
-  function createEmptyDraft() {
-    return {
-      name: '',
-      color: '#4361ee',
-      permissions: ['dashboard.view'],
-    }
-  }
 
   function startCreateRole() {
     activeRoleId.value = null
-    draft.value = createEmptyDraft()
+    draft.value = rolesStore.createEmptyDraft()
     isDialogOpen.value = true
   }
 
   function startEditRole(role) {
     activeRoleId.value = role.id
-    draft.value = {
-      name: role.name,
-      color: role.color,
-      permissions: [...role.permissions],
-    }
+    draft.value = rolesStore.buildDraftFromRole(role)
     isDialogOpen.value = true
   }
 
@@ -79,39 +38,24 @@ export function useRolesManagementPage() {
   }
 
   function saveRole() {
-    const name = draft.value.name.trim()
-    if (!name) return false
-
-    const normalized = {
-      name,
-      color: draft.value.color || '#4361ee',
-      permissions: [...new Set(draft.value.permissions)],
-    }
-
     if (activeRoleId.value) {
-      roles.value = roles.value.map((role) =>
-        role.id === activeRoleId.value ? { ...role, ...normalized } : role,
-      )
+      const updated = rolesStore.updateRoleFromDraft(activeRoleId.value, draft.value)
+      if (!updated) return false
       closeDialog()
       return true
     }
 
-    roles.value = [
-      ...roles.value,
-      {
-        id: `role-${Date.now()}`,
-        ...normalized,
-      },
-    ]
+    const created = rolesStore.createRoleFromDraft(draft.value)
+    if (!created) return false
     closeDialog()
     return true
   }
 
   function deleteRole(roleId) {
-    roles.value = roles.value.filter((role) => role.id !== roleId)
+    rolesStore.deleteRole(roleId)
     if (activeRoleId.value === roleId) {
       activeRoleId.value = null
-      draft.value = createEmptyDraft()
+      draft.value = rolesStore.createEmptyDraft()
       closeDialog()
     }
   }

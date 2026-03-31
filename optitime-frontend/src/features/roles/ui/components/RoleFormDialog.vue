@@ -2,27 +2,72 @@
   <AppDialog :open="open" :title="title" @close="$emit('cancel')">
     <div class="d-grid gap-3">
       <AppInputField
-        input-id="role-name"
-        :label="t('pages.rolesManagement.form.name')"
-        icon="bi bi-person-badge"
-        :model-value="draft.name"
-        :placeholder="t('pages.rolesManagement.form.name')"
+        input-id="role-code"
+        :label="t('pages.rolesManagement.form.code')"
+        icon="bi bi-upc-scan"
+        :model-value="draft.code"
+        :placeholder="t('pages.rolesManagement.form.code')"
         :disabled="!canEditRole"
-        @update:model-value="$emit('update:name', $event)"
+        @update:model-value="$emit('update:code', $event)"
+      />
+
+      <AppInputField
+        input-id="role-name-ar"
+        :label="t('pages.rolesManagement.form.nameAr')"
+        icon="bi bi-translate"
+        :model-value="draft.name_ar"
+        :placeholder="t('pages.rolesManagement.form.nameAr')"
+        :disabled="!canEditRole"
+        @update:model-value="$emit('update:nameAr', $event)"
+      />
+
+      <AppInputField
+        input-id="role-name-en"
+        :label="t('pages.rolesManagement.form.nameEn')"
+        icon="bi bi-fonts"
+        :model-value="draft.name_en"
+        :placeholder="t('pages.rolesManagement.form.nameEn')"
+        :disabled="!canEditRole"
+        @update:model-value="$emit('update:nameEn', $event)"
       />
 
       <div>
         <label class="form-label fw-semibold">{{ t('pages.rolesManagement.form.color') }}</label>
         <div class="d-flex align-items-center gap-2">
           <input
-            :value="draft.color"
+            :value="draft.sidebar_color"
             type="color"
             class="form-control form-control-color"
             :disabled="!canEditRole"
-            @input="$emit('update:color', $event.target.value)"
+            @input="$emit('update:sidebarColor', $event.target.value)"
           />
-          <span class="small text-secondary">{{ draft.color }}</span>
+          <span class="small text-secondary">{{ draft.sidebar_color }}</span>
         </div>
+      </div>
+
+      <div>
+        <label class="form-label fw-semibold">{{ t('pages.rolesManagement.form.description') }}</label>
+        <textarea
+          class="form-control"
+          rows="3"
+          :value="draft.description"
+          :disabled="!canEditRole"
+          @input="$emit('update:description', $event.target.value)"
+        ></textarea>
+      </div>
+
+      <div class="form-check">
+        <input
+          id="role-is-active"
+          class="form-check-input"
+          type="checkbox"
+          :checked="draft.is_active"
+          :disabled="!canEditRole"
+          @change="$emit('update:isActive', $event.target.checked)"
+        />
+        <label for="role-is-active" class="form-check-label">
+          {{ t('pages.rolesManagement.form.isActive') }}
+        </label>
       </div>
 
       <div>
@@ -70,7 +115,17 @@ const props = defineProps({
   canEditPermissions: { type: Boolean, default: true },
 })
 
-defineEmits(['cancel', 'save', 'update:name', 'update:color', 'toggle-permission'])
+defineEmits([
+  'cancel',
+  'save',
+  'update:code',
+  'update:nameAr',
+  'update:nameEn',
+  'update:sidebarColor',
+  'update:description',
+  'update:isActive',
+  'toggle-permission',
+])
 
 const { t } = useI18n()
 const title = computed(() =>

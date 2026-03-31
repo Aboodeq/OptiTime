@@ -26,13 +26,16 @@
         >
           <template #cell-role="{ row }">
             <div class="d-flex align-items-center gap-2">
-              <span class="role-dot" :style="{ background: row.color }"></span>
-              <span class="fw-semibold">{{ row.name }}</span>
+              <span class="role-dot" :style="{ background: row.sidebar_color }"></span>
+              <div class="d-flex flex-column">
+                <span class="fw-semibold">{{ row.name_en }}</span>
+                <small class="text-secondary">{{ row.name_ar }}</small>
+              </div>
             </div>
           </template>
 
           <template #cell-identifier="{ row }">
-            <code>{{ row.id }}</code>
+            <code>{{ row.code }}</code>
           </template>
 
           <template #cell-permissions="{ row }">
@@ -76,15 +79,19 @@
       :can-edit-permissions="canCreateRoles || canUpdateRoles"
       @cancel="closeDialog"
       @save="handleSaveRole"
-      @update:name="draft.name = $event"
-      @update:color="draft.color = $event"
+      @update:code="draft.code = $event"
+      @update:name-ar="draft.name_ar = $event"
+      @update:name-en="draft.name_en = $event"
+      @update:sidebar-color="draft.sidebar_color = $event"
+      @update:description="draft.description = $event"
+      @update:is-active="draft.is_active = $event"
       @toggle-permission="toggleDraftPermission"
     />
 
     <AppConfirmDialog
       :open="Boolean(rolePendingDelete)"
       :title="t('pages.rolesManagement.confirmDelete.title')"
-      :message="t('pages.rolesManagement.confirmDelete.message', { role: rolePendingDelete?.name ?? '' })"
+      :message="t('pages.rolesManagement.confirmDelete.message', { role: rolePendingDelete?.name_en ?? '' })"
       :confirm-text="t('pages.rolesManagement.confirmDelete.confirm')"
       :cancel-text="t('pages.rolesManagement.confirmDelete.cancel')"
       @cancel="rolePendingDelete = null"
@@ -130,8 +137,9 @@ const filteredRoles = computed(() => {
   if (!q) return roles.value
   return roles.value.filter(
     (role) =>
-      role.name.toLowerCase().includes(q) ||
-      role.id.toLowerCase().includes(q) ||
+      role.name_en.toLowerCase().includes(q) ||
+      role.name_ar.toLowerCase().includes(q) ||
+      role.code.toLowerCase().includes(q) ||
       role.permissions.some((permission) => permission.toLowerCase().includes(q)),
   )
 })
