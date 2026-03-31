@@ -47,7 +47,7 @@ defineEmits(['close'])
   position: relative;
   width: min(100%, 620px);
   max-height: 88vh;
-  overflow: auto;
+  overflow: hidden;
   background: #fff;
   border-radius: 16px;
   border: 1px solid #eef0f7;
@@ -74,6 +74,28 @@ defineEmits(['close'])
 }
 .app-dialog__body {
   padding: 1rem;
+  max-height: calc(88vh - 66px);
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.app-dialog__body::-webkit-scrollbar {
+  width: 9px;
+}
+
+.app-dialog__body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.app-dialog__body::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #cbd5e1, #94a3b8);
+  border-radius: 999px;
+  border: 2px solid #fff;
+}
+
+.app-dialog__body::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #94a3b8, #64748b);
 }
 
 .dialog-fade-enter-active,

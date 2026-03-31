@@ -77,8 +77,12 @@
       "form": {
         "createTitle": "Create role",
         "editTitle": "Edit role",
-        "name": "Role name",
+        "code": "Role code",
+        "nameAr": "Role name (Arabic)",
+        "nameEn": "Role name (English)",
         "color": "Sidebar color",
+        "description": "Description",
+        "isActive": "Active role",
         "permissions": "Permissions",
         "dialogHint": "Use the New role button or Edit action to open the role form dialog."
       },
