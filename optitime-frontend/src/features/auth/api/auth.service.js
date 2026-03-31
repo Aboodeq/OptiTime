@@ -10,37 +10,67 @@ const DEMO_USERS = Object.freeze({
     id: 'demo-admin',
     name: 'Demo Admin',
     email: DEMO_CREDENTIALS.email,
-    role: 'admin',
+    role: {
+      key: 'admin',
+      name: 'System admin',
+      color: '#e63946',
+    },
+    permissions: ['dashboard.view', 'sidebar.view'],
   },
   coordinator: {
     id: 'demo-coordinator',
     name: 'Demo Coordinator',
     email: DEMO_CREDENTIALS.email,
-    role: 'coordinator',
+    role: {
+      key: 'coordinator',
+      name: 'Resource coordinator',
+      color: '#4361ee',
+    },
+    permissions: ['dashboard.view', 'sidebar.view'],
   },
   instructor: {
     id: 'demo-instructor',
     name: 'Demo Instructor',
     email: DEMO_CREDENTIALS.email,
-    role: 'instructor',
+    role: {
+      key: 'instructor',
+      name: 'Instructor',
+      color: '#2dc653',
+    },
+    permissions: ['dashboard.view', 'sidebar.view'],
   },
   student: {
     id: 'demo-student',
     name: 'Demo Student',
     email: DEMO_CREDENTIALS.email,
-    role: 'student',
+    role: {
+      key: 'student',
+      name: 'Student',
+      color: '#f8961e',
+    },
+    permissions: ['dashboard.view', 'sidebar.view'],
   },
   management: {
     id: 'demo-management',
     name: 'Demo Management',
     email: DEMO_CREDENTIALS.email,
-    role: 'management',
+    role: {
+      key: 'management',
+      name: 'Management',
+      color: '#0f766e',
+    },
+    permissions: ['dashboard.view', 'sidebar.view'],
   },
   exams: {
     id: 'demo-exams',
     name: 'Demo Exams',
     email: DEMO_CREDENTIALS.email,
-    role: 'exams',
+    role: {
+      key: 'exams',
+      name: 'Exams office',
+      color: '#dc2626',
+    },
+    permissions: ['dashboard.view', 'sidebar.view'],
   },
 })
 

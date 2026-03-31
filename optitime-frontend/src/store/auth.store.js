@@ -29,13 +29,57 @@ function saveUser(user) {
   }
 }
 
+function normalizePermissions(permissions) {
+  if (!Array.isArray(permissions)) return []
+  return [...new Set(permissions.filter((permission) => typeof permission === 'string'))]
+}
+
+function normalizeUser(userData) {
+  if (!userData || typeof userData !== 'object') return null
+
+  const rawRole = userData.role
+  const role =
+    rawRole && typeof rawRole === 'object'
+      ? {
+          key: rawRole.key ?? 'unknown',
+          name: rawRole.name ?? rawRole.key ?? 'Unknown',
+          color: rawRole.color ?? '#334155',
+        }
+      : {
+          key: typeof rawRole === 'string' ? rawRole : 'unknown',
+          name: typeof rawRole === 'string' ? rawRole : 'Unknown',
+          color: '#334155',
+        }
+
+  return {
+    ...userData,
+    role,
+    permissions: normalizePermissions(userData.permissions),
+  }
+}
+
 export const useAuthStore = defineStore('auth', () => {
-  const user = ref(loadSavedUser())
+  const user = ref(normalizeUser(loadSavedUser()))
   const isAuthenticated = computed(() => Boolean(user.value))
+  const role = computed(() => user.value?.role ?? null)
+  const roleKey = computed(() => role.value?.key ?? null)
+  const roleColor = computed(() => role.value?.color ?? '#334155')
+  const permissions = computed(() => user.value?.permissions ?? [])
 
   function setUser(userData) {
-    user.value = userData
-    saveUser(userData)
+    const normalizedUser = normalizeUser(userData)
+    user.value = normalizedUser
+    saveUser(normalizedUser)
+  }
+
+  function hasPermission(permission) {
+    if (!permission) return true
+    return permissions.value.includes(permission)
+  }
+
+  function hasAnyPermission(permissionList) {
+    if (!Array.isArray(permissionList) || permissionList.length === 0) return true
+    return permissionList.some((permission) => hasPermission(permission))
   }
 
   async function login(credentials) {
@@ -57,7 +101,13 @@ export const useAuthStore = defineStore('auth', () => {
   return {
     user,
     isAuthenticated,
+    role,
+    roleKey,
+    roleColor,
+    permissions,
     setUser,
+    hasPermission,
+    hasAnyPermission,
     login,
     loginAsDemoRole,
     logout,

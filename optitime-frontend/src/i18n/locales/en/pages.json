@@ -57,7 +57,11 @@
       "title": "Dashboard placeholder",
       "subtitle": "Auth is working. This page only exists as a protected landing point after login.",
       "role": "Role",
-      "email": "Email"
+      "email": "Email",
+      "permissionCount": "Granted permissions: {count}"
+    },
+    "sidebar": {
+      "empty": "No navigation items available for this role."
     }
   }
 }
