@@ -1,0 +1,6 @@
+optitime-frontend-copy
+optitime-frontend/node_modules
+optitime-frontend/dist
+optitime-frontend/dist-ssr
+optitime-frontend/.env.local
+optitime-frontend/.env.*.local

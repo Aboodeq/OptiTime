@@ -1,0 +1,15 @@
+{
+  "routes": {
+    "login": "Login",
+    "dashboard": "Dashboard",
+    "rolesManagement": "Roles management",
+    "organizationManagement": "Organization",
+    "usersManagement": "Users management",
+    "instructorsManagement": "Instructors management",
+    "studentsManagement": "Students management",
+    "specialitiesManagement": "Specialities management",
+    "semestersManagement": "Semesters management",
+    "constraintsManagement": "Constraints management",
+    "userSettings": "User settings"
+  }
+}

@@ -1,0 +1,617 @@
+{
+  "pages": {
+    "login": {
+      "leftTitle": "نظام جدولة الموارد التعليمية الذكي",
+      "leftSubtitle": "منصة متكاملة لإدارة الجداول الدراسية وتوزيع الموارد الأكاديمية بكفاءة عالية وبدون تعارضات.",
+      "welcomeTitle": "مرحباً بعودتك",
+      "welcomeSubtitle": "سجّل دخولك للوصول إلى لوحة التحكم",
+      "emailLabel": "البريد الإلكتروني",
+      "emailPlaceholder": "example\\@university.edu",
+      "passwordLabel": "كلمة المرور",
+      "passwordPlaceholder": "أدخل كلمة المرور",
+      "forgotPassword": "نسيت كلمة المرور؟",
+      "login": "تسجيل الدخول",
+      "verifying": "جارٍ التحقق...",
+      "quickDemo": "دخول سريع للتجربة",
+      "footer": "جامعة الشام الخاصة - كلية الهندسة المعلوماتية",
+      "errors": {
+        "emailRequired": "يرجى إدخال البريد الإلكتروني",
+        "emailInvalid": "يرجى إدخال بريد إلكتروني صحيح",
+        "passwordRequired": "يرجى إدخال كلمة المرور",
+        "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+      },
+      "toasts": {
+        "success": "تم تسجيل الدخول بنجاح",
+        "invalidCredentials": "بيانات الدخول غير صحيحة"
+      },
+      "features": {
+        "autoScheduling": {
+          "title": "جدولة ذكية تلقائية",
+          "desc": "توليد الجداول خلال ثوانٍ بدون تعارضات"
+        },
+        "zeroConflicts": {
+          "title": "صفر تعارضات مضمون",
+          "desc": "خوارزميات متقدمة تضمن توافقاً عالياً"
+        },
+        "instantNotifications": {
+          "title": "إشعارات لحظية",
+          "desc": "تنبيهات فورية عند أي تغيير في الجدول"
+        }
+      },
+      "stats": {
+        "generationTime": {
+          "value": "60ث",
+          "label": "وقت التوليد"
+        },
+        "conflictFree": {
+          "value": "100%",
+          "label": "بدون تعارض"
+        },
+        "concurrentUsers": {
+          "value": "200+",
+          "label": "مستخدم متزامن"
+        }
+      }
+    },
+    "dashboard": {
+      "title": "لوحة تحكم تجريبية",
+      "subtitle": "المصادقة تعمل. هذه الصفحة موجودة فقط كنقطة وصول محمية بعد تسجيل الدخول.",
+      "role": "الدور",
+      "email": "البريد الإلكتروني",
+      "permissionCount": "الصلاحيات الممنوحة: {count}"
+    },
+    "rolesManagement": {
+      "title": "إدارة الأدوار",
+      "subtitle": "أنشئ قوالب الأدوار وحدد الصلاحيات الدقيقة لكل دور.",
+      "table": {
+        "role": "الدور",
+        "identifier": "المعرف",
+        "permissions": "الصلاحيات",
+        "actions": "الإجراءات",
+        "total": "الإجمالي {count}",
+        "empty": "لا توجد أدوار"
+      },
+      "stats": {
+        "adminRoles": "أدوار وصول الإدارة"
+      },
+      "form": {
+        "createTitle": "إنشاء دور",
+        "editTitle": "تعديل دور",
+        "code": "رمز الدور",
+        "nameAr": "اسم الدور (عربي)",
+        "nameEn": "اسم الدور (إنجليزي)",
+        "color": "لون الشريط الجانبي",
+        "description": "الوصف",
+        "isActive": "دور نشط",
+        "permissions": "الصلاحيات",
+        "dialogHint": "استخدم زر دور جديد أو إجراء التعديل لفتح نافذة نموذج الدور."
+      },
+      "actions": {
+        "newRole": "دور جديد",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "save": "حفظ الدور"
+      },
+      "confirmDelete": {
+        "title": "حذف الدور",
+        "message": "هل أنت متأكد من حذف \"{role}\"؟ لا يمكن التراجع عن هذا الإجراء.",
+        "confirm": "حذف",
+        "cancel": "إلغاء"
+      }
+    },
+    "organization": {
+      "title": "الهيكل التنظيمي",
+      "subtitle": "إدارة الكليات والأقسام وفق صلاحيات دقيقة مبنية على الدور.",
+      "stats": {
+        "faculties": "الكليات",
+        "departments": "الأقسام",
+        "activeFaculties": "الكليات النشطة",
+        "activeDepartments": "الأقسام النشطة"
+      },
+      "faculties": {
+        "faculty": "الكلية",
+        "identifier": "المعرف",
+        "departments": "الأقسام",
+        "graduationHours": "ساعات التخرج",
+        "studyingLevel": "سنوات الدراسة",
+        "status": "الحالة",
+        "actions": "الإجراءات",
+        "empty": "لا توجد كليات"
+      },
+      "cards": {
+        "departmentsPreview": "معاينة الأقسام",
+        "moreDepartments": "+{count} أقسام إضافية",
+        "noDepartments": "لا توجد أقسام في هذه الكلية"
+      },
+      "departments": {
+        "title": "الأقسام",
+        "department": "القسم",
+        "identifier": "المعرف",
+        "status": "الحالة",
+        "actions": "الإجراءات",
+        "empty": "لا توجد أقسام"
+      },
+      "entities": {
+        "faculty": "كلية",
+        "department": "قسم"
+      },
+      "status": {
+        "active": "نشط",
+        "inactive": "غير نشط"
+      },
+      "form": {
+        "createFacultyTitle": "إنشاء كلية",
+        "editFacultyTitle": "تعديل كلية",
+        "createDepartmentTitle": "إنشاء قسم",
+        "editDepartmentTitle": "تعديل قسم",
+        "code": "الرمز",
+        "nameAr": "الاسم (عربي)",
+        "nameEn": "الاسم (إنجليزي)",
+        "graduationHours": "ساعات التخرج",
+        "studyingLevel": "المستوى الدراسي (سنوات)",
+        "color": "لون الكلية",
+        "icon": "الأيقونة",
+        "iconHint": "اسحب وأفلت الأيقونة أو اضغط للرفع",
+        "iconAccepted": "الامتدادات المدعومة: SVG, PNG",
+        "iconClear": "إزالة الأيقونة",
+        "isActive": "نشط"
+      },
+      "actions": {
+        "newFaculty": "كلية جديدة",
+        "newDepartment": "قسم جديد",
+        "viewDepartments": "عرض الأقسام",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "saveFaculty": "حفظ الكلية",
+        "saveDepartment": "حفظ القسم"
+      },
+      "confirmDelete": {
+        "title": "حذف عنصر",
+        "message": "هل أنت متأكد من حذف هذا {type}: \"{name}\"؟",
+        "confirm": "حذف",
+        "cancel": "إلغاء"
+      }
+    },
+    "usersManagement": {
+      "title": "إدارة المستخدمين",
+      "subtitle": "إدارة حسابات الإدارة والموظفين فقط. الطلاب والمدرسون مستثنون.",
+      "table": {
+        "user": "المستخدم",
+        "faculty": "الكلية",
+        "role": "الدور",
+        "department": "القسم",
+        "status": "الحالة",
+        "actions": "الإجراءات",
+        "empty": "لا يوجد مستخدمون"
+      },
+      "stats": {
+        "totalUsers": "إجمالي المستخدمين",
+        "activeUsers": "المستخدمون النشطون",
+        "inactiveUsers": "المستخدمون غير النشطين"
+      },
+      "status": {
+        "active": "نشط",
+        "inactive": "غير نشط"
+      },
+      "form": {
+        "createTitle": "إنشاء مستخدم",
+        "editTitle": "تعديل مستخدم",
+        "name": "الاسم الكامل",
+        "email": "البريد الإلكتروني",
+        "password": "كلمة المرور",
+        "faculty": "الكلية",
+        "facultyPlaceholder": "اختر الكلية",
+        "noFacultyFound": "لا توجد كلية مطابقة",
+        "role": "الدور",
+        "department": "القسم",
+        "departmentPlaceholder": "اختر القسم",
+        "noDepartmentFound": "لا يوجد قسم مطابق",
+        "isActive": "حساب نشط"
+      },
+      "actions": {
+        "newUser": "مستخدم جديد",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "save": "حفظ المستخدم"
+      },
+      "confirmDelete": {
+        "title": "حذف المستخدم",
+        "message": "هل أنت متأكد من حذف \"{user}\"؟",
+        "confirm": "حذف",
+        "cancel": "إلغاء"
+      },
+      "errors": {
+        "invalidForm": "يرجى تعبئة جميع الحقول المطلوبة: الاسم، البريد الإلكتروني، كلمة المرور، الكلية، القسم، والدور."
+      }
+    },
+    "instructorsManagement": {
+      "title": "إدارة المدرسين",
+      "subtitle": "إدارة حسابات المدرسين كميزة مستقلة.",
+      "table": {
+        "instructor": "المدرس",
+        "speciality": "الاختصاص",
+        "faculty": "الكلية",
+        "department": "القسم",
+        "workHoursPerWeek": "ساعات العمل/الأسبوع",
+        "status": "الحالة",
+        "actions": "الإجراءات",
+        "empty": "لا يوجد مدرسون"
+      },
+      "stats": {
+        "totalInstructors": "إجمالي المدرسين",
+        "activeInstructors": "المدرسون النشطون",
+        "inactiveInstructors": "المدرسون غير النشطين"
+      },
+      "status": {
+        "active": "نشط",
+        "inactive": "غير نشط"
+      },
+      "form": {
+        "createTitle": "إنشاء مدرس",
+        "editTitle": "تعديل مدرس",
+        "name": "الاسم الكامل",
+        "email": "البريد الإلكتروني",
+        "password": "كلمة المرور",
+        "speciality": "الاختصاص",
+        "specialityPlaceholder": "اختر الاختصاص",
+        "noSpecialityFound": "لا يوجد اختصاص مطابق",
+        "minWorkHoursPerWeek": "الحد الأدنى لساعات العمل/الأسبوع",
+        "maxWorkHoursPerWeek": "الحد الأعلى لساعات العمل/الأسبوع",
+        "faculty": "الكلية",
+        "facultyPlaceholder": "اختر الكلية",
+        "noFacultyFound": "لا توجد كلية مطابقة",
+        "department": "القسم",
+        "departmentPlaceholder": "اختر القسم",
+        "noDepartmentFound": "لا يوجد قسم مطابق",
+        "isActive": "حساب نشط"
+      },
+      "actions": {
+        "newInstructor": "مدرس جديد",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "save": "حفظ المدرس"
+      },
+      "confirmDelete": {
+        "title": "حذف المدرس",
+        "message": "هل أنت متأكد من حذف \"{instructor}\"؟",
+        "confirm": "حذف",
+        "cancel": "إلغاء"
+      },
+      "errors": {
+        "invalidForm": "يرجى تعبئة جميع الحقول المطلوبة والتأكد من صحة حدود ساعات العمل الأسبوعية."
+      }
+    },
+    "studentsManagement": {
+      "title": "إدارة الطلاب",
+      "subtitle": "إدارة حسابات الطلاب مع الساعات المنجزة والمستوى الدراسي.",
+      "table": {
+        "student": "الطالب",
+        "universityNumber": "الرقم الجامعي",
+        "completedHours": "الساعات المنجزة",
+        "yearLevel": "المستوى الدراسي",
+        "studyStatus": "الوضع الدراسي",
+        "faculty": "الكلية",
+        "department": "القسم",
+        "status": "الحالة",
+        "actions": "الإجراءات",
+        "empty": "لا يوجد طلاب"
+      },
+      "stats": {
+        "totalStudents": "إجمالي الطلاب",
+        "activeStudents": "الطلاب النشطون",
+        "inactiveStudents": "الطلاب غير النشطين"
+      },
+      "status": {
+        "active": "نشط",
+        "inactive": "غير نشط"
+      },
+      "studyStatus": {
+        "regular": "منتظم",
+        "suspended": "موقوف",
+        "graduated": "متخرج"
+      },
+      "form": {
+        "createTitle": "إنشاء طالب",
+        "editTitle": "تعديل طالب",
+        "name": "الاسم الكامل",
+        "email": "البريد الإلكتروني",
+        "password": "كلمة المرور",
+        "universityNumber": "الرقم الجامعي",
+        "universityNumberAuto": "يتم توليده تلقائياً عند الإنشاء",
+        "completedHours": "الساعات المنجزة",
+        "yearLevel": "المستوى الدراسي",
+        "yearLevelPlaceholder": "أدخل المستوى (1-6)",
+        "studyStatus": "الوضع الدراسي",
+        "faculty": "الكلية",
+        "facultyPlaceholder": "اختر الكلية",
+        "noFacultyFound": "لا توجد كلية مطابقة",
+        "department": "القسم",
+        "departmentPlaceholder": "اختر القسم",
+        "noDepartmentFound": "لا يوجد قسم مطابق",
+        "isActive": "حساب نشط"
+      },
+      "actions": {
+        "newStudent": "طالب جديد",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "save": "حفظ الطالب"
+      },
+      "confirmDelete": {
+        "title": "حذف الطالب",
+        "message": "هل أنت متأكد من حذف \"{student}\"؟",
+        "confirm": "حذف",
+        "cancel": "إلغاء"
+      },
+      "errors": {
+        "invalidForm": "يرجى تعبئة جميع الحقول المطلوبة والتأكد من صحة الساعات المنجزة والمستوى الدراسي."
+      }
+    },
+    "specialitiesManagement": {
+      "title": "إدارة الاختصاصات",
+      "subtitle": "إدارة الاختصاصات التدريسية المستخدمة في حسابات المدرسين.",
+      "table": {
+        "speciality": "الاختصاص",
+        "code": "الرمز",
+        "status": "الحالة",
+        "actions": "الإجراءات",
+        "empty": "لا توجد اختصاصات"
+      },
+      "stats": {
+        "totalSpecialities": "إجمالي الاختصاصات",
+        "activeSpecialities": "الاختصاصات النشطة",
+        "inactiveSpecialities": "الاختصاصات غير النشطة"
+      },
+      "status": {
+        "active": "نشط",
+        "inactive": "غير نشط"
+      },
+      "form": {
+        "createTitle": "إنشاء اختصاص",
+        "editTitle": "تعديل اختصاص",
+        "code": "الرمز",
+        "nameAr": "اسم الاختصاص (عربي)",
+        "nameEn": "اسم الاختصاص (إنجليزي)",
+        "isActive": "اختصاص نشط"
+      },
+      "actions": {
+        "newSpeciality": "اختصاص جديد",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "save": "حفظ الاختصاص"
+      },
+      "confirmDelete": {
+        "title": "حذف الاختصاص",
+        "message": "هل أنت متأكد من حذف \"{speciality}\"؟",
+        "confirm": "حذف",
+        "cancel": "إلغاء"
+      },
+      "errors": {
+        "invalidForm": "يرجى تعبئة الحقول المطلوبة: الرمز، اسم الاختصاص (عربي)، واسم الاختصاص (إنجليزي)."
+      }
+    },
+    "semestersManagement": {
+      "title": "إدارة الفصول الدراسية",
+      "subtitle": "إدارة الفصول الأكاديمية والنطاقات الزمنية المستخدمة في دورات التخطيط.",
+      "table": {
+        "semester": "الفصل",
+        "academicYear": "العام الأكاديمي",
+        "dateRange": "النطاق الزمني",
+        "status": "الحالة",
+        "actions": "الإجراءات",
+        "empty": "لا توجد فصول دراسية"
+      },
+      "stats": {
+        "totalSemesters": "إجمالي الفصول",
+        "activeSemesters": "الفصول النشطة",
+        "inactiveSemesters": "الفصول غير النشطة"
+      },
+      "status": {
+        "active": "نشط",
+        "inactive": "غير نشط"
+      },
+      "form": {
+        "createTitle": "إنشاء فصل دراسي",
+        "editTitle": "تعديل فصل دراسي",
+        "name": "اسم الفصل",
+        "code": "الرمز",
+        "codePlaceholder": "مثال: 2026-s1",
+        "academicYear": "العام الأكاديمي",
+        "academicYearPlaceholder": "مثال: 2026-2027",
+        "startDate": "تاريخ البدء",
+        "endDate": "تاريخ الانتهاء",
+        "isActive": "فصل نشط"
+      },
+      "actions": {
+        "newSemester": "فصل جديد",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "save": "حفظ الفصل"
+      },
+      "confirmDelete": {
+        "title": "حذف الفصل",
+        "message": "هل أنت متأكد من حذف \"{semester}\"؟",
+        "confirm": "حذف",
+        "cancel": "إلغاء"
+      },
+      "errors": {
+        "invalidForm": "يرجى تعبئة جميع الحقول المطلوبة والتأكد من أن تاريخ البدء لا يأتي بعد تاريخ الانتهاء."
+      }
+    },
+    "constraintsManagement": {
+      "title": "إدارة القيود",
+      "subtitle": "إعدادات القيود العامة لضبط الجدولة الذكية.",
+      "sections": {
+        "general": "إعدادات الوقت",
+        "hardConstraints": "القيود الصارمة",
+        "softConstraints": "القيود المرنة",
+        "studyDays": "أيام الدراسة",
+        "breakTimes": "أوقات الاستراحة",
+        "roomConstraints": "قيود القاعات"
+      },
+      "form": {
+        "dayStart": "بداية اليوم",
+        "dayEnd": "نهاية اليوم",
+        "capacityThreshold": "حد السعة (%)",
+        "slotMinutes": "مدة المحاضرة الافتراضية",
+        "gapMinutes": "الفاصل بالدقائق",
+        "maxDailyLectures": "الحد الأقصى للمحاضرات اليومية"
+      },
+      "formHints": {
+        "dayStart": "أول وقت مسموح بجدولة محاضرة",
+        "dayEnd": "آخر وقت مسموح بجدولة محاضرة",
+        "slotMinutes": "المدة القياسية لكل محاضرة",
+        "gapMinutes": "وقت الراحة الإلزامي بين محاضرتين",
+        "maxDailyLectures": "أقصى عدد محاضرات للمدرس في اليوم"
+      },
+      "actions": {
+        "saveAll": "حفظ جميع الإعدادات",
+        "resetDefaults": "استعادة الافتراضي",
+        "resetUnsaved": "إلغاء غير المحفوظ"
+      },
+      "stats": {
+        "studyDays": "أيام الدراسة"
+      },
+      "panelHints": {
+        "soft": "يُفضّل تطبيقها — قابلة للانتهاك",
+        "hard": "يجب تطبيقها — لا يمكن انتهاكها",
+        "time": "أوقات العمل وفترات الراحة",
+        "studyDays": "تحديد أيام العمل المسموح بها",
+        "room": "قواعد توزيع واستخدام القاعات"
+      },
+      "constraintLabels": {
+        "no_instructor_overlap": "منع تعارض المدرسين",
+        "no_room_overlap": "منع تعارض القاعات",
+        "room_capacity": "احترام سعة القاعة",
+        "lab_for_lab": "مختبر للمواد العملية",
+        "working_hours": "الالتزام بساعات العمل",
+        "instructor_pref": "تفضيلات المدرسين",
+        "load_balance": "توازن الحمل التدريسي",
+        "student_gap": "توزيع جدول الطالب",
+        "avoid_back_to_back": "تجنب المحاضرات المتتالية",
+        "morning_preference": "تفضيل الأوقات الصباحية",
+        "department_proximity": "تقارب محاضرات القسم",
+        "prayer_noon": "استراحة الظهر",
+        "prayer_asr": "استراحة العصر",
+        "lunch_break": "استراحة الغداء",
+        "match_type": "مطابقة نوع القاعة",
+        "room_proximity": "تقارب القاعات",
+        "avoid_floor_scatter": "تجنب تفرق الطوابق",
+        "equipment_match": "مطابقة تجهيزات القاعة",
+        "max_occupancy_threshold": "نسبة الإشغال القصوى المسموحة",
+        "instructor_load": "حمل المدرس",
+        "coordinator_load": "حمل المنسق"
+      },
+      "constraintDescriptions": {
+        "no_instructor_overlap": "لا يُسمح بجدولة مدرس في وقتين متزامنين",
+        "no_room_overlap": "لا يُسمح باستخدام قاعة لمحاضرتين في نفس الوقت",
+        "room_capacity": "عدد الطلاب يجب ألا يتجاوز سعة القاعة",
+        "lab_for_lab": "المواد المختبرية تُجدوَل في مختبرات فقط",
+        "working_hours": "المحاضرات ضمن ساعات العمل المحددة فقط",
+        "instructor_pref": "مراعاة الأيام والأوقات المفضلة للمدرسين",
+        "load_balance": "توزيع المحاضرات بشكل متوازن على الأسبوع",
+        "student_gap": "تجنب تكدس المحاضرات في يوم واحد للطالب",
+        "avoid_back_to_back": "فترة راحة بين المحاضرات للمدرس",
+        "morning_preference": "توزيع المحاضرات في الصباح قدر الإمكان",
+        "department_proximity": "جدولة مقررات القسم في أيام متقاربة",
+        "match_type": "توجيه المواد النظرية لقاعات والعملية لمختبرات",
+        "room_proximity": "تجميع محاضرات القسم في مبنى واحد قدر الإمكان",
+        "avoid_floor_scatter": "تجنب جدولة محاضرات متتالية في طوابق مختلفة",
+        "equipment_match": "جدولة المواد التي تحتاج معدات في قاعات مجهزة",
+        "max_occupancy_threshold": "الحد الأعلى المسموح لاستخدام سعة القاعة"
+      },
+      "days": {
+        "sun": "الأحد",
+        "mon": "الاثنين",
+        "tue": "الثلاثاء",
+        "wed": "الأربعاء",
+        "thu": "الخميس",
+        "fri": "الجمعة",
+        "sat": "السبت"
+      },
+      "errors": {
+        "invalidForm": "يرجى تصحيح الإعدادات غير الصالحة (نطاقات الوقت، الحدود الرقمية، وقيم الحمل الدنيا/العليا)."
+      },
+      "toasts": {
+        "saved": "تم حفظ القيود",
+        "defaultsReset": "تمت استعادة الإعدادات الافتراضية",
+        "exportQueued": "تم تجهيز طلب الطباعة/التصدير"
+      }
+    },
+    "userSettings": {
+      "title": "إعدادات المستخدم",
+      "subtitle": "إدارة الملف الشخصي وكلمة المرور والإشعارات والنسخ الاحتياطي.",
+      "sections": {
+        "profile": {
+          "title": "إدارة الملف الشخصي",
+          "subtitle": "تحديث معلومات العرض الخاصة بك."
+        },
+        "security": {
+          "title": "الأمان",
+          "subtitle": "تحديث كلمة مرور الحساب."
+        },
+        "notifications": {
+          "title": "إعدادات الإشعارات",
+          "subtitle": "اختر كيف ومتى تصلك التنبيهات."
+        },
+        "backup": {
+          "title": "النسخ الاحتياطي للنظام",
+          "subtitle": "تصدير احتياطي متاح للمسؤول فقط."
+        }
+      },
+      "profile": {
+        "avatar": "الصورة الشخصية",
+        "avatarHint": "ارفع الصورة الشخصية أو اسحبها هنا",
+        "avatarAccepted": "الامتدادات المدعومة: JPG, JPEG, PNG, WEBP, SVG",
+        "avatarClear": "إزالة الصورة",
+        "name": "الاسم الكامل",
+        "namePlaceholder": "أدخل الاسم الكامل",
+        "email": "البريد الإلكتروني",
+        "emailPlaceholder": "أدخل البريد الإلكتروني"
+      },
+      "security": {
+        "currentPassword": "كلمة المرور الحالية",
+        "newPassword": "كلمة المرور الجديدة",
+        "confirmPassword": "تأكيد كلمة المرور الجديدة"
+      },
+      "notifications": {
+        "emailScheduleUpdates": "إيميلات تحديثات الجدول",
+        "emailScheduleUpdatesHint": "استلام بريد عند حدوث تغييرات في جدول المحاضرات.",
+        "emailReminders": "إيميلات التذكير",
+        "emailRemindersHint": "استلام تذكيرات قبل المواعيد المهمة للجدولة.",
+        "pushAnnouncements": "إعلانات فورية",
+        "pushAnnouncementsHint": "استلام رسائل داخل التطبيق للتحديثات العامة.",
+        "pushSystemAlerts": "تنبيهات النظام الفورية",
+        "pushSystemAlertsHint": "استلام تحذيرات وتنبيهات النظام الحرجة.",
+        "weeklyDigest": "ملخص أسبوعي",
+        "weeklyDigestHint": "استلام ملخص أسبوعي لنشاط النظام."
+      },
+      "backup": {
+        "note": "تصدير نسخة JSON محلية من الإعدادات والبيانات الوصفية الحالية."
+      },
+      "actions": {
+        "saveProfile": "حفظ الملف الشخصي",
+        "updatePassword": "تحديث كلمة المرور",
+        "saveNotifications": "حفظ الإشعارات",
+        "createBackup": "إنشاء نسخة احتياطية"
+      },
+      "errors": {
+        "profileInvalid": "يرجى إدخال اسم كامل وبريد إلكتروني صالح.",
+        "passwordMismatch": "كلمة المرور الجديدة وتأكيدها غير متطابقين.",
+        "invalidCurrentPassword": "كلمة المرور الحالية غير صحيحة.",
+        "weakPassword": "يجب أن تكون كلمة المرور الجديدة 8 أحرف على الأقل.",
+        "samePassword": "يجب أن تختلف كلمة المرور الجديدة عن الحالية.",
+        "passwordUpdateFailed": "تعذر تحديث كلمة المرور.",
+        "notificationsSaveFailed": "تعذر حفظ إعدادات الإشعارات."
+      },
+      "toasts": {
+        "profileSaved": "تم تحديث الملف الشخصي",
+        "passwordUpdated": "تم تحديث كلمة المرور",
+        "notificationsSaved": "تم حفظ إعدادات الإشعارات",
+        "backupCreated": "تم إنشاء النسخة الاحتياطية"
+      }
+    },
+    "sidebar": {
+      "empty": "لا توجد عناصر تنقل متاحة لهذا الدور."
+    }
+  }
+}

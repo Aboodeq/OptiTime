@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "sidebar": {
+      "collapse": "طي القائمة",
+      "open": "فتح القائمة"
+    },
+    "topbar": {
+      "quickSearch": "بحث سريع...",
+      "languageToggle": "تبديل اللغة"
+    },
+    "sections": {
+      "home": "الرئيسية",
+      "system": "النظام"
+    },
+    "items": {
+      "organization": "الهيكل التنظيمي"
+    }
+  }
+}

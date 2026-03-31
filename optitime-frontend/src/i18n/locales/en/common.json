@@ -1,0 +1,12 @@
+{
+  "common": {
+    "appName": "OptiTime",
+    "language": "Language",
+    "arabic": "Arabic",
+    "english": "English",
+    "actions": {
+      "logout": "Logout",
+      "close": "Close"
+    }
+  }
+}
