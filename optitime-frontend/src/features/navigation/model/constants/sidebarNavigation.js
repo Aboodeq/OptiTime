@@ -10,6 +10,13 @@ export const BASE_SIDEBAR_SECTIONS = Object.freeze([
         labelKey: 'routes.dashboard',
         permissions: ['dashboard.view'],
       },
+      {
+        id: 'user-settings',
+        routeName: 'user-settings',
+        icon: 'bi bi-gear-fill',
+        labelKey: 'routes.userSettings',
+        permissions: ['settings.view'],
+      },
     ],
   },
   {

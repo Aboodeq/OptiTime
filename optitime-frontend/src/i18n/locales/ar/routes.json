@@ -9,6 +9,7 @@
     "studentsManagement": "إدارة الطلاب",
     "specialitiesManagement": "إدارة الاختصاصات",
     "semestersManagement": "إدارة الفصول الدراسية",
-    "constraintsManagement": "إدارة القيود"
+    "constraintsManagement": "إدارة القيود",
+    "userSettings": "إعدادات المستخدم"
   }
 }

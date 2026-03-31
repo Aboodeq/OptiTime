@@ -11,6 +11,7 @@ import {
   semestersManagementRoute,
   specialitiesManagementRoute,
   studentsManagementRoute,
+  userSettingsRoute,
   usersManagementRoute,
 } from './routes/public.routes'
 
@@ -27,6 +28,7 @@ const router = createRouter({
     specialitiesManagementRoute,
     semestersManagementRoute,
     constraintsManagementRoute,
+    userSettingsRoute,
     ...fallbackRoutes,
   ],
 })

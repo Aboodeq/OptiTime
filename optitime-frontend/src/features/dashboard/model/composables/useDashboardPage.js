@@ -15,6 +15,7 @@ export function useDashboardPage() {
   const isMobile = ref(false)
   const isMobileSidebarOpen = ref(false)
   const userInitial = computed(() => user.value?.name?.trim()?.charAt(0) || '?')
+  const userAvatar = computed(() => user.value?.avatar_url ?? '')
 
   function updateViewportState() {
     if (typeof window === 'undefined') return
@@ -63,6 +64,7 @@ export function useDashboardPage() {
     roleKey,
     visibleSections,
     userInitial,
+    userAvatar,
     isCollapsed,
     isMobile,
     isMobileSidebarOpen,

@@ -11,6 +11,7 @@
           :mobile-open="isMobileSidebarOpen"
           :user-name="user?.name"
           :user-initial="userInitial"
+          :user-avatar="userAvatar"
           @toggle-collapse="toggleSidebarCollapse"
           @logout="handleLogout"
           @navigate="handleSidebarNavigate"
@@ -23,6 +24,7 @@
           :page-title="pageTitle"
           :role-color="roleColor"
           :user-initial="userInitial"
+          :user-avatar="userAvatar"
           :is-mobile="isMobile"
           @open-sidebar="openMobileSidebar"
         />
@@ -69,6 +71,7 @@ const {
   roleKey,
   visibleSections,
   userInitial,
+  userAvatar,
   isCollapsed,
   isMobile,
   isMobileSidebarOpen,

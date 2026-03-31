@@ -100,6 +100,17 @@ export const constraintsManagementRoute = {
   },
 }
 
+export const userSettingsRoute = {
+  path: '/settings',
+  name: 'user-settings',
+  component: () => import('@/features/user-settings/ui/pages/UserSettingsPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['settings.view'],
+    titleKey: 'routes.userSettings',
+  },
+}
+
 export const fallbackRoutes = [
   { path: '/', redirect: '/login' },
   { path: '/:pathMatch(.*)*', redirect: '/login' },
