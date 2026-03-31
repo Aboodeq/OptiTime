@@ -31,44 +31,28 @@
         @update:model-value="$emit('update:nameEn', $event)"
       />
 
-      <div>
-        <label class="form-label fw-semibold">{{ t('pages.rolesManagement.form.color') }}</label>
-        <div class="d-flex align-items-center gap-2">
-          <input
-            :value="draft.sidebar_color"
-            type="color"
-            class="form-control form-control-color"
-            :disabled="!canEditRole"
-            @input="$emit('update:sidebarColor', $event.target.value)"
-          />
-          <span class="small text-secondary">{{ draft.sidebar_color }}</span>
-        </div>
-      </div>
+      <AppColorField
+        :label="t('pages.rolesManagement.form.color')"
+        :model-value="draft.sidebar_color"
+        :disabled="!canEditRole"
+        @update:model-value="$emit('update:sidebarColor', $event)"
+      />
 
-      <div>
-        <label class="form-label fw-semibold">{{ t('pages.rolesManagement.form.description') }}</label>
-        <textarea
-          class="form-control"
-          rows="3"
-          :value="draft.description"
-          :disabled="!canEditRole"
-          @input="$emit('update:description', $event.target.value)"
-        ></textarea>
-      </div>
+      <AppTextareaField
+        input-id="role-description"
+        :label="t('pages.rolesManagement.form.description')"
+        :model-value="draft.description"
+        :disabled="!canEditRole"
+        @update:model-value="$emit('update:description', $event)"
+      />
 
-      <div class="form-check">
-        <input
-          id="role-is-active"
-          class="form-check-input"
-          type="checkbox"
-          :checked="draft.is_active"
-          :disabled="!canEditRole"
-          @change="$emit('update:isActive', $event.target.checked)"
-        />
-        <label for="role-is-active" class="form-check-label">
-          {{ t('pages.rolesManagement.form.isActive') }}
-        </label>
-      </div>
+      <AppCheckboxField
+        input-id="role-is-active"
+        :label="t('pages.rolesManagement.form.isActive')"
+        :model-value="draft.is_active"
+        :disabled="!canEditRole"
+        @update:model-value="$emit('update:isActive', $event)"
+      />
 
       <div>
         <label class="form-label fw-semibold">{{ t('pages.rolesManagement.form.permissions') }}</label>
@@ -103,8 +87,11 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import AppButton from '@/components/common/AppButton.vue'
+import AppCheckboxField from '@/components/common/AppCheckboxField.vue'
+import AppColorField from '@/components/common/AppColorField.vue'
 import AppDialog from '@/components/common/AppDialog.vue'
 import AppInputField from '@/components/common/AppInputField.vue'
+import AppTextareaField from '@/components/common/AppTextareaField.vue'
 
 const props = defineProps({
   open: { type: Boolean, default: false },

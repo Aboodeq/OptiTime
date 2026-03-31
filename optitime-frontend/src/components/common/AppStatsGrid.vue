@@ -33,10 +33,19 @@ defineProps({
   border: 1px solid #eef0f7;
   border-radius: 14px;
   padding: 0.85rem 1rem;
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
   display: grid;
   grid-template-columns: auto 1fr;
   align-items: center;
   gap: 0.75rem;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.app-stats-grid__card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.12);
 }
 
 .app-stats-grid__top {

@@ -22,6 +22,10 @@ const DEMO_USERS = Object.freeze({
       'roles.update',
       'roles.delete',
       'roles.view',
+      'organization.create',
+      'organization.update',
+      'organization.delete',
+      'organization.view',
     ],
   },
   coordinator: {
