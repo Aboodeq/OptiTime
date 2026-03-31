@@ -89,6 +89,17 @@ export const semestersManagementRoute = {
   },
 }
 
+export const constraintsManagementRoute = {
+  path: '/admin/constraints',
+  name: 'constraints-management',
+  component: () => import('@/features/constraints/ui/pages/ConstraintsManagementPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['constraints.view'],
+    titleKey: 'routes.constraintsManagement',
+  },
+}
+
 export const fallbackRoutes = [
   { path: '/', redirect: '/login' },
   { path: '/:pathMatch(.*)*', redirect: '/login' },

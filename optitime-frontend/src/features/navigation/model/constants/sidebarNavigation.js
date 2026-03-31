@@ -65,6 +65,13 @@ export const BASE_SIDEBAR_SECTIONS = Object.freeze([
         labelKey: 'routes.semestersManagement',
         permissions: ['semesters.view'],
       },
+      {
+        id: 'constraints-management',
+        routeName: 'constraints-management',
+        icon: 'bi bi-sliders',
+        labelKey: 'routes.constraintsManagement',
+        permissions: ['constraints.view'],
+      },
     ],
   },
 ])

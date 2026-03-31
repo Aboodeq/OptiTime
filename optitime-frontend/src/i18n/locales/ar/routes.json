@@ -8,6 +8,7 @@
     "instructorsManagement": "إدارة المدرسين",
     "studentsManagement": "إدارة الطلاب",
     "specialitiesManagement": "إدارة الاختصاصات",
-    "semestersManagement": "إدارة الفصول الدراسية"
+    "semestersManagement": "إدارة الفصول الدراسية",
+    "constraintsManagement": "إدارة القيود"
   }
 }

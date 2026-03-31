@@ -152,6 +152,15 @@ defineEmits(['update:modelValue', 'focus', 'blur', 'toggle-visibility'])
   color: #c0c5cc;
 }
 
+.app-input-field__control[type='time']::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+.app-input-field__control[type='time'] {
+  appearance: textfield;
+}
+
 .app-input-field__toggle {
   color: #9ca3af;
   padding: 0;

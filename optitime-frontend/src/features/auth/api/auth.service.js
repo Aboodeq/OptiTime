@@ -31,6 +31,7 @@ const DEMO_USERS = Object.freeze({
       'students.manage',
       'specialities.manage',
       'semesters.manage',
+      'constraints.manage',
     ],
   },
   coordinator: {
@@ -82,6 +83,7 @@ const DEMO_USERS = Object.freeze({
       'instructors.view',
       'students.view',
       'specialities.view',
+      'constraints.view',
     ],
   },
   exams: {

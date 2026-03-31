@@ -10,6 +10,7 @@ const AVAILABLE_PERMISSIONS = Object.freeze([
   'schedule.generate',
   'reports.view',
   'semesters.manage',
+  'constraints.manage',
 ])
 
 const INITIAL_ROLES = Object.freeze([

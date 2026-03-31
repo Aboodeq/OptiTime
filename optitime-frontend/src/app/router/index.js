@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/store/auth.store'
 import {
+  constraintsManagementRoute,
   dashboardRoute,
   fallbackRoutes,
   instructorsManagementRoute,
@@ -25,6 +26,7 @@ const router = createRouter({
     studentsManagementRoute,
     specialitiesManagementRoute,
     semestersManagementRoute,
+    constraintsManagementRoute,
     ...fallbackRoutes,
   ],
 })
