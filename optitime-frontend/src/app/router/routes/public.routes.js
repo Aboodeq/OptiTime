@@ -45,6 +45,28 @@ export const usersManagementRoute = {
   },
 }
 
+export const instructorsManagementRoute = {
+  path: '/admin/instructors',
+  name: 'instructors-management',
+  component: () => import('@/features/instructors/ui/pages/InstructorsManagementPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['instructors.view'],
+    titleKey: 'routes.instructorsManagement',
+  },
+}
+
+export const specialitiesManagementRoute = {
+  path: '/admin/specialities',
+  name: 'specialities-management',
+  component: () => import('@/features/specialities/ui/pages/SpecialitiesManagementPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['specialities.view'],
+    titleKey: 'routes.specialitiesManagement',
+  },
+}
+
 export const fallbackRoutes = [
   { path: '/', redirect: '/login' },
   { path: '/:pathMatch(.*)*', redirect: '/login' },

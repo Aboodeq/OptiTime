@@ -49,6 +49,22 @@ function normalizePermissions(permissions) {
       if (permission === 'users.manage') {
         return ['users.create', 'users.update', 'users.delete', 'users.view']
       }
+      if (permission === 'instructors.manage') {
+        return [
+          'instructors.create',
+          'instructors.update',
+          'instructors.delete',
+          'instructors.view',
+        ]
+      }
+      if (permission === 'specialities.manage') {
+        return [
+          'specialities.create',
+          'specialities.update',
+          'specialities.delete',
+          'specialities.view',
+        ]
+      }
       if (permission === 'roled.delete') {
         return ['roles.delete']
       }

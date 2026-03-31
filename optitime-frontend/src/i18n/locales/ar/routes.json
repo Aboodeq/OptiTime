@@ -4,6 +4,8 @@
     "dashboard": "لوحة التحكم",
     "rolesManagement": "إدارة الأدوار",
     "organizationManagement": "الهيكل التنظيمي",
-    "usersManagement": "إدارة المستخدمين"
+    "usersManagement": "إدارة المستخدمين",
+    "instructorsManagement": "إدارة المدرسين",
+    "specialitiesManagement": "إدارة الاختصاصات"
   }
 }

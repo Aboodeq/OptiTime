@@ -37,6 +37,20 @@ export const BASE_SIDEBAR_SECTIONS = Object.freeze([
         labelKey: 'routes.usersManagement',
         permissions: ['users.view'],
       },
+      {
+        id: 'instructors-management',
+        routeName: 'instructors-management',
+        icon: 'bi bi-mortarboard-fill',
+        labelKey: 'routes.instructorsManagement',
+        permissions: ['instructors.view'],
+      },
+      {
+        id: 'specialities-management',
+        routeName: 'specialities-management',
+        icon: 'bi bi-bookmarks-fill',
+        labelKey: 'routes.specialitiesManagement',
+        permissions: ['specialities.view'],
+      },
     ],
   },
 ])

@@ -3,9 +3,11 @@ import { useAuthStore } from '@/store/auth.store'
 import {
   dashboardRoute,
   fallbackRoutes,
+  instructorsManagementRoute,
   loginRoute,
   organizationManagementRoute,
   rolesManagementRoute,
+  specialitiesManagementRoute,
   usersManagementRoute,
 } from './routes/public.routes'
 
@@ -17,6 +19,8 @@ const router = createRouter({
     rolesManagementRoute,
     organizationManagementRoute,
     usersManagementRoute,
+    instructorsManagementRoute,
+    specialitiesManagementRoute,
     ...fallbackRoutes,
   ],
 })

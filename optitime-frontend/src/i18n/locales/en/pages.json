@@ -220,6 +220,106 @@
         "invalidForm": "Please complete all required fields: name, email, password, faculty, department, and role."
       }
     },
+    "instructorsManagement": {
+      "title": "Instructors management",
+      "subtitle": "Manage instructor accounts as a dedicated feature.",
+      "table": {
+        "instructor": "Instructor",
+        "speciality": "Speciality",
+        "faculty": "Faculty",
+        "department": "Department",
+        "workHoursPerWeek": "Work hours/week",
+        "status": "Status",
+        "actions": "Actions",
+        "empty": "No instructors found"
+      },
+      "stats": {
+        "totalInstructors": "Total instructors",
+        "activeInstructors": "Active instructors",
+        "inactiveInstructors": "Inactive instructors"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "form": {
+        "createTitle": "Create instructor",
+        "editTitle": "Edit instructor",
+        "name": "Full name",
+        "email": "Email",
+        "password": "Password",
+        "speciality": "Speciality",
+        "specialityPlaceholder": "Select speciality",
+        "noSpecialityFound": "No matching speciality",
+        "minWorkHoursPerWeek": "Min work hours/week",
+        "maxWorkHoursPerWeek": "Max work hours/week",
+        "faculty": "Faculty",
+        "facultyPlaceholder": "Select faculty",
+        "noFacultyFound": "No matching faculty",
+        "department": "Department",
+        "departmentPlaceholder": "Select department",
+        "noDepartmentFound": "No matching department",
+        "isActive": "Active account"
+      },
+      "actions": {
+        "newInstructor": "New instructor",
+        "edit": "Edit",
+        "delete": "Delete",
+        "save": "Save instructor"
+      },
+      "confirmDelete": {
+        "title": "Delete instructor",
+        "message": "Are you sure you want to delete \"{instructor}\"?",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "errors": {
+        "invalidForm": "Please complete all required fields and ensure min/max weekly work hours are valid."
+      }
+    },
+    "specialitiesManagement": {
+      "title": "Specialities management",
+      "subtitle": "Manage teaching specialities used by instructor accounts.",
+      "table": {
+        "speciality": "Speciality",
+        "code": "Code",
+        "status": "Status",
+        "actions": "Actions",
+        "empty": "No specialities found"
+      },
+      "stats": {
+        "totalSpecialities": "Total specialities",
+        "activeSpecialities": "Active specialities",
+        "inactiveSpecialities": "Inactive specialities"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "form": {
+        "createTitle": "Create speciality",
+        "editTitle": "Edit speciality",
+        "code": "Code",
+        "nameAr": "Speciality name (Arabic)",
+        "nameEn": "Speciality name (English)",
+        "isActive": "Active speciality"
+      },
+      "actions": {
+        "newSpeciality": "New speciality",
+        "edit": "Edit",
+        "delete": "Delete",
+        "save": "Save speciality"
+      },
+      "confirmDelete": {
+        "title": "Delete speciality",
+        "message": "Are you sure you want to delete \"{speciality}\"?",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "errors": {
+        "invalidForm": "Please complete required fields: code, speciality name (Arabic), and speciality name (English)."
+      }
+    },
     "sidebar": {
       "empty": "No navigation items available for this role."
     }
