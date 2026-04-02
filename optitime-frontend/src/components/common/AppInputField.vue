@@ -18,21 +18,23 @@
         @focus="$emit('focus')"
         @blur="$emit('blur')"
       />
-      <button
+      <AppIconButton
         v-if="revealable"
         class="app-input-field__toggle"
-        type="button"
+        :icon="revealed ? 'bi bi-eye-slash' : 'bi bi-eye'"
+        variant="neutral"
+        size="sm"
         :disabled="disabled"
         @click="$emit('toggle-visibility')"
-      >
-        <i :class="revealed ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
-      </button>
+      />
     </div>
     <div v-if="error" class="app-input-field__error">{{ error }}</div>
   </div>
 </template>
 
 <script setup>
+import AppIconButton from '@/components/common/AppIconButton.vue'
+
 defineProps({
   inputId: {
     type: String,
@@ -150,18 +152,26 @@ defineEmits(['update:modelValue', 'focus', 'blur', 'toggle-visibility'])
   color: #c0c5cc;
 }
 
+.app-input-field__control[type='time']::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+.app-input-field__control[type='time'] {
+  appearance: textfield;
+}
+
 .app-input-field__toggle {
-  background: none;
-  border: none;
   color: #9ca3af;
-  cursor: pointer;
   padding: 0;
-  font-size: 15px;
-  transition: color 0.2s ease;
+  border-color: transparent;
+  background: transparent;
 }
 
 .app-input-field__toggle:hover:not(:disabled) {
   color: #4361ee;
+  border-color: transparent;
+  background: transparent;
 }
 
 .app-input-field__error {
