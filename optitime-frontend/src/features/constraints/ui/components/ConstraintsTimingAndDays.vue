@@ -18,7 +18,7 @@
             icon="bi bi-clock"
             input-type="time"
             :model-value="draft.day_start"
-            @update:model-value="draft.day_start = $event"
+            @update:model-value="updateField('day_start', $event)"
           />
         </AppSettingRow>
 
@@ -33,7 +33,7 @@
             icon="bi bi-clock-fill"
             input-type="time"
             :model-value="draft.day_end"
-            @update:model-value="draft.day_end = $event"
+            @update:model-value="updateField('day_end', $event)"
           />
         </AppSettingRow>
 
@@ -48,7 +48,7 @@
             icon="bi bi-hourglass-split"
             input-type="number"
             :model-value="String(draft.slot_minutes ?? '')"
-            @update:model-value="draft.slot_minutes = toNumber($event)"
+            @update:model-value="updateField('slot_minutes', toNumber($event))"
           />
         </AppSettingRow>
 
@@ -63,7 +63,7 @@
             icon="bi bi-pause-circle"
             input-type="number"
             :model-value="String(draft.gap_minutes ?? '')"
-            @update:model-value="draft.gap_minutes = toNumber($event)"
+            @update:model-value="updateField('gap_minutes', toNumber($event))"
           />
         </AppSettingRow>
 
@@ -78,7 +78,7 @@
             icon="bi bi-list-ol"
             input-type="number"
             :model-value="String(draft.max_daily_lectures ?? '')"
-            @update:model-value="draft.max_daily_lectures = toNumber($event)"
+            @update:model-value="updateField('max_daily_lectures', toNumber($event))"
           />
         </AppSettingRow>
       </div>
@@ -98,25 +98,31 @@
             type="button"
             class="study-day-chip"
             :class="{ 'study-day-chip--active': day.enabled }"
-            @click="day.enabled = !day.enabled"
+            @click="toggleStudyDay(day.value, day.enabled)"
           >
-            <span class="study-day-chip__label">{{ t(`pages.constraintsManagement.days.${day.value}`) }}</span>
+            <span class="study-day-chip__label">{{
+              t(`pages.constraintsManagement.days.${day.value}`)
+            }}</span>
             <small class="study-day-chip__code">{{ day.value }}</small>
           </button>
         </div>
 
         <div class="breaks-block">
-          <h4 class="breaks-block__title">{{ t('pages.constraintsManagement.sections.breakTimes') }}</h4>
+          <h4 class="breaks-block__title">
+            {{ t('pages.constraintsManagement.sections.breakTimes') }}
+          </h4>
           <div v-for="breakTime in draft.break_times" :key="breakTime.key" class="break-row">
             <AppToggleSwitch
               :model-value="breakTime.enabled"
-              @update:model-value="breakTime.enabled = $event"
+              @update:model-value="updateBreakTime(breakTime.key, { enabled: $event })"
             />
             <div class="break-row__content">
               <div class="break-row__name">
                 {{ t(`pages.constraintsManagement.constraintLabels.${breakTime.key}`) }}
               </div>
-              <small class="break-row__range">{{ breakTime.start }} — {{ breakTime.end }}</small>
+              <small class="break-row__range"
+                >{{ breakTime.start }} &mdash; {{ breakTime.end }}</small
+              >
             </div>
             <div class="break-row__inputs">
               <AppInputField
@@ -125,7 +131,7 @@
                 icon="bi bi-clock"
                 input-type="time"
                 :model-value="breakTime.start"
-                @update:model-value="breakTime.start = $event"
+                @update:model-value="updateBreakTime(breakTime.key, { start: $event })"
               />
               <AppInputField
                 :input-id="`break-end-${breakTime.key}`"
@@ -133,7 +139,7 @@
                 icon="bi bi-clock-fill"
                 input-type="time"
                 :model-value="breakTime.end"
-                @update:model-value="breakTime.end = $event"
+                @update:model-value="updateBreakTime(breakTime.key, { end: $event })"
               />
             </div>
           </div>
@@ -151,15 +157,40 @@ import AppSectionPanel from '@/components/common/AppSectionPanel.vue'
 import AppSettingRow from '@/components/common/AppSettingRow.vue'
 import AppToggleSwitch from '@/components/common/AppToggleSwitch.vue'
 
-defineProps({
+const props = defineProps({
   draft: { type: Object, required: true },
 })
+const emit = defineEmits(['update:draft'])
 
 const { t } = useI18n()
 
 function toNumber(value) {
   const parsed = Number(value)
   return Number.isFinite(parsed) ? parsed : 0
+}
+
+function updateField(field, value) {
+  emit('update:draft', {
+    ...props.draft,
+    [field]: value,
+  })
+}
+
+function updateCollectionItem(collectionKey, matchField, matchValue, patch) {
+  emit('update:draft', {
+    ...props.draft,
+    [collectionKey]: props.draft[collectionKey].map((item) =>
+      item[matchField] === matchValue ? { ...item, ...patch } : item,
+    ),
+  })
+}
+
+function toggleStudyDay(dayValue, enabled) {
+  updateCollectionItem('study_days', 'value', dayValue, { enabled: !enabled })
+}
+
+function updateBreakTime(breakKey, patch) {
+  updateCollectionItem('break_times', 'key', breakKey, patch)
 }
 </script>
 

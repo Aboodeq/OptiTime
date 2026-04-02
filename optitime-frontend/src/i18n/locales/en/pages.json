@@ -53,6 +53,54 @@
         }
       }
     },
+    "forgotPassword": {
+      "email": {
+        "title": "Forgot your password?",
+        "subtitle": "Enter your account email and we will send a verification code.",
+        "label": "Email",
+        "placeholder": "example\\@university.edu"
+      },
+      "code": {
+        "title": "Check your email",
+        "subtitle": "Enter the 6-digit code sent to your email address.",
+        "label": "Verification code",
+        "placeholder": "Enter verification code",
+        "resend": "Resend code",
+        "resendDisabled": "Resend available in {seconds}s"
+      },
+      "reset": {
+        "title": "Create a new password",
+        "subtitle": "Choose a strong password for your account.",
+        "passwordLabel": "New password",
+        "passwordPlaceholder": "Enter new password",
+        "confirmPasswordLabel": "Confirm new password",
+        "confirmPasswordPlaceholder": "Re-enter new password"
+      },
+      "actions": {
+        "sendCode": "Send code",
+        "verifyCode": "Verify code",
+        "resetPassword": "Reset password",
+        "backToLogin": "Back to login",
+        "processing": "Processing..."
+      },
+      "errors": {
+        "emailRequired": "Please enter your email",
+        "emailInvalid": "Please enter a valid email address",
+        "codeRequired": "Please enter the verification code",
+        "codeInvalid": "Verification code must be at least 6 characters",
+        "passwordRequired": "Please enter a new password",
+        "passwordMin": "Password must be at least 8 characters",
+        "confirmPasswordRequired": "Please confirm your new password",
+        "passwordMismatch": "Password confirmation does not match",
+        "generic": "Could not complete this step. Please try again."
+      },
+      "toasts": {
+        "codeSent": "Verification code sent to your email",
+        "codeResent": "A new verification code was sent",
+        "codeVerified": "Code verified successfully",
+        "passwordResetSuccess": "Password reset successful. Please sign in."
+      }
+    },
     "dashboard": {
       "title": "Dashboard placeholder",
       "subtitle": "Auth is working. This page only exists as a protected landing point after login.",
@@ -281,6 +329,279 @@
         "invalidForm": "Please complete all required fields and ensure min/max weekly work hours are valid."
       }
     },
+    "instructorSelfAvailability": {
+      "title": "My availability",
+      "subtitle": "Set your preferred teaching days and time window.",
+      "weeklyHoursRange": "Weekly chosen hours: {current}h (required {min}h - {max}h)",
+      "sections": {
+        "days": "Availability grid"
+      },
+      "hints": {
+        "days": "Click cells in the week grid to mark preferred/unavailable slots; break times are locked."
+      },
+      "grid": {
+        "title": "Availability grid",
+        "time": "Time",
+        "preferred": "Preferred",
+        "available": "Available",
+        "unavailable": "Unavailable",
+        "blocked": "Break"
+      },
+      "actions": {
+        "save": "Save my availability"
+      },
+      "errors": {
+        "invalidForm": "Please set valid day intervals within configured working hours and slot boundaries.",
+        "minWeeklyHoursRequired": "You must keep at least {min} chosen hours per week."
+      },
+      "toasts": {
+        "saved": "Your availability has been saved"
+      }
+    },
+    "coordinatorWeeklySchedule": {
+      "title": "Coordinator weekly schedule",
+      "subtitle": "View, edit, and generate the current semester schedule with constraints.",
+      "activeSemester": "Active semester: {name}",
+      "sections": {
+        "board": "Weekly schedule board",
+        "generation": "Generation controls",
+        "kpis": "Key indicators",
+        "requests": "Lecture requests"
+      },
+      "hints": {
+        "board": "Drag and drop sessions between valid slots. Break slots are blocked."
+      },
+      "algorithms": {
+        "genetic": "Genetic algorithm",
+        "geneticDescription": "Faster global search, good for broad optimization.",
+        "backtracking": "Backtracking",
+        "backtrackingDescription": "Step-by-step exact search, stronger on hard constraints."
+      },
+      "actions": {
+        "save": "Save changes",
+        "generate": "Generate schedule",
+        "confirmGenerated": "Confirm and save generated",
+        "cancelPreview": "Cancel preview"
+      },
+      "preview": {
+        "title": "Generated schedule preview",
+        "subtitle": "Review the generated schedule before saving."
+      },
+      "details": {
+        "title": "Lecture details",
+        "course": "Course",
+        "section": "Section",
+        "instructor": "Instructor",
+        "room": "Room",
+        "day": "Day",
+        "time": "Time",
+        "ids": "Reference IDs",
+        "actions": {
+          "requestApology": "Request Apology",
+          "requestMakeup": "Request Makeup"
+        },
+        "studentsTitle": "Assigned students",
+        "students": {
+          "name": "Student",
+          "universityNumber": "University number",
+          "year": "Year",
+          "status": "Status",
+          "empty": "No students assigned to this lecture section.",
+          "searchPlaceholder": "Search students by name"
+        }
+      },
+      "kpis": {
+        "totalSessions": "Total sessions",
+        "roomUtilization": "Room utilization",
+        "instructorBalance": "Instructor load balance",
+        "conflicts": "Conflicts"
+      },
+      "errors": {
+        "noActiveSemester": "No active semester found.",
+        "invalidSchedule": "Schedule has conflicts or invalid slot assignments.",
+        "saveFailed": "Could not save schedule changes.",
+        "generateFailed": "Could not generate a valid schedule."
+      },
+      "toasts": {
+        "saved": "Schedule updated successfully",
+        "generated": "New schedule generated. Please review before saving.",
+        "generatedSaved": "Generated schedule confirmed and saved"
+      },
+      "requests": {
+        "empty": "No lecture requests found.",
+        "columns": {
+          "type": "Type",
+          "instructor": "Instructor",
+          "course": "Course",
+          "lectureDay": "Lecture day",
+          "requestedDate": "Requested date",
+          "status": "Status",
+          "actions": "Actions"
+        },
+        "types": {
+          "apology": "Apology",
+          "makeup": "Makeup"
+        },
+        "statuses": {
+          "pending": "Pending",
+          "approved": "Approved",
+          "rejected": "Rejected"
+        },
+        "actions": {
+          "check": "Check",
+          "modify": "Modify",
+          "delete": "Delete",
+          "saveReview": "Save review",
+          "saveChanges": "Save changes"
+        },
+        "reviewDialog": {
+          "title": "Review request",
+          "status": "Status",
+          "note": "Review note",
+          "notePlaceholder": "Write a review note..."
+        },
+        "editDialog": {
+          "title": "Modify request",
+          "requestedDate": "Requested date",
+          "note": "Reason",
+          "notePlaceholder": "Update request reason..."
+        },
+        "deleteDialog": {
+          "title": "Delete request",
+          "message": "Are you sure you want to delete this request?"
+        },
+        "toasts": {
+          "reviewSaved": "Request review saved.",
+          "requestUpdated": "Request updated successfully.",
+          "requestDeleted": "Request deleted successfully."
+        }
+      }
+    },
+    "instructorWeeklySchedule": {
+      "title": "My weekly schedule",
+      "subtitle": "View your assigned lectures for the current semester.",
+      "activeSemester": "Active semester: {name}",
+      "sections": {
+        "board": "My weekly board"
+      },
+      "requests": {
+        "fields": {
+          "requestedDate": "Requested Date",
+          "reason": "Reason"
+        },
+        "actions": {
+          "submit": "Submit Request"
+        },
+        "errors": {
+          "requestedDateRequired": "Requested date is required.",
+          "requestedDateFuture": "Requested date must be in the future.",
+          "requestedDateDayMismatch": "Requested date must be on {day}.",
+          "reasonRequired": "Reason is required."
+        },
+        "toasts": {
+          "apologySubmitted": "Apology request submitted successfully.",
+          "makeupSubmitted": "Makeup lecture request submitted successfully."
+        },
+        "logs": {
+          "apologyPrepared": "Lecture apology request prepared:",
+          "makeupPrepared": "Makeup lecture request prepared:"
+        },
+        "apology": {
+          "title": "Apology Request",
+          "hint": "Submit an apology request for this lecture with a future date and a reason.",
+          "hintWithDay": "Submit an apology request with a future date on {day}.",
+          "reasonPlaceholder": "Enter apology reason..."
+        },
+        "makeup": {
+          "title": "Makeup Lecture Request",
+          "hint": "Submit a makeup lecture request with a future date and supporting reason.",
+          "reasonPlaceholder": "Enter makeup request reason..."
+        }
+      }
+    },
+    "instructorLectureRequests": {
+      "title": "My lecture requests",
+      "subtitle": "Track apology and makeup requests submitted from your schedule.",
+      "empty": "No lecture requests submitted yet.",
+      "columns": {
+        "note": "Reason"
+      }
+    },
+    "coordinatorLectureRequests": {
+      "title": "Lecture requests management",
+      "subtitle": "Check, modify, and delete instructor lecture requests."
+    },
+    "studentWeeklySchedule": {
+      "title": "My weekly schedule",
+      "subtitle": "View your lecture schedule for the current semester.",
+      "activeSemester": "Active semester: {name}",
+      "sections": {
+        "board": "My weekly board"
+      }
+    },
+    "examsSessionGrades": {
+      "title": "Session student grades",
+      "subtitle": "Enter Oral, Lab, Midterm, and Final grades for each student.",
+      "activeSemester": "Active semester: {name}",
+      "searchPlaceholder": "Search sessions by course or instructor",
+      "sections": {
+        "sessions": "Sessions",
+        "grades": "Grades entry"
+      },
+      "columns": {
+        "course": "Course",
+        "time": "Time",
+        "students": "Students",
+        "student": "Student",
+        "oral": "Oral",
+        "lab": "Lab",
+        "midterm": "Midterm",
+        "final": "Final",
+        "total": "Total",
+        "grade": "Grade",
+        "actions": "Actions"
+      },
+      "actions": {
+        "save": "Save",
+        "markDone": "Mark as done",
+        "reopen": "Reopen"
+      },
+      "status": {
+        "done": "Session marked as done",
+        "notDone": "Session not completed yet"
+      },
+      "empty": {
+        "selectSession": "Select a session to start entering grades.",
+        "noSessions": "No sessions found.",
+        "noStudents": "No students assigned to this session."
+      },
+      "toasts": {
+        "saved": "Grades saved successfully.",
+        "saveFailed": "Could not save grades.",
+        "markedDone": "Session marked as done.",
+        "reopened": "Session reopened for editing."
+      }
+    },
+    "studentGrades": {
+      "title": "My grades",
+      "subtitle": "View your session grades and final letter grade.",
+      "sections": {
+        "grades": "Grades"
+      },
+      "columns": {
+        "course": "Course",
+        "time": "Time",
+        "oral": "Oral",
+        "lab": "Lab",
+        "midterm": "Midterm",
+        "final": "Final",
+        "total": "Total",
+        "grade": "Grade"
+      },
+      "empty": {
+        "noGrades": "No grades available yet."
+      }
+    },
     "studentsManagement": {
       "title": "Students management",
       "subtitle": "Manage student accounts including completed hours and academic level.",
@@ -344,6 +665,232 @@
       },
       "errors": {
         "invalidForm": "Please complete all required fields and ensure completed hours and year level are valid."
+      }
+    },
+    "resourcesManagement": {
+      "title": "Resources management",
+      "subtitle": "Manage teaching resources like projectors, computers, disks, and related inventory.",
+      "table": {
+        "resource": "Resource",
+        "quantity": "Quantity",
+        "location": "Location",
+        "status": "Status",
+        "notes": "Notes",
+        "actions": "Actions",
+        "empty": "No resources found"
+      },
+      "stats": {
+        "totalResources": "Total resources",
+        "availableResources": "Available resources",
+        "unavailableResources": "Unavailable resources"
+      },
+      "status": {
+        "available": "Available",
+        "maintenance": "Maintenance",
+        "unavailable": "Unavailable"
+      },
+      "form": {
+        "createTitle": "Create resource",
+        "editTitle": "Edit resource",
+        "nameAr": "Resource name (Arabic)",
+        "nameArPlaceholder": "Arabic resource name",
+        "nameEn": "Resource name (English)",
+        "nameEnPlaceholder": "Resource name in English",
+        "type": "Type",
+        "typePlaceholder": "e.g. projector, computer, disk",
+        "quantity": "Quantity",
+        "locationAr": "Location (Arabic)",
+        "locationArPlaceholder": "Arabic location",
+        "locationEn": "Location (English)",
+        "locationEnPlaceholder": "e.g. Lab A, Main Hall",
+        "status": "Status",
+        "notesAr": "Notes (Arabic)",
+        "notesArPlaceholder": "Optional Arabic notes",
+        "notesEn": "Notes (English)",
+        "notesEnPlaceholder": "Optional notes about this resource"
+      },
+      "actions": {
+        "newResource": "New resource",
+        "edit": "Edit",
+        "delete": "Delete",
+        "save": "Save resource"
+      },
+      "confirmDelete": {
+        "title": "Delete resource",
+        "message": "Are you sure you want to delete \"{resource}\"?",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "errors": {
+        "invalidForm": "Please complete required fields and ensure quantity is a valid non-negative number."
+      }
+    },
+    "roomsManagement": {
+      "title": "Rooms management",
+      "subtitle": "Manage classrooms, halls, and laboratories with capacity and availability details.",
+      "table": {
+        "room": "Room",
+        "capacity": "Capacity",
+        "resources": "Resources",
+        "location": "Location",
+        "status": "Status",
+        "notes": "Notes",
+        "actions": "Actions",
+        "empty": "No rooms found"
+      },
+      "stats": {
+        "totalRooms": "Total rooms",
+        "availableRooms": "Available rooms",
+        "unavailableRooms": "Unavailable rooms"
+      },
+      "types": {
+        "class": "Classroom",
+        "lab": "Laboratory",
+        "hall": "Hall"
+      },
+      "status": {
+        "available": "Available",
+        "maintenance": "Maintenance",
+        "unavailable": "Unavailable"
+      },
+      "form": {
+        "createTitle": "Create room",
+        "editTitle": "Edit room",
+        "nameAr": "Room name (Arabic)",
+        "nameArPlaceholder": "Arabic room name",
+        "nameEn": "Room name (English)",
+        "nameEnPlaceholder": "e.g. A101, Lab B2",
+        "type": "Room type",
+        "capacity": "Capacity",
+        "resources": "Resources",
+        "resourcesPlaceholder": "Search and select resources",
+        "resourcesEmpty": "No resources found",
+        "locationAr": "Location (Arabic)",
+        "locationArPlaceholder": "Arabic location",
+        "locationEn": "Location (English)",
+        "locationEnPlaceholder": "e.g. Building A - Floor 1",
+        "status": "Status",
+        "notesAr": "Notes (Arabic)",
+        "notesArPlaceholder": "Optional Arabic notes",
+        "notesEn": "Notes (English)",
+        "notesEnPlaceholder": "Optional notes about this room"
+      },
+      "actions": {
+        "newRoom": "New room",
+        "edit": "Edit",
+        "delete": "Delete",
+        "save": "Save room"
+      },
+      "confirmDelete": {
+        "title": "Delete room",
+        "message": "Are you sure you want to delete \"{room}\"?",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "errors": {
+        "invalidForm": "Please complete required fields and ensure type/capacity values are valid."
+      }
+    },
+    "coursesManagement": {
+      "title": "Courses management",
+      "subtitle": "Manage courses with multiple sections (room/lab), section capacities, and instructor assignment per section.",
+      "table": {
+        "course": "Course",
+        "organization": "Faculty / Department",
+        "hours": "Hours",
+        "classTypes": "Class type",
+        "instructors": "Instructors",
+        "actions": "Actions",
+        "empty": "No courses found"
+      },
+      "stats": {
+        "totalCourses": "Total courses",
+        "activeCurrentSemesterCourses": "Active this semester",
+        "inactiveCurrentSemesterCourses": "Inactive this semester",
+        "roomOnlyCourses": "Room-only courses",
+        "roomLabCourses": "Room + Lab courses"
+      },
+      "status": {
+        "active": "Active this semester",
+        "inactive": "Inactive this semester"
+      },
+      "labels": {
+        "faculty": "Faculty",
+        "department": "Department",
+        "doctors": "Doctors",
+        "studentLevel": "Student level",
+        "prerequisites": "Prerequisites",
+        "roomConsumedHours": "Room consumed hours",
+        "labConsumedHours": "Lab consumed hours",
+        "room": "Room",
+        "lab": "Lab",
+        "notApplicable": "N/A"
+      },
+      "classTypes": {
+        "roomOnly": "Room only",
+        "roomAndLab": "Room + Lab"
+      },
+      "form": {
+        "createTitle": "Create course",
+        "editTitle": "Edit course",
+        "code": "Course code",
+        "codePlaceholder": "e.g. SWE-301",
+        "nameAr": "Course name (Arabic)",
+        "nameArPlaceholder": "Arabic course name",
+        "nameEn": "Course name (English)",
+        "nameEnPlaceholder": "Course name in English",
+        "faculty": "Faculty",
+        "facultyPlaceholder": "Select faculty",
+        "department": "Department",
+        "departmentPlaceholder": "Select department",
+        "requiredHours": "Required hours",
+        "requiredHoursPlaceholder": "Total course hours",
+        "roomConsumedHours": "Room consumed hours",
+        "roomConsumedHoursPlaceholder": "Optional room consumed hours",
+        "labConsumedHours": "Lab consumed hours",
+        "labConsumedHoursPlaceholder": "Optional lab consumed hours",
+        "minStudentYearLevel": "Min student year level",
+        "minStudentYearLevelPlaceholder": "Optional minimum year",
+        "maxStudentYearLevel": "Max student year level",
+        "maxStudentYearLevelPlaceholder": "Optional maximum year",
+        "prerequisites": "Prerequisite courses",
+        "prerequisitesPlaceholder": "Search and select prerequisite courses",
+        "prerequisitesEmpty": "No courses found",
+        "sections": "Course sections",
+        "sectionsEmpty": "No sections added yet",
+        "addSection": "Add section",
+        "removeSection": "Remove section",
+        "sectionName": "Section name",
+        "sectionNamePlaceholder": "e.g. Section A",
+        "sectionType": "Section type",
+        "sectionCapacity": "Section capacity",
+        "sectionCapacityPlaceholder": "Students capacity for this section",
+        "sectionInstructors": "Section instructors",
+        "sectionInstructorsPlaceholder": "Search and select section instructors",
+        "instructorsEmpty": "No instructors found"
+      },
+      "actions": {
+        "newCourse": "New course",
+        "activate": "Activate",
+        "deactivate": "Deactivate",
+        "savingStatus": "Saving...",
+        "edit": "Edit",
+        "delete": "Delete",
+        "save": "Save course"
+      },
+      "confirmDelete": {
+        "title": "Delete course",
+        "message": "Are you sure you want to delete \"{course}\"?",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "errors": {
+        "invalidForm": "Please complete required fields, keep hours greater than zero, and set valid sections with capacity and instructors.",
+        "statusUpdateFailed": "Could not update course status for the current semester."
+      },
+      "toasts": {
+        "courseActivated": "\"{course}\" is now active for the current semester.",
+        "courseDeactivated": "\"{course}\" is now inactive for the current semester."
       }
     },
     "specialitiesManagement": {
