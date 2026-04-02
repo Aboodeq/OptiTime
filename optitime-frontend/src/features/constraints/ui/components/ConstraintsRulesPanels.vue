@@ -11,10 +11,11 @@
         <AppToggleItemRow
           v-for="constraint in draft.soft_constraints"
           :key="constraint.key"
-          v-model="constraint.enabled"
+          :model-value="constraint.enabled"
           :title="t(`pages.constraintsManagement.constraintLabels.${constraint.key}`)"
           :description="t(`pages.constraintsManagement.constraintDescriptions.${constraint.key}`)"
           :icon="constraintIcons[constraint.key]"
+          @update:model-value="updateConstraint('soft_constraints', constraint.key, $event)"
         />
       </div>
     </AppSectionPanel>
@@ -30,10 +31,11 @@
         <AppToggleItemRow
           v-for="constraint in draft.hard_constraints"
           :key="constraint.key"
-          v-model="constraint.enabled"
+          :model-value="constraint.enabled"
           :title="t(`pages.constraintsManagement.constraintLabels.${constraint.key}`)"
           :description="t(`pages.constraintsManagement.constraintDescriptions.${constraint.key}`)"
           :icon="constraintIcons[constraint.key]"
+          @update:model-value="updateConstraint('hard_constraints', constraint.key, $event)"
         />
       </div>
     </AppSectionPanel>
@@ -46,14 +48,24 @@ import AppResponsiveGrid from '@/components/common/AppResponsiveGrid.vue'
 import AppSectionPanel from '@/components/common/AppSectionPanel.vue'
 import AppToggleItemRow from '@/components/common/AppToggleItemRow.vue'
 
-defineProps({
+const props = defineProps({
   draft: { type: Object, required: true },
   enabledSoftCount: { type: Number, required: true },
   enabledHardCount: { type: Number, required: true },
   constraintIcons: { type: Object, required: true },
 })
+const emit = defineEmits(['update:draft'])
 
 const { t } = useI18n()
+
+function updateConstraint(collectionKey, constraintKey, enabled) {
+  emit('update:draft', {
+    ...props.draft,
+    [collectionKey]: props.draft[collectionKey].map((constraint) =>
+      constraint.key === constraintKey ? { ...constraint, enabled } : constraint,
+    ),
+  })
+}
 </script>
 
 <style scoped>

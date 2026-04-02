@@ -58,7 +58,9 @@
       </div>
 
       <div class="text-end mb-4">
-        <a href="#" class="forgot-link" @click.prevent>{{ t('pages.login.forgotPassword') }}</a>
+        <a href="#" class="forgot-link" @click.prevent="goToForgotPassword">
+          {{ t('pages.login.forgotPassword') }}
+        </a>
       </div>
 
       <AppButton
@@ -95,6 +97,7 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import AppButton from '@/components/common/AppButton.vue'
 import AppInputField from '@/components/common/AppInputField.vue'
 import { useLoginForm } from '@/features/auth/model/composables/useLoginForm'
@@ -103,6 +106,7 @@ import DemoRoleButton from './DemoRoleButton.vue'
 import LocaleSwitcher from './LocaleSwitcher.vue'
 
 const { t } = useI18n()
+const router = useRouter()
 const { demoRoles } = useLoginPageContent()
 const {
   form,
@@ -118,4 +122,8 @@ const {
   handleFieldBlur,
   togglePassword,
 } = useLoginForm()
+
+function goToForgotPassword() {
+  router.push({ name: 'forgot-password-email' })
+}
 </script>
