@@ -66,6 +66,13 @@ export const BASE_SIDEBAR_SECTIONS = Object.freeze([
         permissions: ['students.view'],
       },
       {
+        id: 'resources-management',
+        routeName: 'resources-management',
+        icon: 'bi bi-pc-display',
+        labelKey: 'routes.resourcesManagement',
+        permissions: ['resources.view'],
+      },
+      {
         id: 'specialities-management',
         routeName: 'specialities-management',
         icon: 'bi bi-bookmarks-fill',

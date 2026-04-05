@@ -17,7 +17,8 @@
       "system": "System"
     },
     "items": {
-      "organization": "Organization"
+      "organization": "Organization",
+      "resources": "Resources"
     }
   }
 }

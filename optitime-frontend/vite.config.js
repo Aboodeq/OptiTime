@@ -9,7 +9,7 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
-  server: {
-    host: true,
-  },
+  // server: {
+  //   host: true,
+  // },
 })

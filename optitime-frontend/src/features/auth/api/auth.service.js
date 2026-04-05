@@ -69,22 +69,10 @@ const DEMO_USERS = Object.freeze({
       'settings.profile.update',
       'settings.security.update',
       'settings.notifications.update',
-      'schedule.view',
-      'schedule.update',
-      'schedule.generate',
-      'instructorSchedule.requests.review',
       'resources.create',
       'resources.update',
       'resources.delete',
       'resources.view',
-      'rooms.create',
-      'rooms.update',
-      'rooms.delete',
-      'rooms.view',
-      'courses.create',
-      'courses.update',
-      'courses.delete',
-      'courses.view',
     ],
   },
   instructor: {
@@ -104,17 +92,10 @@ const DEMO_USERS = Object.freeze({
       'settings.profile.update',
       'settings.security.update',
       'settings.notifications.update',
-      'instructorPreferences.self.view',
-      'instructorPreferences.self.update',
-      'instructorSchedule.self.view',
-      'instructorSchedule.apologyRequest.create',
-      'instructorSchedule.makeupRequest.create',
-      'instructorSchedule.requests.self.update',
-      'instructorSchedule.requests.self.delete',
     ],
   },
   student: {
-    id: 'student-demo',
+    id: 'demo-student',
     name: 'Demo Student',
     email: DEMO_CREDENTIALS.email,
     role: {
@@ -130,8 +111,6 @@ const DEMO_USERS = Object.freeze({
       'settings.profile.update',
       'settings.security.update',
       'settings.notifications.update',
-      'studentSchedule.self.view',
-      'studentGrades.view',
     ],
   },
   management: {
@@ -146,8 +125,12 @@ const DEMO_USERS = Object.freeze({
     permissions: [
       'dashboard.view',
       'sidebar.view',
-      'courses.view',
-      'semesters.view',
+      'users.view',
+      'instructors.view',
+      'students.view',
+      'resources.view',
+      'specialities.view',
+      'constraints.view',
       'notifications.view',
       'settings.view',
       'settings.profile.update',
@@ -172,9 +155,6 @@ const DEMO_USERS = Object.freeze({
       'settings.profile.update',
       'settings.security.update',
       'settings.notifications.update',
-      'studentGrades.create',
-      'studentGrades.update',
-      'studentGrades.delete',
     ],
   },
 })
@@ -186,27 +166,6 @@ function getDelay() {
 
 function createAuthError(code, message) {
   return { code, message }
-}
-
-const resetCodeStore = new Map()
-
-function normalizeEmail(email) {
-  return String(email ?? '')
-    .trim()
-    .toLowerCase()
-}
-
-function getOrCreateResetEntry(email) {
-  const normalizedEmail = normalizeEmail(email)
-  const existing = resetCodeStore.get(normalizedEmail)
-  if (existing) return existing
-
-  const created = {
-    code: '123456',
-    verified: false,
-  }
-  resetCodeStore.set(normalizedEmail, created)
-  return created
 }
 
 export const authService = {
@@ -233,45 +192,5 @@ export const authService = {
     }
 
     return { ...user }
-  },
-
-  async requestPasswordReset(email) {
-    await sleep(getDelay())
-    getOrCreateResetEntry(email)
-    return { delivered: true }
-  },
-
-  async verifyPasswordResetCode({ email, code }) {
-    await sleep(getDelay())
-
-    const normalizedEmail = normalizeEmail(email)
-    const entry = resetCodeStore.get(normalizedEmail)
-    const normalizedCode = String(code ?? '').trim()
-
-    if (!entry || normalizedCode !== entry.code) {
-      throw createAuthError('INVALID_RESET_CODE', 'Invalid reset code')
-    }
-
-    entry.verified = true
-    return { verified: true }
-  },
-
-  async resetPassword({ email, code, password }) {
-    await sleep(getDelay())
-
-    const normalizedEmail = normalizeEmail(email)
-    const entry = resetCodeStore.get(normalizedEmail)
-    const normalizedCode = String(code ?? '').trim()
-
-    if (!entry || !entry.verified || normalizedCode !== entry.code) {
-      throw createAuthError('RESET_NOT_ALLOWED', 'Reset password request is invalid')
-    }
-
-    if (typeof password !== 'string' || password.length < 8) {
-      throw createAuthError('WEAK_PASSWORD', 'Password is too weak')
-    }
-
-    resetCodeStore.delete(normalizedEmail)
-    return { success: true }
   },
 }

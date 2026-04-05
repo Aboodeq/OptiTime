@@ -9,12 +9,7 @@
       </div>
 
       <div class="constraints-control-row">
-        <AppButton
-          type="button"
-          class="save-all-legacy-btn"
-          icon="bi bi-check2-circle"
-          @click="handleSave"
-        >
+        <AppButton type="button" class="save-all-legacy-btn" icon="bi bi-check2-circle" @click="handleSave">
           {{ t('pages.constraintsManagement.actions.saveAll') }}
         </AppButton>
         <AppButton type="button" variant="outline" @click="handleResetToSaved">
@@ -37,14 +32,12 @@
           :enabled-soft-count="enabledSoftCount"
           :enabled-hard-count="enabledHardCount"
           :constraint-icons="constraintIcons"
-          @update:draft="updateDraft"
         />
-        <ConstraintsTimingAndDays :draft="draft" @update:draft="updateDraft" />
+        <ConstraintsTimingAndDays :draft="draft" />
         <ConstraintsRoomPanel
           :draft="draft"
           :visible-room-constraints="visibleRoomConstraints"
           :constraint-icons="constraintIcons"
-          @update:draft="updateDraft"
         />
       </div>
     </section>
@@ -65,7 +58,12 @@ import ConstraintsTimingAndDays from '@/features/constraints/ui/components/Const
 
 const { t } = useI18n()
 const toast = useToast()
-const { draft, saveDraft, resetDraftToSaved, resetToDefault } = useConstraintsManagementPage()
+const {
+  draft,
+  saveDraft,
+  resetDraftToSaved,
+  resetToDefault,
+} = useConstraintsManagementPage()
 
 const enabledSoftCount = computed(
   () => draft.value?.soft_constraints.filter((item) => item.enabled).length ?? 0,
@@ -116,10 +114,6 @@ function handleResetToDefaults() {
 
 function handleResetToSaved() {
   resetDraftToSaved()
-}
-
-function updateDraft(nextDraft) {
-  draft.value = nextDraft
 }
 </script>
 
