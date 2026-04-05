@@ -17,7 +17,8 @@
       "system": "النظام"
     },
     "items": {
-      "organization": "الهيكل التنظيمي"
+      "organization": "الهيكل التنظيمي",
+      "resources": "الموارد"
     }
   }
 }
