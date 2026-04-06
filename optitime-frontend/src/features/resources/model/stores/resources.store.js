@@ -6,12 +6,15 @@ const RESOURCE_STATUS_OPTIONS = Object.freeze(['available', 'maintenance', 'unav
 
 function createEmptyDraft() {
   return {
-    name: '',
+    name_ar: '',
+    name_en: '',
     type: '',
     quantity: '',
-    location: '',
+    location_ar: '',
+    location_en: '',
     status: 'available',
-    notes: '',
+    notes_ar: '',
+    notes_en: '',
   }
 }
 
@@ -35,34 +38,43 @@ export const useResourcesStore = defineStore('resources', () => {
 
   function buildDraftFromResource(resource) {
     return {
-      name: resource.name,
+      name_ar: resource.name_ar ?? '',
+      name_en: resource.name_en ?? '',
       type: resource.type,
       quantity: resource.quantity ?? '',
-      location: resource.location ?? '',
+      location_ar: resource.location_ar ?? '',
+      location_en: resource.location_en ?? '',
       status: resource.status ?? 'available',
-      notes: resource.notes ?? '',
+      notes_ar: resource.notes_ar ?? '',
+      notes_en: resource.notes_en ?? '',
     }
   }
 
   function normalizeDraft(draft) {
-    const name = draft.name?.trim() || ''
+    const nameAr = draft.name_ar?.trim() || ''
+    const nameEn = draft.name_en?.trim() || ''
     const type = draft.type?.trim().toLowerCase() || ''
-    const location = draft.location?.trim() || ''
-    const notes = draft.notes?.trim() || ''
+    const locationAr = draft.location_ar?.trim() || ''
+    const locationEn = draft.location_en?.trim() || ''
+    const notesAr = draft.notes_ar?.trim() || ''
+    const notesEn = draft.notes_en?.trim() || ''
     const status = draft.status?.trim() || ''
     const quantity = Number(draft.quantity)
 
-    if (!name || !type) return null
+    if (!nameAr || !nameEn || !type) return null
     if (!Number.isFinite(quantity) || quantity < 0) return null
     if (!RESOURCE_STATUS_OPTIONS.includes(status)) return null
 
     return {
-      name,
+      name_ar: nameAr,
+      name_en: nameEn,
       type,
       quantity,
-      location,
+      location_ar: locationAr,
+      location_en: locationEn,
       status,
-      notes,
+      notes_ar: notesAr,
+      notes_en: notesEn,
     }
   }
 
@@ -71,7 +83,7 @@ export const useResourcesStore = defineStore('resources', () => {
     if (!normalized) return false
     const created = await resourcesService.createResource(normalized)
     resources.value = [...resources.value, created]
-    return true
+    return created
   }
 
   async function updateResourceFromDraft(resourceId, draft) {

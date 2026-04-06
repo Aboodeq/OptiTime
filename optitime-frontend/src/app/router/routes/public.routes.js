@@ -78,6 +78,17 @@ export const resourcesManagementRoute = {
   },
 }
 
+export const roomsManagementRoute = {
+  path: '/admin/rooms',
+  name: 'rooms-management',
+  component: () => import('@/features/rooms/ui/pages/RoomsManagementPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['rooms.view'],
+    titleKey: 'routes.roomsManagement',
+  },
+}
+
 export const specialitiesManagementRoute = {
   path: '/admin/specialities',
   name: 'specialities-management',

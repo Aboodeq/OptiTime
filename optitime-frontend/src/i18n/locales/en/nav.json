@@ -18,7 +18,9 @@
     },
     "items": {
       "organization": "Organization",
-      "resources": "Resources"
+      "resources": "Resources",
+      "rooms": "Rooms",
+      "laboratories": "Laboratories"
     }
   }
 }
