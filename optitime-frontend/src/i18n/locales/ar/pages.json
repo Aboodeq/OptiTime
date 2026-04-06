@@ -371,15 +371,22 @@
       "form": {
         "createTitle": "إنشاء مورد",
         "editTitle": "تعديل مورد",
-        "name": "اسم المورد",
+        "nameAr": "اسم المورد (عربي)",
+        "nameArPlaceholder": "اسم المورد بالعربية",
+        "nameEn": "اسم المورد (إنجليزي)",
+        "nameEnPlaceholder": "اسم المورد بالإنجليزية",
         "type": "النوع",
         "typePlaceholder": "مثال: projector أو computer أو disk",
         "quantity": "الكمية",
-        "location": "الموقع",
-        "locationPlaceholder": "مثال: المخبر A أو القاعة الرئيسية",
+        "locationAr": "الموقع (عربي)",
+        "locationArPlaceholder": "الموقع بالعربية",
+        "locationEn": "الموقع (إنجليزي)",
+        "locationEnPlaceholder": "مثال: Lab A أو Main Hall",
         "status": "الحالة",
-        "notes": "ملاحظات",
-        "notesPlaceholder": "ملاحظات اختيارية حول هذا المورد"
+        "notesAr": "ملاحظات (عربي)",
+        "notesArPlaceholder": "ملاحظات اختيارية بالعربية",
+        "notesEn": "ملاحظات (إنجليزي)",
+        "notesEnPlaceholder": "Optional notes in English"
       },
       "actions": {
         "newResource": "مورد جديد",
@@ -395,6 +402,72 @@
       },
       "errors": {
         "invalidForm": "يرجى تعبئة الحقول المطلوبة والتأكد من أن الكمية رقم صحيح غير سالب."
+      }
+    },
+    "roomsManagement": {
+      "title": "إدارة القاعات",
+      "subtitle": "إدارة القاعات الصفية والمدرجات والمختبرات مع معلومات السعة والحالة.",
+      "table": {
+        "room": "القاعة",
+        "capacity": "السعة",
+        "resources": "الموارد",
+        "location": "الموقع",
+        "status": "الحالة",
+        "notes": "ملاحظات",
+        "actions": "الإجراءات",
+        "empty": "لا توجد قاعات"
+      },
+      "stats": {
+        "totalRooms": "إجمالي القاعات",
+        "availableRooms": "القاعات المتاحة",
+        "unavailableRooms": "القاعات غير المتاحة"
+      },
+      "types": {
+        "class": "قاعة صفية",
+        "lab": "مختبر",
+        "hall": "مدرج"
+      },
+      "status": {
+        "available": "متاح",
+        "maintenance": "صيانة",
+        "unavailable": "غير متاح"
+      },
+      "form": {
+        "createTitle": "إنشاء قاعة",
+        "editTitle": "تعديل قاعة",
+        "nameAr": "اسم القاعة (عربي)",
+        "nameArPlaceholder": "اسم القاعة بالعربية",
+        "nameEn": "اسم القاعة (إنجليزي)",
+        "nameEnPlaceholder": "مثال: A101 أو Lab B2",
+        "type": "نوع القاعة",
+        "capacity": "السعة",
+        "resources": "الموارد",
+        "resourcesPlaceholder": "ابحث واختر الموارد",
+        "resourcesEmpty": "لا توجد موارد مطابقة",
+        "locationAr": "الموقع (عربي)",
+        "locationArPlaceholder": "الموقع بالعربية",
+        "locationEn": "الموقع (إنجليزي)",
+        "locationEnPlaceholder": "مثال: Building A - Floor 1",
+        "status": "الحالة",
+        "notesAr": "ملاحظات (عربي)",
+        "notesArPlaceholder": "ملاحظات اختيارية بالعربية",
+        "notesEn": "ملاحظات (إنجليزي)",
+        "notesEnPlaceholder": "Optional notes in English"
+      },
+      "actions": {
+        "newRoom": "قاعة جديدة",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "save": "حفظ القاعة"
+      },
+      "confirmDelete": {
+        "title": "حذف القاعة",
+        "message": "هل أنت متأكد من حذف \"{room}\"؟",
+        "confirm": "حذف",
+        "cancel": "إلغاء"
+      },
+      "errors": {
+        "invalidForm": "يرجى تعبئة الحقول المطلوبة والتأكد من صحة نوع القاعة والسعة."
       }
     },
     "specialitiesManagement": {

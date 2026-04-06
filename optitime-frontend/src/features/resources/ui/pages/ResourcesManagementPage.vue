@@ -31,7 +31,8 @@
         >
           <template #cell-resource="{ row }">
             <div class="d-flex flex-column">
-              <span class="fw-semibold">{{ row.name }}</span>
+              <span class="fw-semibold">{{ row.name_ar }}</span>
+              <small class="text-secondary">{{ row.name_en }}</small>
               <small class="text-secondary">{{ row.type }}</small>
             </div>
           </template>
@@ -41,7 +42,10 @@
           </template>
 
           <template #cell-location="{ row }">
-            {{ row.location || '-' }}
+            <div class="d-flex flex-column">
+              <span>{{ row.location_ar || '-' }}</span>
+              <small class="text-secondary">{{ row.location_en || '-' }}</small>
+            </div>
           </template>
 
           <template #cell-status="{ row }">
@@ -57,7 +61,10 @@
           </template>
 
           <template #cell-notes="{ row }">
-            {{ row.notes || '-' }}
+            <div class="d-flex flex-column">
+              <span>{{ row.notes_ar || '-' }}</span>
+              <small class="text-secondary">{{ row.notes_en || '-' }}</small>
+            </div>
           </template>
 
           <template #cell-actions="{ row }">
@@ -94,12 +101,15 @@
       :can-edit="canCreateResources || canUpdateResources"
       @cancel="closeDialog"
       @save="handleSaveResource"
-      @update:name="draft.name = $event"
+      @update:name_ar="draft.name_ar = $event"
+      @update:name_en="draft.name_en = $event"
       @update:type="draft.type = $event"
       @update:quantity="draft.quantity = $event"
-      @update:location="draft.location = $event"
+      @update:location_ar="draft.location_ar = $event"
+      @update:location_en="draft.location_en = $event"
       @update:status="draft.status = $event"
-      @update:notes="draft.notes = $event"
+      @update:notes_ar="draft.notes_ar = $event"
+      @update:notes_en="draft.notes_en = $event"
     />
 
     <AppConfirmDialog
@@ -107,7 +117,7 @@
       :title="t('pages.resourcesManagement.confirmDelete.title')"
       :message="
         t('pages.resourcesManagement.confirmDelete.message', {
-          resource: resourcePendingDelete?.name ?? '',
+          resource: resourcePendingDelete?.name_en ?? '',
         })
       "
       :confirm-text="t('pages.resourcesManagement.confirmDelete.confirm')"
@@ -165,11 +175,14 @@ const filteredResources = computed(() => {
   if (!q) return resources.value
   return resources.value.filter(
     (resource) =>
-      resource.name.toLowerCase().includes(q) ||
-      resource.type.toLowerCase().includes(q) ||
-      resource.location.toLowerCase().includes(q) ||
-      resource.status.toLowerCase().includes(q) ||
-      resource.notes.toLowerCase().includes(q),
+      (resource.name_ar || '').toLowerCase().includes(q) ||
+      (resource.name_en || '').toLowerCase().includes(q) ||
+      (resource.type || '').toLowerCase().includes(q) ||
+      (resource.location_ar || '').toLowerCase().includes(q) ||
+      (resource.location_en || '').toLowerCase().includes(q) ||
+      (resource.status || '').toLowerCase().includes(q) ||
+      (resource.notes_ar || '').toLowerCase().includes(q) ||
+      (resource.notes_en || '').toLowerCase().includes(q),
   )
 })
 

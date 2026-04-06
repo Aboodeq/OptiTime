@@ -371,15 +371,22 @@
       "form": {
         "createTitle": "Create resource",
         "editTitle": "Edit resource",
-        "name": "Resource name",
+        "nameAr": "Resource name (Arabic)",
+        "nameArPlaceholder": "Arabic resource name",
+        "nameEn": "Resource name (English)",
+        "nameEnPlaceholder": "Resource name in English",
         "type": "Type",
         "typePlaceholder": "e.g. projector, computer, disk",
         "quantity": "Quantity",
-        "location": "Location",
-        "locationPlaceholder": "e.g. Lab A, Main Hall",
+        "locationAr": "Location (Arabic)",
+        "locationArPlaceholder": "Arabic location",
+        "locationEn": "Location (English)",
+        "locationEnPlaceholder": "e.g. Lab A, Main Hall",
         "status": "Status",
-        "notes": "Notes",
-        "notesPlaceholder": "Optional notes about this resource"
+        "notesAr": "Notes (Arabic)",
+        "notesArPlaceholder": "Optional Arabic notes",
+        "notesEn": "Notes (English)",
+        "notesEnPlaceholder": "Optional notes about this resource"
       },
       "actions": {
         "newResource": "New resource",
@@ -395,6 +402,72 @@
       },
       "errors": {
         "invalidForm": "Please complete required fields and ensure quantity is a valid non-negative number."
+      }
+    },
+    "roomsManagement": {
+      "title": "Rooms management",
+      "subtitle": "Manage classrooms, halls, and laboratories with capacity and availability details.",
+      "table": {
+        "room": "Room",
+        "capacity": "Capacity",
+        "resources": "Resources",
+        "location": "Location",
+        "status": "Status",
+        "notes": "Notes",
+        "actions": "Actions",
+        "empty": "No rooms found"
+      },
+      "stats": {
+        "totalRooms": "Total rooms",
+        "availableRooms": "Available rooms",
+        "unavailableRooms": "Unavailable rooms"
+      },
+      "types": {
+        "class": "Classroom",
+        "lab": "Laboratory",
+        "hall": "Hall"
+      },
+      "status": {
+        "available": "Available",
+        "maintenance": "Maintenance",
+        "unavailable": "Unavailable"
+      },
+      "form": {
+        "createTitle": "Create room",
+        "editTitle": "Edit room",
+        "nameAr": "Room name (Arabic)",
+        "nameArPlaceholder": "Arabic room name",
+        "nameEn": "Room name (English)",
+        "nameEnPlaceholder": "e.g. A101, Lab B2",
+        "type": "Room type",
+        "capacity": "Capacity",
+        "resources": "Resources",
+        "resourcesPlaceholder": "Search and select resources",
+        "resourcesEmpty": "No resources found",
+        "locationAr": "Location (Arabic)",
+        "locationArPlaceholder": "Arabic location",
+        "locationEn": "Location (English)",
+        "locationEnPlaceholder": "e.g. Building A - Floor 1",
+        "status": "Status",
+        "notesAr": "Notes (Arabic)",
+        "notesArPlaceholder": "Optional Arabic notes",
+        "notesEn": "Notes (English)",
+        "notesEnPlaceholder": "Optional notes about this room"
+      },
+      "actions": {
+        "newRoom": "New room",
+        "edit": "Edit",
+        "delete": "Delete",
+        "save": "Save room"
+      },
+      "confirmDelete": {
+        "title": "Delete room",
+        "message": "Are you sure you want to delete \"{room}\"?",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "errors": {
+        "invalidForm": "Please complete required fields and ensure type/capacity values are valid."
       }
     },
     "specialitiesManagement": {

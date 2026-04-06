@@ -2,13 +2,23 @@
   <AppDialog :open="open" :title="title" @close="$emit('cancel')">
     <div class="d-grid gap-3">
       <AppInputField
-        input-id="resource-name"
-        :label="t('pages.resourcesManagement.form.name')"
+        input-id="resource-name-ar"
+        :label="t('pages.resourcesManagement.form.nameAr')"
         icon="bi bi-box-seam"
-        :model-value="draft.name"
-        :placeholder="t('pages.resourcesManagement.form.name')"
+        :model-value="draft.name_ar"
+        :placeholder="t('pages.resourcesManagement.form.nameArPlaceholder')"
         :disabled="!canEdit"
-        @update:model-value="$emit('update:name', $event)"
+        @update:model-value="$emit('update:name_ar', $event)"
+      />
+
+      <AppInputField
+        input-id="resource-name-en"
+        :label="t('pages.resourcesManagement.form.nameEn')"
+        icon="bi bi-box-seam"
+        :model-value="draft.name_en"
+        :placeholder="t('pages.resourcesManagement.form.nameEnPlaceholder')"
+        :disabled="!canEdit"
+        @update:model-value="$emit('update:name_en', $event)"
       />
 
       <AppInputField
@@ -33,13 +43,23 @@
       />
 
       <AppInputField
-        input-id="resource-location"
-        :label="t('pages.resourcesManagement.form.location')"
+        input-id="resource-location-ar"
+        :label="t('pages.resourcesManagement.form.locationAr')"
         icon="bi bi-geo-alt"
-        :model-value="draft.location"
-        :placeholder="t('pages.resourcesManagement.form.locationPlaceholder')"
+        :model-value="draft.location_ar"
+        :placeholder="t('pages.resourcesManagement.form.locationArPlaceholder')"
         :disabled="!canEdit"
-        @update:model-value="$emit('update:location', $event)"
+        @update:model-value="$emit('update:location_ar', $event)"
+      />
+
+      <AppInputField
+        input-id="resource-location-en"
+        :label="t('pages.resourcesManagement.form.locationEn')"
+        icon="bi bi-geo-alt"
+        :model-value="draft.location_en"
+        :placeholder="t('pages.resourcesManagement.form.locationEnPlaceholder')"
+        :disabled="!canEdit"
+        @update:model-value="$emit('update:location_en', $event)"
       />
 
       <AppAutocompleteField
@@ -55,12 +75,21 @@
       />
 
       <AppTextareaField
-        input-id="resource-notes"
-        :label="t('pages.resourcesManagement.form.notes')"
-        :model-value="draft.notes"
-        :placeholder="t('pages.resourcesManagement.form.notesPlaceholder')"
+        input-id="resource-notes-ar"
+        :label="t('pages.resourcesManagement.form.notesAr')"
+        :model-value="draft.notes_ar"
+        :placeholder="t('pages.resourcesManagement.form.notesArPlaceholder')"
         :disabled="!canEdit"
-        @update:model-value="$emit('update:notes', $event)"
+        @update:model-value="$emit('update:notes_ar', $event)"
+      />
+
+      <AppTextareaField
+        input-id="resource-notes-en"
+        :label="t('pages.resourcesManagement.form.notesEn')"
+        :model-value="draft.notes_en"
+        :placeholder="t('pages.resourcesManagement.form.notesEnPlaceholder')"
+        :disabled="!canEdit"
+        @update:model-value="$emit('update:notes_en', $event)"
       />
 
       <div class="d-flex justify-content-end gap-2 pt-2">
@@ -94,12 +123,15 @@ const props = defineProps({
 defineEmits([
   'cancel',
   'save',
-  'update:name',
+  'update:name_ar',
+  'update:name_en',
   'update:type',
   'update:quantity',
-  'update:location',
+  'update:location_ar',
+  'update:location_en',
   'update:status',
-  'update:notes',
+  'update:notes_ar',
+  'update:notes_en',
 ])
 
 const { t } = useI18n()

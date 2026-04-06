@@ -18,7 +18,9 @@
     },
     "items": {
       "organization": "الهيكل التنظيمي",
-      "resources": "الموارد"
+      "resources": "الموارد",
+      "rooms": "القاعات",
+      "laboratories": "المختبرات"
     }
   }
 }
