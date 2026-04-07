@@ -55,6 +55,11 @@ const COURSES_SEED = [
 ]
 
 let coursesDb = COURSES_SEED.map((item) => ({ ...item }))
+const CURRENT_SEMESTER_ID = 'semester-current'
+let courseOfferingsDb = [
+  { id: 'offering-1', course_id: 'course-1', semester_id: CURRENT_SEMESTER_ID, is_active: true },
+  { id: 'offering-2', course_id: 'course-2', semester_id: CURRENT_SEMESTER_ID, is_active: false },
+]
 
 function cloneCourse(course) {
   return {
@@ -101,6 +106,37 @@ export const coursesService = {
   async deleteCourse(courseId) {
     const before = coursesDb.length
     coursesDb = coursesDb.filter((item) => item.id !== courseId)
+    courseOfferingsDb = courseOfferingsDb.filter((item) => item.course_id !== courseId)
     return coursesDb.length < before
+  },
+
+  async getCurrentSemesterId() {
+    return CURRENT_SEMESTER_ID
+  },
+
+  async getCourseOfferingsBySemester(semesterId) {
+    return courseOfferingsDb
+      .filter((item) => item.semester_id === semesterId)
+      .map((item) => ({ ...item }))
+  },
+
+  async setCourseOfferingActivation({ semesterId, courseId, isActive }) {
+    const normalizedActive = Boolean(isActive)
+    let updated = null
+    courseOfferingsDb = courseOfferingsDb.map((item) => {
+      if (item.semester_id !== semesterId || item.course_id !== courseId) return item
+      updated = { ...item, is_active: normalizedActive }
+      return updated
+    })
+    if (!updated) {
+      updated = {
+        id: `offering-${Date.now()}`,
+        course_id: courseId,
+        semester_id: semesterId,
+        is_active: normalizedActive,
+      }
+      courseOfferingsDb = [...courseOfferingsDb, updated]
+    }
+    return { ...updated }
   },
 }

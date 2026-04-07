@@ -6,6 +6,7 @@
     "organizationManagement": "Organization",
     "usersManagement": "Users management",
     "instructorsManagement": "Instructors management",
+    "instructorSelfAvailability": "My availability",
     "studentsManagement": "Students management",
     "resourcesManagement": "Resources management",
     "roomsManagement": "Rooms management",

@@ -32,8 +32,12 @@
             :course="course"
             :can-edit="canUpdateCourses"
             :can-delete="canDeleteCourses"
+            :can-toggle-activation="canUpdateCourses"
+            :is-active="course.is_active_current_semester"
+            :is-toggling="course.is_toggling_activation"
             @edit="startEditCourse"
             @delete="requestDeleteCourse"
+            @toggle-activation="handleToggleCourseActivation"
           />
         </template>
       </AppEntityGrid>
@@ -107,6 +111,8 @@ const {
   coursesCount,
   coursesWithLabCount,
   coursesWithoutLabCount,
+  activeCoursesCount,
+  inactiveCoursesCount,
   facultyOptions,
   departmentOptions,
   instructorOptions,
@@ -124,6 +130,9 @@ const {
   addSection,
   removeSection,
   updateSection,
+  toggleCourseActivation,
+  isCourseActiveThisSemester,
+  isCourseToggleInFlight,
 } = useCoursesManagementPage()
 
 const search = ref('')
@@ -140,6 +149,10 @@ const { filteredCourses, statsCards } = useCoursesViewData({
   coursesCount,
   coursesWithLabCount,
   coursesWithoutLabCount,
+  activeCoursesCount,
+  inactiveCoursesCount,
+  isCourseActiveThisSemester,
+  isCourseToggleInFlight,
   search,
   t,
 })
@@ -163,6 +176,21 @@ async function handleSaveCourse() {
   if (!saved) {
     toast.error(t('pages.coursesManagement.errors.invalidForm'))
   }
+}
+
+async function handleToggleCourseActivation(course) {
+  if (!canUpdateCourses.value) return
+  const saved = await toggleCourseActivation(course.id)
+  if (!saved) {
+    toast.error(t('pages.coursesManagement.errors.statusUpdateFailed'))
+    return
+  }
+  const isActiveNow = isCourseActiveThisSemester(course.id)
+  toast.success(
+    isActiveNow
+      ? t('pages.coursesManagement.toasts.courseActivated', { course: course.name_en })
+      : t('pages.coursesManagement.toasts.courseDeactivated', { course: course.name_en }),
+  )
 }
 </script>
 

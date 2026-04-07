@@ -281,6 +281,35 @@
         "invalidForm": "Please complete all required fields and ensure min/max weekly work hours are valid."
       }
     },
+    "instructorSelfAvailability": {
+      "title": "My availability",
+      "subtitle": "Set your preferred teaching days and time window.",
+      "weeklyHoursRange": "Weekly chosen hours: {current}h (required {min}h - {max}h)",
+      "sections": {
+        "days": "Availability grid"
+      },
+      "hints": {
+        "days": "Click cells in the week grid to mark preferred/unavailable slots; break times are locked."
+      },
+      "grid": {
+        "title": "Availability grid",
+        "time": "Time",
+        "preferred": "Preferred",
+        "available": "Available",
+        "unavailable": "Unavailable",
+        "blocked": "Break"
+      },
+      "actions": {
+        "save": "Save my availability"
+      },
+      "errors": {
+        "invalidForm": "Please set valid day intervals within configured working hours and slot boundaries.",
+        "minWeeklyHoursRequired": "You must keep at least {min} chosen hours per week."
+      },
+      "toasts": {
+        "saved": "Your availability has been saved"
+      }
+    },
     "studentsManagement": {
       "title": "Students management",
       "subtitle": "Manage student accounts including completed hours and academic level.",
@@ -484,8 +513,14 @@
       },
       "stats": {
         "totalCourses": "Total courses",
+        "activeCurrentSemesterCourses": "Active this semester",
+        "inactiveCurrentSemesterCourses": "Inactive this semester",
         "roomOnlyCourses": "Room-only courses",
         "roomLabCourses": "Room + Lab courses"
+      },
+      "status": {
+        "active": "Active this semester",
+        "inactive": "Inactive this semester"
       },
       "labels": {
         "faculty": "Faculty",
@@ -544,6 +579,9 @@
       },
       "actions": {
         "newCourse": "New course",
+        "activate": "Activate",
+        "deactivate": "Deactivate",
+        "savingStatus": "Saving...",
         "edit": "Edit",
         "delete": "Delete",
         "save": "Save course"
@@ -555,7 +593,12 @@
         "cancel": "Cancel"
       },
       "errors": {
-        "invalidForm": "Please complete required fields, keep hours greater than zero, and set valid sections with capacity and instructors."
+        "invalidForm": "Please complete required fields, keep hours greater than zero, and set valid sections with capacity and instructors.",
+        "statusUpdateFailed": "Could not update course status for the current semester."
+      },
+      "toasts": {
+        "courseActivated": "\"{course}\" is now active for the current semester.",
+        "courseDeactivated": "\"{course}\" is now inactive for the current semester."
       }
     },
     "specialitiesManagement": {

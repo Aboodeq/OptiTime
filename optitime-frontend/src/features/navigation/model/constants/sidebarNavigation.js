@@ -24,6 +24,13 @@ export const BASE_SIDEBAR_SECTIONS = Object.freeze([
         labelKey: 'routes.notifications',
         permissions: ['notifications.view'],
       },
+      {
+        id: 'instructor-self-availability',
+        routeName: 'instructor-self-availability',
+        icon: 'bi bi-calendar2-week',
+        labelKey: 'routes.instructorSelfAvailability',
+        permissions: ['instructorPreferences.self.view'],
+      },
     ],
   },
   {
