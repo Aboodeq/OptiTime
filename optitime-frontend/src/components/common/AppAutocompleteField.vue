@@ -1,6 +1,6 @@
 <template>
   <div class="app-autocomplete-field">
-    <label :for="inputId" class="app-autocomplete-field__label">{{ label }}</label>
+    <label v-if="!hideLabel" :for="inputId" class="app-autocomplete-field__label">{{ label }}</label>
     <div class="app-autocomplete-field__wrapper">
       <i v-if="icon" :class="[icon, 'app-autocomplete-field__icon']"></i>
       <input
@@ -59,6 +59,7 @@ import AppButton from '@/components/common/AppButton.vue'
 const props = defineProps({
   inputId: { type: String, required: true },
   label: { type: String, required: true },
+  hideLabel: { type: Boolean, default: false },
   modelValue: { type: String, default: '' },
   options: { type: Array, default: () => [] },
   placeholder: { type: String, default: '' },

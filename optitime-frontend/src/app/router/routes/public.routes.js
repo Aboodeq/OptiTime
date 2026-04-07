@@ -89,6 +89,17 @@ export const roomsManagementRoute = {
   },
 }
 
+export const coursesManagementRoute = {
+  path: '/admin/courses',
+  name: 'courses-management',
+  component: () => import('@/features/courses/ui/pages/CoursesManagementPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['courses.view'],
+    titleKey: 'routes.coursesManagement',
+  },
+}
+
 export const specialitiesManagementRoute = {
   path: '/admin/specialities',
   name: 'specialities-management',

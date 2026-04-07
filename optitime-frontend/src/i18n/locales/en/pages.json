@@ -470,6 +470,94 @@
         "invalidForm": "Please complete required fields and ensure type/capacity values are valid."
       }
     },
+    "coursesManagement": {
+      "title": "Courses management",
+      "subtitle": "Manage courses with multiple sections (room/lab), section capacities, and instructor assignment per section.",
+      "table": {
+        "course": "Course",
+        "organization": "Faculty / Department",
+        "hours": "Hours",
+        "classTypes": "Class type",
+        "instructors": "Instructors",
+        "actions": "Actions",
+        "empty": "No courses found"
+      },
+      "stats": {
+        "totalCourses": "Total courses",
+        "roomOnlyCourses": "Room-only courses",
+        "roomLabCourses": "Room + Lab courses"
+      },
+      "labels": {
+        "faculty": "Faculty",
+        "department": "Department",
+        "doctors": "Doctors",
+        "studentLevel": "Student level",
+        "prerequisites": "Prerequisites",
+        "roomConsumedHours": "Room consumed hours",
+        "labConsumedHours": "Lab consumed hours",
+        "room": "Room",
+        "lab": "Lab",
+        "notApplicable": "N/A"
+      },
+      "classTypes": {
+        "roomOnly": "Room only",
+        "roomAndLab": "Room + Lab"
+      },
+      "form": {
+        "createTitle": "Create course",
+        "editTitle": "Edit course",
+        "code": "Course code",
+        "codePlaceholder": "e.g. SWE-301",
+        "nameAr": "Course name (Arabic)",
+        "nameArPlaceholder": "Arabic course name",
+        "nameEn": "Course name (English)",
+        "nameEnPlaceholder": "Course name in English",
+        "faculty": "Faculty",
+        "facultyPlaceholder": "Select faculty",
+        "department": "Department",
+        "departmentPlaceholder": "Select department",
+        "requiredHours": "Required hours",
+        "requiredHoursPlaceholder": "Total course hours",
+        "roomConsumedHours": "Room consumed hours",
+        "roomConsumedHoursPlaceholder": "Optional room consumed hours",
+        "labConsumedHours": "Lab consumed hours",
+        "labConsumedHoursPlaceholder": "Optional lab consumed hours",
+        "minStudentYearLevel": "Min student year level",
+        "minStudentYearLevelPlaceholder": "Optional minimum year",
+        "maxStudentYearLevel": "Max student year level",
+        "maxStudentYearLevelPlaceholder": "Optional maximum year",
+        "prerequisites": "Prerequisite courses",
+        "prerequisitesPlaceholder": "Search and select prerequisite courses",
+        "prerequisitesEmpty": "No courses found",
+        "sections": "Course sections",
+        "sectionsEmpty": "No sections added yet",
+        "addSection": "Add section",
+        "removeSection": "Remove section",
+        "sectionName": "Section name",
+        "sectionNamePlaceholder": "e.g. Section A",
+        "sectionType": "Section type",
+        "sectionCapacity": "Section capacity",
+        "sectionCapacityPlaceholder": "Students capacity for this section",
+        "sectionInstructors": "Section instructors",
+        "sectionInstructorsPlaceholder": "Search and select section instructors",
+        "instructorsEmpty": "No instructors found"
+      },
+      "actions": {
+        "newCourse": "New course",
+        "edit": "Edit",
+        "delete": "Delete",
+        "save": "Save course"
+      },
+      "confirmDelete": {
+        "title": "Delete course",
+        "message": "Are you sure you want to delete \"{course}\"?",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "errors": {
+        "invalidForm": "Please complete required fields, keep hours greater than zero, and set valid sections with capacity and instructors."
+      }
+    },
     "specialitiesManagement": {
       "title": "Specialities management",
       "subtitle": "Manage teaching specialities used by instructor accounts.",

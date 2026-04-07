@@ -1,0 +1,106 @@
+const COURSES_SEED = [
+  {
+    id: 'course-1',
+    code: 'SWE-301',
+    name_ar: 'تحليل وتصميم النظم',
+    name_en: 'Systems Analysis and Design',
+    faculty_id: 'faculty-informatics',
+    department_id: 'dept-software',
+    required_hours: 3,
+    room_consumed_hours: 2,
+    lab_consumed_hours: 3,
+    sections: [
+      {
+        id: 'course-1-sec-1',
+        section_name: 'Section A',
+        section_type: 'room',
+        capacity: 40,
+        instructor_ids: ['instructor-1'],
+      },
+      {
+        id: 'course-1-sec-2',
+        section_name: 'Lab Group A',
+        section_type: 'lab',
+        capacity: 25,
+        instructor_ids: ['instructor-3'],
+      },
+    ],
+    min_student_year_level: 3,
+    max_student_year_level: 5,
+    prerequisite_course_ids: [],
+  },
+  {
+    id: 'course-2',
+    code: 'FIN-210',
+    name_ar: 'مبادئ التمويل',
+    name_en: 'Principles of Finance',
+    faculty_id: 'faculty-business',
+    department_id: 'dept-finance',
+    required_hours: 2,
+    room_consumed_hours: 2,
+    lab_consumed_hours: null,
+    sections: [
+      {
+        id: 'course-2-sec-1',
+        section_name: 'Section A',
+        section_type: 'room',
+        capacity: 60,
+        instructor_ids: ['instructor-2'],
+      },
+    ],
+    min_student_year_level: 2,
+    max_student_year_level: 4,
+    prerequisite_course_ids: [],
+  },
+]
+
+let coursesDb = COURSES_SEED.map((item) => ({ ...item }))
+
+function cloneCourse(course) {
+  return {
+    ...course,
+    sections: Array.isArray(course.sections)
+      ? course.sections.map((section) => ({
+          ...section,
+          instructor_ids: Array.isArray(section.instructor_ids) ? [...section.instructor_ids] : [],
+        }))
+      : [],
+    prerequisite_course_ids: Array.isArray(course.prerequisite_course_ids)
+      ? [...course.prerequisite_course_ids]
+      : [],
+  }
+}
+
+export const coursesService = {
+  async getCourses() {
+    return coursesDb.map(cloneCourse)
+  },
+
+  async createCourse(payload) {
+    const course = {
+      ...payload,
+      id: `course-${Date.now()}`,
+    }
+    coursesDb = [...coursesDb, course]
+    return cloneCourse(course)
+  },
+
+  async updateCourse(courseId, payload) {
+    let updatedCourse = null
+    coursesDb = coursesDb.map((item) => {
+      if (item.id !== courseId) return item
+      updatedCourse = {
+        ...item,
+        ...payload,
+      }
+      return updatedCourse
+    })
+    return updatedCourse ? cloneCourse(updatedCourse) : null
+  },
+
+  async deleteCourse(courseId) {
+    const before = coursesDb.length
+    coursesDb = coursesDb.filter((item) => item.id !== courseId)
+    return coursesDb.length < before
+  },
+}
