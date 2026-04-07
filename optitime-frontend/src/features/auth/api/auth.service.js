@@ -77,6 +77,10 @@ const DEMO_USERS = Object.freeze({
       'rooms.update',
       'rooms.delete',
       'rooms.view',
+      'courses.create',
+      'courses.update',
+      'courses.delete',
+      'courses.view',
     ],
   },
   instructor: {
@@ -134,6 +138,7 @@ const DEMO_USERS = Object.freeze({
       'students.view',
       'resources.view',
       'rooms.view',
+      'courses.view',
       'specialities.view',
       'constraints.view',
       'notifications.view',

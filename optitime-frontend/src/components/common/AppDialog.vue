@@ -1,7 +1,7 @@
 <template>
   <Teleport to="body">
     <Transition name="dialog-fade">
-      <div v-if="open" class="app-dialog" @keydown.esc="$emit('close')">
+      <div v-if="open" class="app-dialog" v-bind="attrs" @keydown.esc="$emit('close')">
         <AppButton
           class="app-dialog__overlay"
           variant="plain"
@@ -37,10 +37,14 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, useAttrs } from 'vue'
 import AppButton from '@/components/common/AppButton.vue'
 import AppIconButton from '@/components/common/AppIconButton.vue'
 import { useAuthStore } from '@/store/auth.store'
+
+defineOptions({
+  inheritAttrs: false,
+})
 
 defineProps({
   open: { type: Boolean, default: false },
@@ -49,6 +53,7 @@ defineProps({
 
 defineEmits(['close'])
 
+const attrs = useAttrs()
 const authStore = useAuthStore()
 const dialogToneStyle = computed(() => {
   const tone = authStore.roleColor

@@ -80,6 +80,13 @@ export const BASE_SIDEBAR_SECTIONS = Object.freeze([
         permissions: ['rooms.view'],
       },
       {
+        id: 'courses-management',
+        routeName: 'courses-management',
+        icon: 'bi bi-journal-richtext',
+        labelKey: 'routes.coursesManagement',
+        permissions: ['courses.view'],
+      },
+      {
         id: 'specialities-management',
         routeName: 'specialities-management',
         icon: 'bi bi-bookmarks-fill',

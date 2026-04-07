@@ -1,6 +1,6 @@
 <template>
   <div class="app-input-field">
-    <label :for="inputId" class="app-input-field__label">{{ label }}</label>
+    <label v-if="!hideLabel" :for="inputId" class="app-input-field__label">{{ label }}</label>
     <div
       class="app-input-field__wrapper"
       :class="{ 'is-focused': focused, 'has-value': modelValue, 'is-invalid': error }"
@@ -43,6 +43,10 @@ defineProps({
   label: {
     type: String,
     required: true,
+  },
+  hideLabel: {
+    type: Boolean,
+    default: false,
   },
   modelValue: {
     type: String,

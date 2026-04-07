@@ -470,6 +470,94 @@
         "invalidForm": "يرجى تعبئة الحقول المطلوبة والتأكد من صحة نوع القاعة والسعة."
       }
     },
+    "coursesManagement": {
+      "title": "إدارة المقررات",
+      "subtitle": "إدارة المقررات مع عدة شعب (قاعة/مخبر) وتحديد السعة لكل شعبة وتوزيع المدرسين لكل شعبة.",
+      "table": {
+        "course": "المقرر",
+        "organization": "الكلية / القسم",
+        "hours": "الساعات",
+        "classTypes": "نوع الحصة",
+        "instructors": "المدرسون",
+        "actions": "الإجراءات",
+        "empty": "لا توجد مقررات"
+      },
+      "stats": {
+        "totalCourses": "إجمالي المقررات",
+        "roomOnlyCourses": "مقررات نظرية فقط",
+        "roomLabCourses": "مقررات نظرية + مخبر"
+      },
+      "labels": {
+        "faculty": "الكلية",
+        "department": "القسم",
+        "doctors": "المدرسون",
+        "studentLevel": "مستوى الطالب",
+        "prerequisites": "المتطلبات السابقة",
+        "roomConsumedHours": "الساعات المستهلكة للقاعة",
+        "labConsumedHours": "الساعات المستهلكة للمخبر",
+        "room": "قاعة",
+        "lab": "مخبر",
+        "notApplicable": "غير مطبق"
+      },
+      "classTypes": {
+        "roomOnly": "قاعة فقط",
+        "roomAndLab": "قاعة + مخبر"
+      },
+      "form": {
+        "createTitle": "إنشاء مقرر",
+        "editTitle": "تعديل مقرر",
+        "code": "رمز المقرر",
+        "codePlaceholder": "مثال: SWE-301",
+        "nameAr": "اسم المقرر (عربي)",
+        "nameArPlaceholder": "اسم المقرر بالعربية",
+        "nameEn": "اسم المقرر (إنجليزي)",
+        "nameEnPlaceholder": "اسم المقرر بالإنجليزية",
+        "faculty": "الكلية",
+        "facultyPlaceholder": "اختر الكلية",
+        "department": "القسم",
+        "departmentPlaceholder": "اختر القسم",
+        "requiredHours": "الساعات المطلوبة",
+        "requiredHoursPlaceholder": "إجمالي ساعات المقرر",
+        "roomConsumedHours": "الساعات المستهلكة للقاعة",
+        "roomConsumedHoursPlaceholder": "ساعات القاعة المستهلكة (اختياري)",
+        "labConsumedHours": "الساعات المستهلكة للمخبر",
+        "labConsumedHoursPlaceholder": "ساعات المخبر المستهلكة (اختياري)",
+        "minStudentYearLevel": "الحد الأدنى لمستوى الطالب",
+        "minStudentYearLevelPlaceholder": "حد أدنى اختياري",
+        "maxStudentYearLevel": "الحد الأعلى لمستوى الطالب",
+        "maxStudentYearLevelPlaceholder": "حد أعلى اختياري",
+        "prerequisites": "المقررات المتطلبة سابقا",
+        "prerequisitesPlaceholder": "ابحث واختر المقررات المتطلبة",
+        "prerequisitesEmpty": "لا توجد مقررات مطابقة",
+        "sections": "شعب المقرر",
+        "sectionsEmpty": "لا توجد شعب مضافة بعد",
+        "addSection": "إضافة شعبة",
+        "removeSection": "حذف الشعبة",
+        "sectionName": "اسم الشعبة",
+        "sectionNamePlaceholder": "مثال: الشعبة A",
+        "sectionType": "نوع الشعبة",
+        "sectionCapacity": "سعة الشعبة",
+        "sectionCapacityPlaceholder": "عدد الطلاب في هذه الشعبة",
+        "sectionInstructors": "مدرسو الشعبة",
+        "sectionInstructorsPlaceholder": "ابحث واختر مدرسي الشعبة",
+        "instructorsEmpty": "لا يوجد مدرسون مطابقون"
+      },
+      "actions": {
+        "newCourse": "مقرر جديد",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "save": "حفظ المقرر"
+      },
+      "confirmDelete": {
+        "title": "حذف المقرر",
+        "message": "هل أنت متأكد من حذف \"{course}\"؟",
+        "confirm": "حذف",
+        "cancel": "إلغاء"
+      },
+      "errors": {
+        "invalidForm": "يرجى تعبئة الحقول المطلوبة والتأكد من أن الساعات أكبر من صفر وتعريف شعب صالحة مع السعة والمدرسين."
+      }
+    },
     "specialitiesManagement": {
       "title": "إدارة الاختصاصات",
       "subtitle": "إدارة الاختصاصات التدريسية المستخدمة في حسابات المدرسين.",
