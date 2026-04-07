@@ -57,6 +57,9 @@ function normalizePermissions(permissions) {
           'instructors.view',
         ]
       }
+      if (permission === 'instructorPreferences.self.manage') {
+        return ['instructorPreferences.self.view', 'instructorPreferences.self.update']
+      }
       if (permission === 'students.manage') {
         return ['students.create', 'students.update', 'students.delete', 'students.view']
       }

@@ -5,6 +5,11 @@
         <h3 class="course-card__title mb-0">{{ course.name_en }}</h3>
         <small class="course-card__subtitle">{{ course.name_ar }}</small>
         <div class="course-card__code">{{ course.code }}</div>
+        <div class="course-card__status-row">
+          <span class="badge rounded-pill" :class="isActive ? 'course-card__status--active' : 'course-card__status--inactive'">
+            {{ isActive ? t('pages.coursesManagement.status.active') : t('pages.coursesManagement.status.inactive') }}
+          </span>
+        </div>
       </div>
       <span class="badge rounded-pill course-card__type-badge">
         {{ course.has_lab_component ? t('pages.coursesManagement.classTypes.roomAndLab') : t('pages.coursesManagement.classTypes.roomOnly') }}
@@ -92,7 +97,23 @@
       </div>
     </div>
 
-    <div v-if="canEdit || canDelete" class="course-card__actions">
+    <div v-if="canEdit || canDelete || canToggleActivation" class="course-card__actions">
+      <button
+        v-if="canToggleActivation"
+        class="btn btn-sm"
+        :class="isActive ? 'btn-outline-danger' : 'btn-outline-success'"
+        type="button"
+        :disabled="isToggling"
+        @click="$emit('toggle-activation', course)"
+      >
+        {{
+          isToggling
+            ? t('pages.coursesManagement.actions.savingStatus')
+            : isActive
+              ? t('pages.coursesManagement.actions.deactivate')
+              : t('pages.coursesManagement.actions.activate')
+        }}
+      </button>
       <AppIconButton
         v-if="canEdit"
         icon="bi bi-pencil-square"
@@ -124,9 +145,12 @@ const props = defineProps({
   course: { type: Object, required: true },
   canEdit: { type: Boolean, default: false },
   canDelete: { type: Boolean, default: false },
+  canToggleActivation: { type: Boolean, default: false },
+  isActive: { type: Boolean, default: false },
+  isToggling: { type: Boolean, default: false },
 })
 
-defineEmits(['edit', 'delete'])
+defineEmits(['edit', 'delete', 'toggle-activation'])
 const { t } = useI18n()
 
 const gradientPalette = [
@@ -214,6 +238,22 @@ function hashCode(value) {
   font-size: 0.7rem;
   letter-spacing: 0.08em;
   color: rgba(255, 255, 255, 0.82);
+}
+
+.course-card__status-row {
+  margin-top: 0.4rem;
+}
+
+.course-card__status--active {
+  background: rgba(34, 197, 94, 0.25);
+  color: #f0fdf4;
+  border: 1px solid rgba(240, 253, 244, 0.35);
+}
+
+.course-card__status--inactive {
+  background: rgba(248, 113, 113, 0.25);
+  color: #fff1f2;
+  border: 1px solid rgba(255, 241, 242, 0.4);
 }
 
 .course-card__type-badge {

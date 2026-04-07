@@ -56,6 +56,18 @@ export const instructorsManagementRoute = {
   },
 }
 
+export const instructorSelfAvailabilityRoute = {
+  path: '/instructor/availability',
+  name: 'instructor-self-availability',
+  component: () =>
+    import('@/features/instructor-preferences/ui/pages/InstructorSelfAvailabilityPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['instructorPreferences.self.view'],
+    titleKey: 'routes.instructorSelfAvailability',
+  },
+}
+
 export const studentsManagementRoute = {
   path: '/admin/students',
   name: 'students-management',

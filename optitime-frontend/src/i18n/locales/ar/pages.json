@@ -281,6 +281,35 @@
         "invalidForm": "يرجى تعبئة جميع الحقول المطلوبة والتأكد من صحة حدود ساعات العمل الأسبوعية."
       }
     },
+    "instructorSelfAvailability": {
+      "title": "توفري",
+      "subtitle": "حدد أيام التدريس والوقت المفضل لك.",
+      "weeklyHoursRange": "الساعات المختارة أسبوعيا: {current} س (المطلوب بين {min} و{max} س)",
+      "sections": {
+        "days": "شبكة التوفر"
+      },
+      "hints": {
+        "days": "اضغط على خلايا الجدول الأسبوعي لتحديد المفضل/غير المتاح؛ أوقات الاستراحة مقفلة."
+      },
+      "grid": {
+        "title": "شبكة التوفر",
+        "time": "الوقت",
+        "preferred": "مفضل",
+        "available": "متاح",
+        "unavailable": "غير متاح",
+        "blocked": "استراحة"
+      },
+      "actions": {
+        "save": "حفظ توفري"
+      },
+      "errors": {
+        "invalidForm": "يرجى إدخال فترات صحيحة ضمن ساعات العمل المسموح بها وحدود أوقات المحاضرات.",
+        "minWeeklyHoursRequired": "يجب أن لا تقل الساعات المختارة أسبوعيا عن {min} ساعة."
+      },
+      "toasts": {
+        "saved": "تم حفظ توفرك"
+      }
+    },
     "studentsManagement": {
       "title": "إدارة الطلاب",
       "subtitle": "إدارة حسابات الطلاب مع الساعات المنجزة والمستوى الدراسي.",
@@ -484,8 +513,14 @@
       },
       "stats": {
         "totalCourses": "إجمالي المقررات",
+        "activeCurrentSemesterCourses": "النشطة هذا الفصل",
+        "inactiveCurrentSemesterCourses": "غير النشطة هذا الفصل",
         "roomOnlyCourses": "مقررات نظرية فقط",
         "roomLabCourses": "مقررات نظرية + مخبر"
+      },
+      "status": {
+        "active": "نشط هذا الفصل",
+        "inactive": "غير نشط هذا الفصل"
       },
       "labels": {
         "faculty": "الكلية",
@@ -544,6 +579,9 @@
       },
       "actions": {
         "newCourse": "مقرر جديد",
+        "activate": "تفعيل",
+        "deactivate": "تعطيل",
+        "savingStatus": "جارٍ الحفظ...",
         "edit": "تعديل",
         "delete": "حذف",
         "save": "حفظ المقرر"
@@ -555,7 +593,12 @@
         "cancel": "إلغاء"
       },
       "errors": {
-        "invalidForm": "يرجى تعبئة الحقول المطلوبة والتأكد من أن الساعات أكبر من صفر وتعريف شعب صالحة مع السعة والمدرسين."
+        "invalidForm": "يرجى تعبئة الحقول المطلوبة والتأكد من أن الساعات أكبر من صفر وتعريف شعب صالحة مع السعة والمدرسين.",
+        "statusUpdateFailed": "تعذر تحديث حالة المقرر للفصل الحالي."
+      },
+      "toasts": {
+        "courseActivated": "تم تفعيل \"{course}\" للفصل الحالي.",
+        "courseDeactivated": "تم تعطيل \"{course}\" للفصل الحالي."
       }
     },
     "specialitiesManagement": {

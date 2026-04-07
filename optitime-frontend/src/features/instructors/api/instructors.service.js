@@ -1,6 +1,7 @@
 const INSTRUCTORS_SEED = [
   {
     id: 'instructor-1',
+    user_id: 'user-instructor-1',
     name: 'Dr. Lina Hasan',
     email: 'lina.hasan@optitime.com',
     password: 'Inst@123',
@@ -14,6 +15,7 @@ const INSTRUCTORS_SEED = [
   },
   {
     id: 'instructor-2',
+    user_id: 'user-instructor-2',
     name: 'Dr. Omar Saad',
     email: 'omar.saad@optitime.com',
     password: 'Inst@123',
@@ -27,6 +29,7 @@ const INSTRUCTORS_SEED = [
   },
   {
     id: 'instructor-3',
+    user_id: 'user-instructor-3',
     name: 'Eng. Reem Khaled',
     email: 'reem.khaled@optitime.com',
     password: 'Inst@123',
@@ -37,6 +40,20 @@ const INSTRUCTORS_SEED = [
     faculty_id: 'faculty-informatics',
     department_id: 'dept-networks',
     is_active: false,
+  },
+  {
+    id: 'instructor-demo',
+    user_id: 'demo-instructor',
+    name: 'Demo Instructor',
+    email: 'demo@optitime.com',
+    password: 'Inst@123',
+    speciality_id: 'speciality-software',
+    min_work_hours_per_week: 6,
+    max_work_hours_per_week: 12,
+    role: 'instructor',
+    faculty_id: 'faculty-informatics',
+    department_id: 'dept-software',
+    is_active: true,
   },
 ]
 
