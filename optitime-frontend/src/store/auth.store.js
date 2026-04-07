@@ -57,33 +57,11 @@ function normalizePermissions(permissions) {
           'instructors.view',
         ]
       }
-      if (permission === 'instructorPreferences.self.manage') {
-        return ['instructorPreferences.self.view', 'instructorPreferences.self.update']
-      }
-      if (permission === 'instructorSchedule.self.manage') {
-        return [
-          'instructorSchedule.self.view',
-          'instructorSchedule.apologyRequest.create',
-          'instructorSchedule.makeupRequest.create',
-          'instructorSchedule.requests.self.update',
-          'instructorSchedule.requests.self.delete',
-        ]
-      }
       if (permission === 'students.manage') {
         return ['students.create', 'students.update', 'students.delete', 'students.view']
       }
       if (permission === 'courses.manage') {
         return ['courses.create', 'courses.update', 'courses.delete', 'courses.view']
-      }
-      if (permission === 'schedule.manage') {
-        return [
-          'schedule.view',
-          'schedule.update',
-          'schedule.generate',
-          'instructorSchedule.requests.review',
-          'instructorSchedule.requests.update',
-          'instructorSchedule.requests.delete',
-        ]
       }
       if (permission === 'resources.manage') {
         return ['resources.create', 'resources.update', 'resources.delete', 'resources.view']
@@ -140,20 +118,10 @@ function normalizeUser(userData) {
           color: '#334155',
         }
 
-  const normalizedPermissions = normalizePermissions(userData.permissions)
-  const effectivePermissions =
-    role.key === 'coordinator'
-      ? normalizedPermissions.filter(
-          (permission) =>
-            permission !== 'instructorSchedule.requests.update' &&
-            permission !== 'instructorSchedule.requests.delete',
-        )
-      : normalizedPermissions
-
   return {
     ...userData,
     role,
-    permissions: effectivePermissions,
+    permissions: normalizePermissions(userData.permissions),
   }
 }
 
@@ -164,12 +132,6 @@ export const useAuthStore = defineStore('auth', () => {
   const roleKey = computed(() => role.value?.key ?? null)
   const roleColor = computed(() => role.value?.color ?? '#334155')
   const permissions = computed(() => user.value?.permissions ?? [])
-  const passwordRecovery = ref({
-    email: '',
-    code: '',
-    isCodeVerified: false,
-    codeSentAt: 0,
-  })
 
   function setUser(userData) {
     const normalizedUser = normalizeUser(userData)
@@ -204,70 +166,6 @@ export const useAuthStore = defineStore('auth', () => {
     return loggedInUser
   }
 
-  function clearPasswordRecovery() {
-    passwordRecovery.value = {
-      email: '',
-      code: '',
-      isCodeVerified: false,
-      codeSentAt: 0,
-    }
-  }
-
-  async function requestPasswordReset(email) {
-    const normalizedEmail = String(email ?? '')
-      .trim()
-      .toLowerCase()
-
-    await authService.requestPasswordReset(normalizedEmail)
-    passwordRecovery.value = {
-      email: normalizedEmail,
-      code: '',
-      isCodeVerified: false,
-      codeSentAt: Date.now(),
-    }
-    return true
-  }
-
-  async function resendPasswordResetCode() {
-    const email = passwordRecovery.value.email
-    if (!email) {
-      throw { code: 'MISSING_EMAIL' }
-    }
-    await authService.requestPasswordReset(email)
-    passwordRecovery.value = {
-      ...passwordRecovery.value,
-      code: '',
-      codeSentAt: Date.now(),
-      isCodeVerified: false,
-    }
-    return true
-  }
-
-  async function verifyPasswordResetCode(code) {
-    const email = passwordRecovery.value.email
-    if (!email) {
-      throw { code: 'MISSING_EMAIL' }
-    }
-    await authService.verifyPasswordResetCode({ email, code })
-    passwordRecovery.value = {
-      ...passwordRecovery.value,
-      code: String(code ?? '').trim(),
-      isCodeVerified: true,
-    }
-    return true
-  }
-
-  async function resetPassword(password) {
-    const { email, code, isCodeVerified } = passwordRecovery.value
-    if (!email || !code || !isCodeVerified) {
-      throw { code: 'RESET_NOT_ALLOWED' }
-    }
-
-    await authService.resetPassword({ email, code, password })
-    clearPasswordRecovery()
-    return true
-  }
-
   function logout() {
     setUser(null)
   }
@@ -285,12 +183,6 @@ export const useAuthStore = defineStore('auth', () => {
     hasAnyPermission,
     login,
     loginAsDemoRole,
-    passwordRecovery,
-    clearPasswordRecovery,
-    requestPasswordReset,
-    resendPasswordResetCode,
-    verifyPasswordResetCode,
-    resetPassword,
     logout,
   }
 })

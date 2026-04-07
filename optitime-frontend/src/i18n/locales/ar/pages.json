@@ -53,54 +53,6 @@
         }
       }
     },
-    "forgotPassword": {
-      "email": {
-        "title": "نسيت كلمة المرور؟",
-        "subtitle": "أدخل بريدك الإلكتروني وسنرسل لك رمز تحقق.",
-        "label": "البريد الإلكتروني",
-        "placeholder": "example\\@university.edu"
-      },
-      "code": {
-        "title": "تحقق من بريدك الإلكتروني",
-        "subtitle": "أدخل رمز التحقق المكون من 6 أرقام.",
-        "label": "رمز التحقق",
-        "placeholder": "أدخل رمز التحقق",
-        "resend": "إعادة إرسال الرمز",
-        "resendDisabled": "يمكن إعادة الإرسال بعد {seconds}ث"
-      },
-      "reset": {
-        "title": "إنشاء كلمة مرور جديدة",
-        "subtitle": "اختر كلمة مرور قوية لحسابك.",
-        "passwordLabel": "كلمة المرور الجديدة",
-        "passwordPlaceholder": "أدخل كلمة المرور الجديدة",
-        "confirmPasswordLabel": "تأكيد كلمة المرور الجديدة",
-        "confirmPasswordPlaceholder": "أعد إدخال كلمة المرور الجديدة"
-      },
-      "actions": {
-        "sendCode": "إرسال الرمز",
-        "verifyCode": "تأكيد الرمز",
-        "resetPassword": "إعادة تعيين كلمة المرور",
-        "backToLogin": "العودة لتسجيل الدخول",
-        "processing": "جارٍ المعالجة..."
-      },
-      "errors": {
-        "emailRequired": "يرجى إدخال البريد الإلكتروني",
-        "emailInvalid": "يرجى إدخال بريد إلكتروني صحيح",
-        "codeRequired": "يرجى إدخال رمز التحقق",
-        "codeInvalid": "يجب أن يكون رمز التحقق 6 محارف على الأقل",
-        "passwordRequired": "يرجى إدخال كلمة المرور الجديدة",
-        "passwordMin": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
-        "confirmPasswordRequired": "يرجى تأكيد كلمة المرور الجديدة",
-        "passwordMismatch": "تأكيد كلمة المرور غير مطابق",
-        "generic": "تعذر إتمام هذه الخطوة. يرجى المحاولة مرة أخرى."
-      },
-      "toasts": {
-        "codeSent": "تم إرسال رمز التحقق إلى بريدك الإلكتروني",
-        "codeResent": "تم إرسال رمز تحقق جديد",
-        "codeVerified": "تم التحقق من الرمز بنجاح",
-        "passwordResetSuccess": "تمت إعادة تعيين كلمة المرور بنجاح. سجّل الدخول الآن."
-      }
-    },
     "dashboard": {
       "title": "لوحة تحكم تجريبية",
       "subtitle": "المصادقة تعمل. هذه الصفحة موجودة فقط كنقطة وصول محمية بعد تسجيل الدخول.",
@@ -329,279 +281,6 @@
         "invalidForm": "يرجى تعبئة جميع الحقول المطلوبة والتأكد من صحة حدود ساعات العمل الأسبوعية."
       }
     },
-    "instructorSelfAvailability": {
-      "title": "توفري",
-      "subtitle": "حدد أيام التدريس والوقت المفضل لك.",
-      "weeklyHoursRange": "الساعات المختارة أسبوعيا: {current} س (المطلوب بين {min} و{max} س)",
-      "sections": {
-        "days": "شبكة التوفر"
-      },
-      "hints": {
-        "days": "اضغط على خلايا الجدول الأسبوعي لتحديد المفضل/غير المتاح؛ أوقات الاستراحة مقفلة."
-      },
-      "grid": {
-        "title": "شبكة التوفر",
-        "time": "الوقت",
-        "preferred": "مفضل",
-        "available": "متاح",
-        "unavailable": "غير متاح",
-        "blocked": "استراحة"
-      },
-      "actions": {
-        "save": "حفظ توفري"
-      },
-      "errors": {
-        "invalidForm": "يرجى إدخال فترات صحيحة ضمن ساعات العمل المسموح بها وحدود أوقات المحاضرات.",
-        "minWeeklyHoursRequired": "يجب أن لا تقل الساعات المختارة أسبوعيا عن {min} ساعة."
-      },
-      "toasts": {
-        "saved": "تم حفظ توفرك"
-      }
-    },
-    "coordinatorWeeklySchedule": {
-      "title": "الجدول الأسبوعي للمنسق",
-      "subtitle": "عرض وتعديل وتوليد جدول الفصل الحالي مع مراعاة القيود.",
-      "activeSemester": "الفصل النشط: {name}",
-      "sections": {
-        "board": "لوحة الجدول الأسبوعي",
-        "generation": "خيارات التوليد",
-        "kpis": "مؤشرات الأداء",
-        "requests": "طلبات المحاضرات"
-      },
-      "hints": {
-        "board": "اسحب وأفلت الجلسات بين الخانات الصالحة. خانات الاستراحة محجوبة."
-      },
-      "algorithms": {
-        "genetic": "الخوارزمية الجينية",
-        "geneticDescription": "بحث أسرع على مستوى عام ومناسب للتحسين الواسع.",
-        "backtracking": "التراجع والتتبع",
-        "backtrackingDescription": "بحث دقيق خطوة بخطوة ومناسب للقيود الصارمة."
-      },
-      "actions": {
-        "save": "حفظ التعديلات",
-        "generate": "توليد جدول",
-        "confirmGenerated": "تأكيد وحفظ الناتج",
-        "cancelPreview": "إلغاء المعاينة"
-      },
-      "preview": {
-        "title": "معاينة الجدول المولد",
-        "subtitle": "راجع الجدول المولد قبل حفظه."
-      },
-      "details": {
-        "title": "تفاصيل المحاضرة",
-        "course": "المقرر",
-        "section": "الشعبة",
-        "instructor": "المدرس",
-        "room": "القاعة",
-        "day": "اليوم",
-        "time": "الوقت",
-        "ids": "المعرفات المرجعية",
-        "actions": {
-          "requestApology": "طلب اعتذار",
-          "requestMakeup": "طلب تعويض"
-        },
-        "studentsTitle": "الطلاب المسجلون",
-        "students": {
-          "name": "الطالب",
-          "universityNumber": "الرقم الجامعي",
-          "year": "السنة",
-          "status": "الحالة",
-          "empty": "لا يوجد طلاب مخصصون لهذه الشعبة حالياً.",
-          "searchPlaceholder": "ابحث عن طالب بالاسم"
-        }
-      },
-      "kpis": {
-        "totalSessions": "إجمالي الجلسات",
-        "roomUtilization": "استثمار القاعات",
-        "instructorBalance": "توازن حمل المدرسين",
-        "conflicts": "التعارضات"
-      },
-      "errors": {
-        "noActiveSemester": "لا يوجد فصل نشط حالياً.",
-        "invalidSchedule": "الجدول يحتوي تعارضات أو خانات غير صالحة.",
-        "saveFailed": "تعذر حفظ تعديلات الجدول.",
-        "generateFailed": "تعذر توليد جدول صالح."
-      },
-      "toasts": {
-        "saved": "تم تحديث الجدول بنجاح",
-        "generated": "تم توليد جدول جديد. يرجى مراجعته قبل الحفظ.",
-        "generatedSaved": "تم تأكيد الجدول المولد وحفظه"
-      },
-      "requests": {
-        "empty": "لا توجد طلبات محاضرات.",
-        "columns": {
-          "type": "النوع",
-          "instructor": "المدرس",
-          "course": "المقرر",
-          "lectureDay": "يوم المحاضرة",
-          "requestedDate": "التاريخ المطلوب",
-          "status": "الحالة",
-          "actions": "الإجراءات"
-        },
-        "types": {
-          "apology": "اعتذار",
-          "makeup": "تعويض"
-        },
-        "statuses": {
-          "pending": "قيد الانتظار",
-          "approved": "مقبول",
-          "rejected": "مرفوض"
-        },
-        "actions": {
-          "check": "تدقيق",
-          "modify": "تعديل",
-          "delete": "حذف",
-          "saveReview": "حفظ التدقيق",
-          "saveChanges": "حفظ التعديلات"
-        },
-        "reviewDialog": {
-          "title": "تدقيق الطلب",
-          "status": "الحالة",
-          "note": "ملاحظة التدقيق",
-          "notePlaceholder": "اكتب ملاحظة التدقيق..."
-        },
-        "editDialog": {
-          "title": "تعديل الطلب",
-          "requestedDate": "التاريخ المطلوب",
-          "note": "السبب",
-          "notePlaceholder": "حدّث سبب الطلب..."
-        },
-        "deleteDialog": {
-          "title": "حذف الطلب",
-          "message": "هل أنت متأكد من حذف هذا الطلب؟"
-        },
-        "toasts": {
-          "reviewSaved": "تم حفظ تدقيق الطلب.",
-          "requestUpdated": "تم تعديل الطلب بنجاح.",
-          "requestDeleted": "تم حذف الطلب بنجاح."
-        }
-      }
-    },
-    "instructorWeeklySchedule": {
-      "title": "جدولي الأسبوعي",
-      "subtitle": "عرض المحاضرات المسندة إليك في الفصل الحالي.",
-      "activeSemester": "الفصل النشط: {name}",
-      "sections": {
-        "board": "لوحتي الأسبوعية"
-      },
-      "requests": {
-        "fields": {
-          "requestedDate": "التاريخ المطلوب",
-          "reason": "السبب"
-        },
-        "actions": {
-          "submit": "إرسال الطلب"
-        },
-        "errors": {
-          "requestedDateRequired": "التاريخ المطلوب إلزامي.",
-          "requestedDateFuture": "يجب أن يكون التاريخ المطلوب في المستقبل.",
-          "requestedDateDayMismatch": "يجب أن يكون التاريخ المطلوب يوم {day}.",
-          "reasonRequired": "السبب إلزامي."
-        },
-        "toasts": {
-          "apologySubmitted": "تم إرسال طلب الاعتذار بنجاح.",
-          "makeupSubmitted": "تم إرسال طلب التعويض بنجاح."
-        },
-        "logs": {
-          "apologyPrepared": "تم تجهيز حمولة طلب الاعتذار:",
-          "makeupPrepared": "تم تجهيز حمولة طلب التعويض:"
-        },
-        "apology": {
-          "title": "طلب اعتذار",
-          "hint": "أرسل طلب اعتذار لهذه المحاضرة مع تاريخ مستقبلي وسبب.",
-          "hintWithDay": "أرسل طلب اعتذار بتاريخ مستقبلي على يوم {day}.",
-          "reasonPlaceholder": "أدخل سبب الاعتذار..."
-        },
-        "makeup": {
-          "title": "طلب تعويض محاضرة",
-          "hint": "أرسل طلب تعويض محاضرة مع تاريخ مستقبلي وسبب داعم.",
-          "reasonPlaceholder": "أدخل سبب طلب التعويض..."
-        }
-      }
-    },
-    "instructorLectureRequests": {
-      "title": "طلباتي للمحاضرات",
-      "subtitle": "تابع طلبات الاعتذار والتعويض التي أرسلتها من جدولك.",
-      "empty": "لا توجد طلبات محاضرات مرسلة حتى الآن.",
-      "columns": {
-        "note": "السبب"
-      }
-    },
-    "coordinatorLectureRequests": {
-      "title": "إدارة طلبات المحاضرات",
-      "subtitle": "تدقيق وتعديل وحذف طلبات المحاضرات للمدرسين."
-    },
-    "studentWeeklySchedule": {
-      "title": "جدولي الأسبوعي",
-      "subtitle": "عرض جدول محاضراتك للفصل الحالي.",
-      "activeSemester": "الفصل النشط: {name}",
-      "sections": {
-        "board": "لوحتي الأسبوعية"
-      }
-    },
-    "examsSessionGrades": {
-      "title": "درجات الطلاب للجلسات",
-      "subtitle": "إدخال درجات الشفهي والمخبري والمنتصف والنهائي لكل طالب.",
-      "activeSemester": "الفصل النشط: {name}",
-      "searchPlaceholder": "ابحث عن جلسة حسب المقرر أو المدرس",
-      "sections": {
-        "sessions": "الجلسات",
-        "grades": "إدخال الدرجات"
-      },
-      "columns": {
-        "course": "المقرر",
-        "time": "الوقت",
-        "students": "الطلاب",
-        "student": "الطالب",
-        "oral": "شفهي",
-        "lab": "مخبري",
-        "midterm": "منتصف",
-        "final": "نهائي",
-        "total": "المجموع",
-        "grade": "التقدير",
-        "actions": "الإجراءات"
-      },
-      "actions": {
-        "save": "حفظ",
-        "markDone": "تعيين كمكتمل",
-        "reopen": "إعادة الفتح"
-      },
-      "status": {
-        "done": "تم تعيين الجلسة كمكتملة",
-        "notDone": "الجلسة غير مكتملة بعد"
-      },
-      "empty": {
-        "selectSession": "اختر جلسة للبدء بإدخال الدرجات.",
-        "noSessions": "لا توجد جلسات.",
-        "noStudents": "لا يوجد طلاب مسجلون في هذه الجلسة."
-      },
-      "toasts": {
-        "saved": "تم حفظ الدرجات بنجاح.",
-        "saveFailed": "تعذر حفظ الدرجات.",
-        "markedDone": "تم تعيين الجلسة كمكتملة.",
-        "reopened": "تمت إعادة فتح الجلسة للتعديل."
-      }
-    },
-    "studentGrades": {
-      "title": "درجاتي",
-      "subtitle": "عرض درجات الجلسات والتقدير النهائي.",
-      "sections": {
-        "grades": "الدرجات"
-      },
-      "columns": {
-        "course": "المقرر",
-        "time": "الوقت",
-        "oral": "شفهي",
-        "lab": "مخبري",
-        "midterm": "منتصف",
-        "final": "نهائي",
-        "total": "المجموع",
-        "grade": "التقدير"
-      },
-      "empty": {
-        "noGrades": "لا توجد درجات حالياً."
-      }
-    },
     "studentsManagement": {
       "title": "إدارة الطلاب",
       "subtitle": "إدارة حسابات الطلاب مع الساعات المنجزة والمستوى الدراسي.",
@@ -805,14 +484,8 @@
       },
       "stats": {
         "totalCourses": "إجمالي المقررات",
-        "activeCurrentSemesterCourses": "النشطة هذا الفصل",
-        "inactiveCurrentSemesterCourses": "غير النشطة هذا الفصل",
         "roomOnlyCourses": "مقررات نظرية فقط",
         "roomLabCourses": "مقررات نظرية + مخبر"
-      },
-      "status": {
-        "active": "نشط هذا الفصل",
-        "inactive": "غير نشط هذا الفصل"
       },
       "labels": {
         "faculty": "الكلية",
@@ -871,9 +544,6 @@
       },
       "actions": {
         "newCourse": "مقرر جديد",
-        "activate": "تفعيل",
-        "deactivate": "تعطيل",
-        "savingStatus": "جارٍ الحفظ...",
         "edit": "تعديل",
         "delete": "حذف",
         "save": "حفظ المقرر"
@@ -885,12 +555,7 @@
         "cancel": "إلغاء"
       },
       "errors": {
-        "invalidForm": "يرجى تعبئة الحقول المطلوبة والتأكد من أن الساعات أكبر من صفر وتعريف شعب صالحة مع السعة والمدرسين.",
-        "statusUpdateFailed": "تعذر تحديث حالة المقرر للفصل الحالي."
-      },
-      "toasts": {
-        "courseActivated": "تم تفعيل \"{course}\" للفصل الحالي.",
-        "courseDeactivated": "تم تعطيل \"{course}\" للفصل الحالي."
+        "invalidForm": "يرجى تعبئة الحقول المطلوبة والتأكد من أن الساعات أكبر من صفر وتعريف شعب صالحة مع السعة والمدرسين."
       }
     },
     "specialitiesManagement": {

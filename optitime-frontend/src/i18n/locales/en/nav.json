@@ -17,7 +17,10 @@
       "system": "System"
     },
     "items": {
-      "organization": "Organization"
+      "organization": "Organization",
+      "resources": "Resources",
+      "rooms": "Rooms",
+      "laboratories": "Laboratories"
     }
   }
 }

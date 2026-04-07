@@ -5,30 +5,6 @@ export const loginRoute = {
   meta: { guestOnly: true, titleKey: 'routes.login' },
 }
 
-export const forgotPasswordEmailRoute = {
-  path: '/forgot-password',
-  name: 'forgot-password-email',
-  component: () => import('@/features/auth/ui/pages/ForgotPasswordPage.vue'),
-  props: { step: 'email' },
-  meta: { guestOnly: true, titleKey: 'routes.forgotPasswordEmail' },
-}
-
-export const forgotPasswordCodeRoute = {
-  path: '/forgot-password/code',
-  name: 'forgot-password-code',
-  component: () => import('@/features/auth/ui/pages/ForgotPasswordPage.vue'),
-  props: { step: 'code' },
-  meta: { guestOnly: true, titleKey: 'routes.forgotPasswordCode' },
-}
-
-export const forgotPasswordResetRoute = {
-  path: '/forgot-password/reset',
-  name: 'forgot-password-reset',
-  component: () => import('@/features/auth/ui/pages/ForgotPasswordPage.vue'),
-  props: { step: 'reset' },
-  meta: { guestOnly: true, titleKey: 'routes.forgotPasswordReset' },
-}
-
 export const dashboardRoute = {
   path: '/dashboard',
   name: 'dashboard',
@@ -88,6 +64,39 @@ export const studentsManagementRoute = {
     requiresAuth: true,
     requiredPermissions: ['students.view'],
     titleKey: 'routes.studentsManagement',
+  },
+}
+
+export const resourcesManagementRoute = {
+  path: '/admin/resources',
+  name: 'resources-management',
+  component: () => import('@/features/resources/ui/pages/ResourcesManagementPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['resources.view'],
+    titleKey: 'routes.resourcesManagement',
+  },
+}
+
+export const roomsManagementRoute = {
+  path: '/admin/rooms',
+  name: 'rooms-management',
+  component: () => import('@/features/rooms/ui/pages/RoomsManagementPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['rooms.view'],
+    titleKey: 'routes.roomsManagement',
+  },
+}
+
+export const coursesManagementRoute = {
+  path: '/admin/courses',
+  name: 'courses-management',
+  component: () => import('@/features/courses/ui/pages/CoursesManagementPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['courses.view'],
+    titleKey: 'routes.coursesManagement',
   },
 }
 
