@@ -60,5 +60,7 @@ const { t } = useI18n()
 .constraints-rule-list {
   display: grid;
   gap: 0.25rem;
+  width: 100%;
+  min-width: 0;
 }
 </style>

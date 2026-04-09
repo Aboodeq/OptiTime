@@ -1,5 +1,5 @@
 import { storeToRefs } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useAuthStore } from '@/store/auth.store'
 import { useConstraintsStore } from '@/features/constraints/model/stores/constraints.store'
 import { useInstructorPreferencesStore } from '@/features/instructor-preferences/model/stores/instructorPreferences.store'
@@ -8,8 +8,6 @@ export function useInstructorSelfAvailabilityPage() {
   const authStore = useAuthStore()
   const constraintsStore = useConstraintsStore()
   const preferencesStore = useInstructorPreferencesStore()
-  constraintsStore.ensureInitialized()
-  preferencesStore.ensureInitialized()
 
   const { enabledStudyDayValues } = storeToRefs(preferencesStore)
   const draft = ref(preferencesStore.createEmptyDraft())
@@ -50,7 +48,10 @@ export function useInstructorSelfAvailabilityPage() {
     return preferencesStore.upsertPreferenceForInstructorId(instructorId.value, draft.value)
   }
 
-  initializeDraft()
+  onMounted(async () => {
+    await Promise.all([constraintsStore.ensureInitialized(), preferencesStore.ensureInitialized()])
+    initializeDraft()
+  })
 
   return {
     dayOptions,

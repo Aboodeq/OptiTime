@@ -33,15 +33,24 @@ const emitToggle = (value) => emit('update:modelValue', value)
 <style scoped>
 .toggle-item-row {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 0.75rem;
   align-items: center;
   padding: 0.55rem 0.6rem;
   border-radius: 12px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .toggle-item-row:hover {
   background: #f8f9fe;
+}
+
+.toggle-item-row__content {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .toggle-item-row__title {
@@ -59,6 +68,7 @@ const emitToggle = (value) => emit('update:modelValue', value)
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
+  flex-shrink: 0;
 }
 
 .toggle-item-row__leading {
@@ -83,12 +93,13 @@ const emitToggle = (value) => emit('update:modelValue', value)
 
 @media (max-width: 576px) {
   .toggle-item-row {
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto minmax(0, 1fr);
   }
 
   .toggle-item-row__meta {
     grid-column: 1 / -1;
     justify-content: flex-end;
+    flex-shrink: 0;
   }
 }
 </style>

@@ -1,11 +1,10 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
+import { constraintsService } from '@/features/constraints/api/constraints.service'
 import {
   cloneConstraintsSettings,
   createDefaultConstraintsSettings,
 } from '@/features/constraints/model/constants/defaultConstraints'
-
-const STORAGE_KEY = 'optitime.constraints.settings.v1'
 
 function reorderByKey(defaultItems, currentItems, keyField = 'key') {
   const currentMap = new Map(
@@ -43,41 +42,18 @@ function normalizeSettingsShape(value) {
   return merged
 }
 
-function loadSavedSettings() {
-  if (typeof window === 'undefined') return createDefaultConstraintsSettings()
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY)
-    if (!raw) return createDefaultConstraintsSettings()
-    const parsed = JSON.parse(raw)
-    if (!parsed || typeof parsed !== 'object') return createDefaultConstraintsSettings()
-
-    // Backward compatibility: previous version stored settings keyed by semester id.
-    if (!Array.isArray(parsed.hard_constraints)) {
-      const firstValue = Object.values(parsed)[0]
-      if (firstValue && typeof firstValue === 'object') {
-        return normalizeSettingsShape(firstValue)
-      }
-      return createDefaultConstraintsSettings()
-    }
-
-    return normalizeSettingsShape(parsed)
-  } catch {
-    return createDefaultConstraintsSettings()
-  }
-}
-
-function persistSettings(value) {
-  if (typeof window === 'undefined') return
-  try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(value))
-  } catch {
-    // ignore storage errors
-  }
-}
-
 function normalizeNumber(value) {
   const parsed = Number(value)
   return Number.isFinite(parsed) ? parsed : NaN
+}
+
+/** Strip read-only `id` before PUT (schedule setting row id). */
+function toApiPayload(settings) {
+  const clone = cloneConstraintsSettings(settings)
+  if (clone && typeof clone === 'object' && 'id' in clone) {
+    delete clone.id
+  }
+  return clone
 }
 
 export const useConstraintsStore = defineStore('constraints', () => {
@@ -85,44 +61,68 @@ export const useConstraintsStore = defineStore('constraints', () => {
   const settings = ref(createDefaultConstraintsSettings())
   const activeSettings = computed(() => settings.value)
 
-  function ensureInitialized() {
+  async function reloadFromApi() {
+    const raw = await constraintsService.getCurrent()
+    settings.value = normalizeSettingsShape(raw)
+  }
+
+  async function ensureInitialized() {
     if (initialized.value) return
-    settings.value = loadSavedSettings()
+    try {
+      await reloadFromApi()
+    } catch {
+      settings.value = createDefaultConstraintsSettings()
+    }
     initialized.value = true
   }
 
-  function saveActiveSettings() {
-    persistSettings(settings.value)
-    return true
+  async function saveActiveSettings() {
+    if (!validateActiveSettings()) return false
+    try {
+      const payload = toApiPayload(settings.value)
+      await constraintsService.updateCurrent(payload)
+      await reloadFromApi()
+      return true
+    } catch {
+      return false
+    }
   }
 
-  function resetActiveSettings() {
+  async function resetActiveSettings() {
     settings.value = createDefaultConstraintsSettings()
-    persistSettings(settings.value)
-    return true
+    if (!validateActiveSettings()) return false
+    try {
+      const payload = toApiPayload(settings.value)
+      await constraintsService.updateCurrent(payload)
+      await reloadFromApi()
+      return true
+    } catch {
+      return false
+    }
   }
 
   function validateActiveSettings() {
-    const settings = activeSettings.value
-    if (!settings) return false
+    const settingsVal = activeSettings.value
+    if (!settingsVal) return false
 
-    const slotMinutes = normalizeNumber(settings.slot_minutes)
-    const gapMinutes = normalizeNumber(settings.gap_minutes)
-    const maxDailyLectures = normalizeNumber(settings.max_daily_lectures)
-    const capacityThreshold = normalizeNumber(settings.capacity_threshold)
+    const slotMinutes = normalizeNumber(settingsVal.slot_minutes)
+    const gapMinutes = normalizeNumber(settingsVal.gap_minutes)
+    const maxDailyLectures = normalizeNumber(settingsVal.max_daily_lectures)
+    const capacityThreshold = normalizeNumber(settingsVal.capacity_threshold)
 
     if (!(slotMinutes > 0)) return false
     if (!(gapMinutes >= 0)) return false
     if (!(maxDailyLectures > 0)) return false
     if (!(capacityThreshold >= 0 && capacityThreshold <= 100)) return false
-    if (!settings.day_start || !settings.day_end || settings.day_start >= settings.day_end) return false
+    if (!settingsVal.day_start || !settingsVal.day_end || settingsVal.day_start >= settingsVal.day_end)
+      return false
 
-    const hasInvalidBreak = settings.break_times.some(
+    const hasInvalidBreak = settingsVal.break_times.some(
       (item) => !item.start || !item.end || item.start >= item.end,
     )
     if (hasInvalidBreak) return false
 
-    const hasInvalidLoadRange = settings.load_settings.some((item) => {
+    const hasInvalidLoadRange = settingsVal.load_settings.some((item) => {
       const min = normalizeNumber(item.min)
       const max = normalizeNumber(item.max)
       return !(min >= 0 && max >= min)
@@ -143,6 +143,7 @@ export const useConstraintsStore = defineStore('constraints', () => {
   return {
     activeSettings,
     ensureInitialized,
+    reloadFromApi,
     saveActiveSettings,
     resetActiveSettings,
     validateActiveSettings,

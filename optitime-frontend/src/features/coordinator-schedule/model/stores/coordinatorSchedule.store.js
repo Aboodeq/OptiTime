@@ -520,7 +520,7 @@ export const useCoordinatorScheduleStore = defineStore('coordinatorSchedule', ()
   async function ensureInitialized() {
     if (initialized.value) return
     loading.value = true
-    constraintsStore.ensureInitialized()
+    await constraintsStore.ensureInitialized()
     await Promise.all([
       semestersStore.ensureInitialized(),
       roomsStore.ensureInitialized(),

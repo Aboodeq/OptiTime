@@ -181,21 +181,27 @@ function toNumber(value) {
 .study-breaks-section {
   display: grid;
   gap: 0.85rem;
+  min-width: 0;
 }
 
 .study-days-grid {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(4.5rem, 1fr));
   gap: 0.4rem;
+  width: 100%;
+  min-width: 0;
 }
 
 .study-day-chip {
   border: 1px solid #dfe3f1;
   background: #f9faff;
   border-radius: 10px;
-  padding: 0.45rem 0.35rem;
+  padding: 0.45rem 0.3rem;
   text-align: center;
   transition: all 0.2s ease;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .study-day-chip--active {
@@ -205,8 +211,11 @@ function toNumber(value) {
 
 .study-day-chip__label {
   display: block;
-  font-size: 0.78rem;
+  font-size: clamp(0.62rem, 1.5vw + 0.35rem, 0.78rem);
   font-weight: 700;
+  line-height: 1.2;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .study-day-chip__code {
@@ -266,10 +275,6 @@ function toNumber(value) {
 }
 
 @media (max-width: 992px) {
-  .study-days-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
   .break-row {
     grid-template-columns: auto 1fr;
   }
@@ -282,7 +287,7 @@ function toNumber(value) {
 
 @media (max-width: 576px) {
   .study-days-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(4.25rem, 1fr));
   }
 
   .break-row__inputs {

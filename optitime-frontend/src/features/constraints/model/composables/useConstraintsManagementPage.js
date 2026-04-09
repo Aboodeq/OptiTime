@@ -1,30 +1,35 @@
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useConstraintsStore } from '@/features/constraints/model/stores/constraints.store'
 
 export function useConstraintsManagementPage() {
   const constraintsStore = useConstraintsStore()
-  constraintsStore.ensureInitialized()
-
   const draft = ref(constraintsStore.getDraftForActiveSemester())
 
   function resetDraftToSaved() {
     draft.value = constraintsStore.getDraftForActiveSemester()
   }
 
-  function saveDraft() {
+  async function saveDraft() {
     if (!draft.value) return false
     constraintsStore.replaceActiveSettings(draft.value)
     if (!constraintsStore.validateActiveSettings()) return false
-    constraintsStore.saveActiveSettings()
+    const ok = await constraintsStore.saveActiveSettings()
+    if (!ok) return false
     draft.value = constraintsStore.getDraftForActiveSemester()
     return true
   }
 
-  function resetToDefault() {
-    constraintsStore.resetActiveSettings()
+  async function resetToDefault() {
+    const ok = await constraintsStore.resetActiveSettings()
+    if (!ok) return false
     draft.value = constraintsStore.getDraftForActiveSemester()
     return true
   }
+
+  onMounted(async () => {
+    await constraintsStore.ensureInitialized()
+    resetDraftToSaved()
+  })
 
   return {
     draft,
