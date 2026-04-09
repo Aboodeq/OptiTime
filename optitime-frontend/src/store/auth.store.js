@@ -57,11 +57,17 @@ function normalizePermissions(permissions) {
           'instructors.view',
         ]
       }
+      if (permission === 'instructorPreferences.self.manage') {
+        return ['instructorPreferences.self.view', 'instructorPreferences.self.update']
+      }
       if (permission === 'students.manage') {
         return ['students.create', 'students.update', 'students.delete', 'students.view']
       }
       if (permission === 'courses.manage') {
         return ['courses.create', 'courses.update', 'courses.delete', 'courses.view']
+      }
+      if (permission === 'schedule.manage') {
+        return ['schedule.view', 'schedule.update', 'schedule.generate']
       }
       if (permission === 'resources.manage') {
         return ['resources.create', 'resources.update', 'resources.delete', 'resources.view']
