@@ -69,6 +69,9 @@ const DEMO_USERS = Object.freeze({
       'settings.profile.update',
       'settings.security.update',
       'settings.notifications.update',
+      'schedule.view',
+      'schedule.update',
+      'schedule.generate',
       'resources.create',
       'resources.update',
       'resources.delete',
@@ -102,10 +105,11 @@ const DEMO_USERS = Object.freeze({
       'settings.notifications.update',
       'instructorPreferences.self.view',
       'instructorPreferences.self.update',
+      'instructorSchedule.self.view',
     ],
   },
   student: {
-    id: 'demo-student',
+    id: 'student-demo',
     name: 'Demo Student',
     email: DEMO_CREDENTIALS.email,
     role: {
@@ -121,6 +125,7 @@ const DEMO_USERS = Object.freeze({
       'settings.profile.update',
       'settings.security.update',
       'settings.notifications.update',
+      'studentSchedule.self.view',
     ],
   },
   management: {

@@ -31,6 +31,27 @@ export const BASE_SIDEBAR_SECTIONS = Object.freeze([
         labelKey: 'routes.instructorSelfAvailability',
         permissions: ['instructorPreferences.self.view'],
       },
+      {
+        id: 'instructor-weekly-schedule',
+        routeName: 'instructor-weekly-schedule',
+        icon: 'bi bi-calendar-week',
+        labelKey: 'routes.instructorWeeklySchedule',
+        permissions: ['instructorSchedule.self.view'],
+      },
+      {
+        id: 'student-weekly-schedule',
+        routeName: 'student-weekly-schedule',
+        icon: 'bi bi-calendar-check',
+        labelKey: 'routes.studentWeeklySchedule',
+        permissions: ['studentSchedule.self.view'],
+      },
+      {
+        id: 'coordinator-weekly-schedule',
+        routeName: 'coordinator-weekly-schedule',
+        icon: 'bi bi-calendar3-week',
+        labelKey: 'routes.coordinatorWeeklySchedule',
+        permissions: ['schedule.view'],
+      },
     ],
   },
   {

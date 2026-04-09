@@ -66,6 +66,9 @@ function normalizePermissions(permissions) {
       if (permission === 'courses.manage') {
         return ['courses.create', 'courses.update', 'courses.delete', 'courses.view']
       }
+      if (permission === 'schedule.manage') {
+        return ['schedule.view', 'schedule.update', 'schedule.generate']
+      }
       if (permission === 'resources.manage') {
         return ['resources.create', 'resources.update', 'resources.delete', 'resources.view']
       }
