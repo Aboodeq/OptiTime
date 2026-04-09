@@ -209,7 +209,7 @@ const canViewUsers = computed(() => authStore.hasPermission('users.view'))
 const canCreateUsers = computed(() => authStore.hasPermission('users.create'))
 const canUpdateUsers = computed(() => authStore.hasPermission('users.update'))
 const canDeleteUsers = computed(() => authStore.hasPermission('users.delete'))
-const canCreateOrganization = computed(() => authStore.hasPermission('organization.create'))
+const canCreateOrganization = computed(() => authStore.hasPermission('faculties.create'))
 const facultyNameById = computed(() => {
   const map = new Map()
   faculties.value.forEach((faculty) => {

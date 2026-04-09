@@ -22,10 +22,10 @@ export function useUserSettingsPage() {
   })
 
   const userId = computed(() => authStore.user?.id ?? null)
-  const canUpdateProfile = computed(() => authStore.hasPermission('settings.profile.update'))
-  const canUpdateSecurity = computed(() => authStore.hasPermission('settings.security.update'))
-  const canUpdateNotifications = computed(() => authStore.hasPermission('settings.notifications.update'))
-  const canCreateBackup = computed(() => authStore.hasPermission('settings.backup.create'))
+  const canUpdateProfile = computed(() => authStore.hasPermission('profile.update'))
+  const canUpdateSecurity = computed(() => authStore.hasPermission('profile.update'))
+  const canUpdateNotifications = computed(() => authStore.hasPermission('profile.update'))
+  const canCreateBackup = computed(() => authStore.hasPermission('profile.update'))
 
   async function initialize() {
     if (!userId.value) return

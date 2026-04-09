@@ -1,6 +1,9 @@
 {
   "routes": {
     "login": "Login",
+    "forgotPasswordEmail": "Forgot password",
+    "forgotPasswordCode": "Verify code",
+    "forgotPasswordReset": "Reset password",
     "dashboard": "Dashboard",
     "rolesManagement": "Roles management",
     "organizationManagement": "Organization",
@@ -12,6 +15,8 @@
     "coordinatorWeeklySchedule": "Weekly schedule",
     "coordinatorLectureRequests": "Lecture requests",
     "studentWeeklySchedule": "My weekly schedule",
+    "studentGrades": "My grades",
+    "examsSessionGrades": "Session student grades",
     "studentsManagement": "Students management",
     "resourcesManagement": "Resources management",
     "roomsManagement": "Rooms management",

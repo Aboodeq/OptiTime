@@ -51,9 +51,9 @@ export function useDashboardPage() {
     if (isMobile.value) closeMobileSidebar()
   }
 
-  function handleLogout() {
+  async function handleLogout() {
     closeMobileSidebar()
-    authStore.logout()
+    await authStore.logout()
     router.push('/login')
   }
 

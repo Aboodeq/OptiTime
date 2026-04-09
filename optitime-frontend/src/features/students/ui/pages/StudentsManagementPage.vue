@@ -3,7 +3,7 @@
     <section class="dashboard-card w-100">
       <div class="students-toolbar">
         <h1 class="h4 fw-bold mb-0">{{ t('pages.studentsManagement.title') }}</h1>
-        <AppCan permission="students.create">
+        <AppCan permission="users.create">
           <AppButton
             class="new-student-btn"
             type="button"
@@ -72,7 +72,7 @@
 
           <template #cell-actions="{ row }">
             <div class="text-start">
-              <AppCan permission="students.update">
+              <AppCan permission="users.update">
                 <AppIconButton
                   class="me-2"
                   icon="bi bi-pencil-square"
@@ -82,7 +82,7 @@
                   @click="startEditStudent(row)"
                 />
               </AppCan>
-              <AppCan permission="students.delete">
+              <AppCan permission="users.delete">
                 <AppIconButton
                   icon="bi bi-trash3"
                   variant="danger"
@@ -172,10 +172,10 @@ const {
 const search = ref('')
 const studentPendingDelete = ref(null)
 
-const canViewStudents = computed(() => authStore.hasPermission('students.view'))
-const canCreateStudents = computed(() => authStore.hasPermission('students.create'))
-const canUpdateStudents = computed(() => authStore.hasPermission('students.update'))
-const canDeleteStudents = computed(() => authStore.hasPermission('students.delete'))
+const canViewStudents = computed(() => authStore.hasPermission('users.view'))
+const canCreateStudents = computed(() => authStore.hasPermission('users.create'))
+const canUpdateStudents = computed(() => authStore.hasPermission('users.update'))
+const canDeleteStudents = computed(() => authStore.hasPermission('users.delete'))
 const facultyNameById = computed(() => {
   const map = new Map()
   faculties.value.forEach((faculty) => {

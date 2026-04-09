@@ -3,7 +3,7 @@
     <section class="dashboard-card w-100">
       <div class="specialities-toolbar">
         <h1 class="h4 fw-bold mb-0">{{ t('pages.specialitiesManagement.title') }}</h1>
-        <AppCan permission="specialities.create">
+        <AppCan permission="specializations.create">
           <AppButton
             class="new-speciality-btn"
             type="button"
@@ -52,7 +52,7 @@
 
           <template #cell-actions="{ row }">
             <div class="text-start">
-              <AppCan permission="specialities.update">
+              <AppCan permission="specializations.update">
                 <AppIconButton
                   class="me-2"
                   icon="bi bi-pencil-square"
@@ -62,7 +62,7 @@
                   @click="startEditSpeciality(row)"
                 />
               </AppCan>
-              <AppCan permission="specialities.delete">
+              <AppCan permission="specializations.delete">
                 <AppIconButton
                   icon="bi bi-trash3"
                   variant="danger"
@@ -141,10 +141,10 @@ const {
 
 const search = ref('')
 const specialityPendingDelete = ref(null)
-const canViewSpecialities = computed(() => authStore.hasPermission('specialities.view'))
-const canCreateSpecialities = computed(() => authStore.hasPermission('specialities.create'))
-const canUpdateSpecialities = computed(() => authStore.hasPermission('specialities.update'))
-const canDeleteSpecialities = computed(() => authStore.hasPermission('specialities.delete'))
+const canViewSpecialities = computed(() => authStore.hasPermission('specializations.view'))
+const canCreateSpecialities = computed(() => authStore.hasPermission('specializations.create'))
+const canUpdateSpecialities = computed(() => authStore.hasPermission('specializations.update'))
+const canDeleteSpecialities = computed(() => authStore.hasPermission('specializations.delete'))
 
 const filteredSpecialities = computed(() => {
   if (!canViewSpecialities.value) return []

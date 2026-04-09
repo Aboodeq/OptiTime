@@ -3,7 +3,7 @@
     <section class="dashboard-card w-100">
       <div class="organization-toolbar">
         <h1 class="h4 fw-bold mb-0">{{ t('pages.organization.title') }}</h1>
-        <AppCan permission="organization.create">
+        <AppCan permission="faculties.create">
           <AppButton
             class="new-entity-btn"
             type="button"
@@ -131,10 +131,10 @@ const {
 const search = ref('')
 const pendingDelete = ref(null)
 
-const canViewOrganization = computed(() => authStore.hasPermission('organization.view'))
-const canCreateOrganization = computed(() => authStore.hasPermission('organization.create'))
-const canUpdateOrganization = computed(() => authStore.hasPermission('organization.update'))
-const canDeleteOrganization = computed(() => authStore.hasPermission('organization.delete'))
+const canViewOrganization = computed(() => authStore.hasPermission('faculties.view'))
+const canCreateOrganization = computed(() => authStore.hasPermission('faculties.create'))
+const canUpdateOrganization = computed(() => authStore.hasPermission('faculties.update'))
+const canDeleteOrganization = computed(() => authStore.hasPermission('faculties.delete'))
 const previewLimit = 3
 
 const filteredFaculties = computed(() => {

@@ -146,7 +146,7 @@ const localizedDayOptions = computed(() => {
   }))
 })
 
-const canUpdateSchedule = computed(() => authStore.hasPermission('schedule.update'))
+const canUpdateSchedule = computed(() => authStore.hasPermission('schedules.update'))
 const canGenerateSchedule = computed(() => authStore.hasPermission('schedule.generate'))
 const selectedLectureStudents = computed(() =>
   selectedLecture.value ? getLectureStudents(selectedLecture.value) : [],

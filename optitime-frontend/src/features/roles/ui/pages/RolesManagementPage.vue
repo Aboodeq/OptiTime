@@ -201,17 +201,17 @@ function requestDeleteRole(role) {
   rolePendingDelete.value = role
 }
 
-function confirmDeleteRole() {
+async function confirmDeleteRole() {
   if (!canDeleteRoles.value) return
   if (!rolePendingDelete.value) return
-  deleteRole(rolePendingDelete.value.id)
+  await deleteRole(rolePendingDelete.value.id)
   rolePendingDelete.value = null
 }
 
-function handleSaveRole() {
+async function handleSaveRole() {
   if (isEditing.value && !canUpdateRoles.value) return
   if (!isEditing.value && !canCreateRoles.value) return
-  saveRole()
+  await saveRole()
 }
 </script>
 

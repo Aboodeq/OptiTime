@@ -73,10 +73,10 @@ const apologyDialogOpen = ref(false)
 const makeupDialogOpen = ref(false)
 const selectedLecture = ref(null)
 const canRequestApologyLecture = computed(() =>
-  authStore.hasPermission('instructorSchedule.apologyRequest.create'),
+  authStore.hasPermission('instructor.requests.create'),
 )
 const canRequestMakeupLecture = computed(() =>
-  authStore.hasPermission('instructorSchedule.makeupRequest.create'),
+  authStore.hasPermission('instructor.requests.create'),
 )
 
 const { activeSemester, dayOptions, timeSlots, blockedSlotStarts, sessions, getLectureStudents } =

@@ -105,8 +105,8 @@ const editOpen = ref(false)
 const deleteOpen = ref(false)
 const editForm = ref({ requested_date: '', note: '' })
 
-const canModifyOwn = computed(() => authStore.hasPermission('instructorSchedule.requests.self.update'))
-const canDeleteOwn = computed(() => authStore.hasPermission('instructorSchedule.requests.self.delete'))
+const canModifyOwn = computed(() => authStore.hasPermission('instructor.requests.create'))
+const canDeleteOwn = computed(() => authStore.hasPermission('instructor.requests.create'))
 const instructorRequests = computed(() => requestsStore.requests)
 
 const columns = computed(() => [

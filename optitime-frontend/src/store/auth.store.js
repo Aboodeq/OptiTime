@@ -1,126 +1,17 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { AUTH_STORAGE_KEY } from '@/constants/storageKeys'
 import { authService } from '@/features/auth/api/auth.service'
-
-function loadSavedUser() {
-  if (typeof window === 'undefined') return null
-
-  try {
-    const raw = window.localStorage.getItem(AUTH_STORAGE_KEY)
-    return raw ? JSON.parse(raw) : null
-  } catch {
-    return null
-  }
-}
-
-function saveUser(user) {
-  if (typeof window === 'undefined') return
-
-  try {
-    if (!user) {
-      window.localStorage.removeItem(AUTH_STORAGE_KEY)
-      return
-    }
-
-    window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user))
-  } catch {
-    // ignore storage errors
-  }
-}
+import { loadAuthSession, saveAuthSession } from '@/lib/authSession'
 
 function normalizePermissions(permissions) {
   if (!Array.isArray(permissions)) return []
-  const mapped = permissions
-    .filter((permission) => typeof permission === 'string')
-    .map((permission) => permission.replace(/\s+/g, ''))
-    .flatMap((permission) => {
-      if (permission === 'roles.manage') {
-        return ['roles.create', 'roles.update', 'roles.delete', 'roles.view']
-      }
-      if (permission === 'organization.manage') {
-        return [
-          'organization.create',
-          'organization.update',
-          'organization.delete',
-          'organization.view',
-        ]
-      }
-      if (permission === 'users.manage') {
-        return ['users.create', 'users.update', 'users.delete', 'users.view']
-      }
-      if (permission === 'instructors.manage') {
-        return [
-          'instructors.create',
-          'instructors.update',
-          'instructors.delete',
-          'instructors.view',
-        ]
-      }
-      if (permission === 'instructorPreferences.self.manage') {
-        return ['instructorPreferences.self.view', 'instructorPreferences.self.update']
-      }
-      if (permission === 'instructorSchedule.self.manage') {
-        return [
-          'instructorSchedule.self.view',
-          'instructorSchedule.apologyRequest.create',
-          'instructorSchedule.makeupRequest.create',
-          'instructorSchedule.requests.self.update',
-          'instructorSchedule.requests.self.delete',
-        ]
-      }
-      if (permission === 'students.manage') {
-        return ['students.create', 'students.update', 'students.delete', 'students.view']
-      }
-      if (permission === 'courses.manage') {
-        return ['courses.create', 'courses.update', 'courses.delete', 'courses.view']
-      }
-      if (permission === 'schedule.manage') {
-        return [
-          'schedule.view',
-          'schedule.update',
-          'schedule.generate',
-          'instructorSchedule.requests.review',
-          'instructorSchedule.requests.update',
-          'instructorSchedule.requests.delete',
-        ]
-      }
-      if (permission === 'resources.manage') {
-        return ['resources.create', 'resources.update', 'resources.delete', 'resources.view']
-      }
-      if (permission === 'specialities.manage') {
-        return [
-          'specialities.create',
-          'specialities.update',
-          'specialities.delete',
-          'specialities.view',
-        ]
-      }
-      if (permission === 'semesters.manage') {
-        return ['semesters.create', 'semesters.update', 'semesters.delete', 'semesters.view']
-      }
-      if (permission === 'constraints.manage') {
-        return ['constraints.create', 'constraints.update', 'constraints.delete', 'constraints.view']
-      }
-      if (permission === 'auditLogs.manage') {
-        return ['auditLogs.create', 'auditLogs.update', 'auditLogs.delete', 'auditLogs.view']
-      }
-      if (permission === 'settings.manage') {
-        return [
-          'settings.view',
-          'settings.profile.update',
-          'settings.security.update',
-          'settings.notifications.update',
-          'settings.backup.create',
-        ]
-      }
-      if (permission === 'roled.delete') {
-        return ['roles.delete']
-      }
-      return [permission]
-    })
-
-  return [...new Set(mapped)]
+  return [
+    ...new Set(
+      permissions
+        .filter((permission) => typeof permission === 'string')
+        .map((permission) => permission.replace(/\s+/g, '')),
+    ),
+  ]
 }
 
 function normalizeUser(userData) {
@@ -130,9 +21,9 @@ function normalizeUser(userData) {
   const role =
     rawRole && typeof rawRole === 'object'
       ? {
-          key: rawRole.key ?? 'unknown',
-          name: rawRole.name ?? rawRole.key ?? 'Unknown',
-          color: rawRole.color ?? '#334155',
+          key: rawRole.key ?? rawRole.code ?? 'unknown',
+          name: rawRole.name ?? rawRole.name_en ?? rawRole.key ?? 'Unknown',
+          color: rawRole.color ?? rawRole.sidebar_color ?? '#334155',
         }
       : {
           key: typeof rawRole === 'string' ? rawRole : 'unknown',
@@ -141,34 +32,39 @@ function normalizeUser(userData) {
         }
 
   const normalizedPermissions = normalizePermissions(userData.permissions)
-  const effectivePermissions =
-    role.key === 'coordinator'
-      ? normalizedPermissions.filter(
-          (permission) =>
-            permission !== 'instructorSchedule.requests.update' &&
-            permission !== 'instructorSchedule.requests.delete',
-        )
-      : normalizedPermissions
 
   return {
     ...userData,
     role,
-    permissions: effectivePermissions,
+    permissions: normalizedPermissions,
   }
 }
 
 export const useAuthStore = defineStore('auth', () => {
-  const user = ref(normalizeUser(loadSavedUser()))
+  const user = ref(normalizeUser(loadAuthSession().user))
   const isAuthenticated = computed(() => Boolean(user.value))
   const role = computed(() => user.value?.role ?? null)
   const roleKey = computed(() => role.value?.key ?? null)
   const roleColor = computed(() => role.value?.color ?? '#334155')
   const permissions = computed(() => user.value?.permissions ?? [])
+  const passwordRecovery = ref({
+    email: '',
+    code: '',
+    isCodeVerified: false,
+    codeSentAt: 0,
+  })
 
   function setUser(userData) {
+    if (!userData) {
+      user.value = null
+      saveAuthSession(null, null)
+      return
+    }
+
     const normalizedUser = normalizeUser(userData)
     user.value = normalizedUser
-    saveUser(normalizedUser)
+    const { token } = loadAuthSession()
+    saveAuthSession(token, normalizedUser)
   }
 
   function patchCurrentUser(partial) {
@@ -187,19 +83,114 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function login(credentials) {
-    const loggedInUser = await authService.login(credentials)
-    setUser(loggedInUser)
-    return loggedInUser
+    const { token, user: loggedInUser } = await authService.login(credentials)
+    const normalizedUser = normalizeUser(loggedInUser)
+    user.value = normalizedUser
+    saveAuthSession(token, normalizedUser)
+    return normalizedUser
   }
 
-  async function loginAsDemoRole(role) {
-    const loggedInUser = await authService.loginAsDemoRole(role)
-    setUser(loggedInUser)
-    return loggedInUser
+  async function loginAsDemoRole(roleKey) {
+    const { token, user: loggedInUser } = await authService.loginAsDemoRole(roleKey)
+    const normalizedUser = normalizeUser(loggedInUser)
+    user.value = normalizedUser
+    saveAuthSession(token, normalizedUser)
+    return normalizedUser
   }
 
-  function logout() {
-    setUser(null)
+  /**
+   * Refresh user from GET /api/user when a token exists (e.g. after reload).
+   */
+  async function restoreSession() {
+    const { token, user: stored } = loadAuthSession()
+    if (!token || !stored) return
+
+    if (authService.isDemoMode() && String(token).startsWith('demo-token')) {
+      user.value = normalizeUser(stored)
+      return
+    }
+
+    try {
+      const fresh = await authService.fetchCurrentUser()
+      if (fresh) {
+        const normalizedUser = normalizeUser(fresh)
+        user.value = normalizedUser
+        saveAuthSession(token, normalizedUser)
+      }
+    } catch {
+      user.value = null
+      saveAuthSession(null, null)
+    }
+  }
+
+  function clearPasswordRecovery() {
+    passwordRecovery.value = {
+      email: '',
+      code: '',
+      isCodeVerified: false,
+      codeSentAt: 0,
+    }
+  }
+
+  async function requestPasswordReset(email) {
+    const normalizedEmail = String(email ?? '')
+      .trim()
+      .toLowerCase()
+
+    await authService.requestPasswordReset(normalizedEmail)
+    passwordRecovery.value = {
+      email: normalizedEmail,
+      code: '',
+      isCodeVerified: false,
+      codeSentAt: Date.now(),
+    }
+    return true
+  }
+
+  async function resendPasswordResetCode() {
+    const email = passwordRecovery.value.email
+    if (!email) {
+      throw { code: 'MISSING_EMAIL' }
+    }
+    await authService.requestPasswordReset(email)
+    passwordRecovery.value = {
+      ...passwordRecovery.value,
+      code: '',
+      codeSentAt: Date.now(),
+      isCodeVerified: false,
+    }
+    return true
+  }
+
+  async function verifyPasswordResetCode(code) {
+    const email = passwordRecovery.value.email
+    if (!email) {
+      throw { code: 'MISSING_EMAIL' }
+    }
+    await authService.verifyPasswordResetCode({ email, code })
+    passwordRecovery.value = {
+      ...passwordRecovery.value,
+      code: String(code ?? '').trim(),
+      isCodeVerified: true,
+    }
+    return true
+  }
+
+  async function resetPassword(password) {
+    const { email, code, isCodeVerified } = passwordRecovery.value
+    if (!email || !code || !isCodeVerified) {
+      throw { code: 'RESET_NOT_ALLOWED' }
+    }
+
+    await authService.resetPassword({ email, code, password })
+    clearPasswordRecovery()
+    return true
+  }
+
+  async function logout() {
+    await authService.logout()
+    user.value = null
+    saveAuthSession(null, null)
   }
 
   return {
@@ -215,6 +206,13 @@ export const useAuthStore = defineStore('auth', () => {
     hasAnyPermission,
     login,
     loginAsDemoRole,
+    restoreSession,
+    passwordRecovery,
+    clearPasswordRecovery,
+    requestPasswordReset,
+    resendPasswordResetCode,
+    verifyPasswordResetCode,
+    resetPassword,
     logout,
   }
 })

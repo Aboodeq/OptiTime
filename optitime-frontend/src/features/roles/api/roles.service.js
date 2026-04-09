@@ -1,198 +1,52 @@
-const AVAILABLE_PERMISSIONS = Object.freeze([
-  'dashboard.view',
-  'organization.create',
-  'organization.update',
-  'organization.delete',
-  'organization.view',
-  'roles.create',
-  'roles.update',
-  'roles.delete',
-  'roles.view',
-  'users.create',
-  'users.update',
-  'users.delete',
-  'users.view',
-  'instructors.create',
-  'instructors.update',
-  'instructors.delete',
-  'instructors.view',
-  'instructorPreferences.self.view',
-  'instructorPreferences.self.update',
-  'instructorSchedule.self.view',
-  'instructorSchedule.apologyRequest.create',
-  'instructorSchedule.makeupRequest.create',
-  'instructorSchedule.requests.review',
-  'instructorSchedule.requests.update',
-  'instructorSchedule.requests.delete',
-  'instructorSchedule.requests.self.update',
-  'instructorSchedule.requests.self.delete',
-  'students.create',
-  'students.update',
-  'students.delete',
-  'students.view',
-  'studentSchedule.self.view',
-  'resources.create',
-  'resources.update',
-  'resources.delete',
-  'resources.view',
-  'rooms.create',
-  'rooms.update',
-  'rooms.delete',
-  'rooms.view',
-  'users.manage',
-  'students.manage',
-  'courses.manage',
-  'courses.create',
-  'courses.update',
-  'courses.delete',
-  'courses.view',
-  'specialities.create',
-  'specialities.update',
-  'specialities.delete',
-  'specialities.view',
-  'schedule.view',
-  'schedule.update',
-  'schedule.generate',
-  'reports.view',
-  'semesters.manage',
-  'semesters.create',
-  'semesters.update',
-  'semesters.delete',
-  'semesters.view',
-  'constraints.manage',
-  'constraints.view',
-  'auditLogs.view',
-  'settings.manage',
-  'notifications.view',
-  'settings.view',
-  'settings.profile.update',
-  'settings.security.update',
-  'settings.notifications.update',
-  'settings.backup.create',
-])
+import { apiJson } from '@/api/client'
 
-const INITIAL_ROLES = Object.freeze([
-  {
-    id: 'role-admin',
-    code: 'admin',
-    name_ar: 'مدير النظام',
-    name_en: 'System admin',
-    sidebar_color: '#e63946',
-    description: 'System role with full role-management access.',
-    is_active: true,
-    permissions: [
-      'dashboard.view',
-      'roles.create',
-      'roles.update',
-      'roles.delete',
-      'roles.view',
-      'settings.manage',
-    ],
-  },
-  {
-    id: 'role-coordinator',
-    code: 'coordinator',
-    name_ar: 'منسق الموارد',
-    name_en: 'Resource coordinator',
-    sidebar_color: '#4361ee',
-    description: '',
-    is_active: true,
-    permissions: [
-      'dashboard.view',
-      'courses.create',
-      'courses.update',
-      'courses.delete',
-      'courses.view',
-      'semesters.create',
-      'semesters.update',
-      'semesters.delete',
-      'semesters.view',
-      'schedule.view',
-      'schedule.update',
-      'schedule.generate',
-      'instructorSchedule.requests.review',
-      'settings.view',
-      'settings.profile.update',
-      'settings.security.update',
-      'settings.notifications.update',
-      'notifications.view',
-    ],
-  },
-  {
-    id: 'role-instructor',
-    code: 'instructor',
-    name_ar: 'مدرس',
-    name_en: 'Instructor',
-    sidebar_color: '#2dc653',
-    description: '',
-    is_active: true,
-    permissions: [
-      'dashboard.view',
-      'instructorPreferences.self.view',
-      'instructorPreferences.self.update',
-      'instructorSchedule.self.view',
-      'instructorSchedule.apologyRequest.create',
-      'instructorSchedule.makeupRequest.create',
-      'instructorSchedule.requests.self.update',
-      'instructorSchedule.requests.self.delete',
-      'notifications.view',
-      'settings.view',
-      'settings.profile.update',
-      'settings.security.update',
-      'settings.notifications.update',
-    ],
-  },
-  {
-    id: 'role-management',
-    code: 'management',
-    name_ar: 'الإدارة',
-    name_en: 'Management',
-    sidebar_color: '#0f766e',
-    description: '',
-    is_active: true,
-    permissions: [
-      'dashboard.view',
-      'courses.view',
-      'semesters.view',
-      'notifications.view',
-      'settings.view',
-      'settings.profile.update',
-      'settings.security.update',
-      'settings.notifications.update',
-    ],
-  },
-  {
-    id: 'role-student',
-    code: 'student',
-    name_ar: 'طالب',
-    name_en: 'Student',
-    sidebar_color: '#f8961e',
-    description: '',
-    is_active: true,
-    permissions: [
-      'dashboard.view',
-      'studentSchedule.self.view',
-      'settings.view',
-      'settings.profile.update',
-      'settings.security.update',
-      'settings.notifications.update',
-    ],
-  },
-])
+function permissionCodesFromRole(role) {
+  if (!role?.permissions?.length) return []
+  return role.permissions
+    .map((p) => (typeof p === 'string' ? p : p?.code))
+    .filter(Boolean)
+}
 
-function cloneRole(role) {
+/**
+ * Normalize API role for the UI: `permissions` is always an array of codes.
+ */
+export function mapRoleFromApi(role) {
+  if (!role) return null
   return {
     ...role,
-    permissions: [...role.permissions],
+    permissions: permissionCodesFromRole(role),
   }
 }
 
 export const rolesService = {
   async getPermissionsCatalog() {
-    return [...AVAILABLE_PERMISSIONS]
+    const { data } = await apiJson('/admin/permissions')
+    return Array.isArray(data) ? data : []
   },
 
   async getRoles() {
-    return INITIAL_ROLES.map(cloneRole)
+    const { data } = await apiJson('/admin/roles')
+    const list = Array.isArray(data) ? data : []
+    return list.map((r) => mapRoleFromApi(r)).filter(Boolean)
+  },
+
+  async createRole(body) {
+    const { data } = await apiJson('/admin/roles', {
+      method: 'POST',
+      json: body,
+    })
+    return mapRoleFromApi(data)
+  },
+
+  async updateRole(id, body) {
+    const { data } = await apiJson(`/admin/roles/${id}`, {
+      method: 'PUT',
+      json: body,
+    })
+    return mapRoleFromApi(data)
+  },
+
+  async deleteRole(id) {
+    await apiJson(`/admin/roles/${id}`, { method: 'DELETE' })
   },
 }

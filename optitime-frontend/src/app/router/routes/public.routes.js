@@ -5,6 +5,30 @@ export const loginRoute = {
   meta: { guestOnly: true, titleKey: 'routes.login' },
 }
 
+export const forgotPasswordEmailRoute = {
+  path: '/forgot-password',
+  name: 'forgot-password-email',
+  component: () => import('@/features/auth/ui/pages/ForgotPasswordPage.vue'),
+  props: { step: 'email' },
+  meta: { guestOnly: true, titleKey: 'routes.forgotPasswordEmail' },
+}
+
+export const forgotPasswordCodeRoute = {
+  path: '/forgot-password/code',
+  name: 'forgot-password-code',
+  component: () => import('@/features/auth/ui/pages/ForgotPasswordPage.vue'),
+  props: { step: 'code' },
+  meta: { guestOnly: true, titleKey: 'routes.forgotPasswordCode' },
+}
+
+export const forgotPasswordResetRoute = {
+  path: '/forgot-password/reset',
+  name: 'forgot-password-reset',
+  component: () => import('@/features/auth/ui/pages/ForgotPasswordPage.vue'),
+  props: { step: 'reset' },
+  meta: { guestOnly: true, titleKey: 'routes.forgotPasswordReset' },
+}
+
 export const dashboardRoute = {
   path: '/dashboard',
   name: 'dashboard',
@@ -29,7 +53,7 @@ export const organizationManagementRoute = {
   component: () => import('@/features/organization/ui/pages/AdminOrganizationPage.vue'),
   meta: {
     requiresAuth: true,
-    requiredPermissions: ['organization.view'],
+    requiredPermissions: ['faculties.view'],
     titleKey: 'routes.organizationManagement',
   },
 }
@@ -51,7 +75,7 @@ export const instructorsManagementRoute = {
   component: () => import('@/features/instructors/ui/pages/InstructorsManagementPage.vue'),
   meta: {
     requiresAuth: true,
-    requiredPermissions: ['instructors.view'],
+    requiredPermissions: ['users.view'],
     titleKey: 'routes.instructorsManagement',
   },
 }
@@ -63,7 +87,7 @@ export const instructorSelfAvailabilityRoute = {
     import('@/features/instructor-preferences/ui/pages/InstructorSelfAvailabilityPage.vue'),
   meta: {
     requiresAuth: true,
-    requiredPermissions: ['instructorPreferences.self.view'],
+    requiredPermissions: ['instructor_availability.view'],
     titleKey: 'routes.instructorSelfAvailability',
   },
 }
@@ -75,7 +99,7 @@ export const instructorWeeklyScheduleRoute = {
     import('@/features/coordinator-schedule/ui/pages/InstructorWeeklySchedulePage.vue'),
   meta: {
     requiresAuth: true,
-    requiredPermissions: ['instructorSchedule.self.view'],
+    requiredPermissions: ['instructor.schedule.view'],
     titleKey: 'routes.instructorWeeklySchedule',
   },
 }
@@ -87,10 +111,7 @@ export const instructorLectureRequestsRoute = {
     import('@/features/lecture-requests/ui/pages/InstructorLectureRequestsPage.vue'),
   meta: {
     requiresAuth: true,
-    requiredPermissions: [
-      'instructorSchedule.apologyRequest.create',
-      'instructorSchedule.makeupRequest.create',
-    ],
+    requiredPermissions: ['instructor.requests.create'],
     titleKey: 'routes.instructorLectureRequests',
   },
 }
@@ -101,8 +122,30 @@ export const studentWeeklyScheduleRoute = {
   component: () => import('@/features/coordinator-schedule/ui/pages/StudentWeeklySchedulePage.vue'),
   meta: {
     requiresAuth: true,
-    requiredPermissions: ['studentSchedule.self.view'],
+    requiredPermissions: ['student.schedule.view'],
     titleKey: 'routes.studentWeeklySchedule',
+  },
+}
+
+export const studentGradesRoute = {
+  path: '/student/grades',
+  name: 'student-grades',
+  component: () => import('@/features/session-grades/ui/pages/StudentGradesPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['student.grades.view'],
+    titleKey: 'routes.studentGrades',
+  },
+}
+
+export const examsSessionGradesRoute = {
+  path: '/exams/session-grades',
+  name: 'exams-session-grades',
+  component: () => import('@/features/session-grades/ui/pages/ExamsSessionGradesPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['exam_grades.update'],
+    titleKey: 'routes.examsSessionGrades',
   },
 }
 
@@ -113,7 +156,7 @@ export const coordinatorWeeklyScheduleRoute = {
     import('@/features/coordinator-schedule/ui/pages/CoordinatorWeeklySchedulePage.vue'),
   meta: {
     requiresAuth: true,
-    requiredPermissions: ['schedule.view'],
+    requiredPermissions: ['schedules.view'],
     titleKey: 'routes.coordinatorWeeklySchedule',
   },
 }
@@ -125,7 +168,7 @@ export const coordinatorLectureRequestsRoute = {
     import('@/features/lecture-requests/ui/pages/CoordinatorLectureRequestsPage.vue'),
   meta: {
     requiresAuth: true,
-    requiredPermissions: ['instructorSchedule.requests.review'],
+    requiredPermissions: ['lecture_requests.view'],
     titleKey: 'routes.coordinatorLectureRequests',
   },
 }
@@ -136,7 +179,7 @@ export const studentsManagementRoute = {
   component: () => import('@/features/students/ui/pages/StudentsManagementPage.vue'),
   meta: {
     requiresAuth: true,
-    requiredPermissions: ['students.view'],
+    requiredPermissions: ['users.view'],
     titleKey: 'routes.studentsManagement',
   },
 }
@@ -180,7 +223,7 @@ export const specialitiesManagementRoute = {
   component: () => import('@/features/specialities/ui/pages/SpecialitiesManagementPage.vue'),
   meta: {
     requiresAuth: true,
-    requiredPermissions: ['specialities.view'],
+    requiredPermissions: ['specializations.view'],
     titleKey: 'routes.specialitiesManagement',
   },
 }
@@ -202,7 +245,7 @@ export const constraintsManagementRoute = {
   component: () => import('@/features/constraints/ui/pages/ConstraintsManagementPage.vue'),
   meta: {
     requiresAuth: true,
-    requiredPermissions: ['constraints.view'],
+    requiredPermissions: ['schedule_settings.view'],
     titleKey: 'routes.constraintsManagement',
   },
 }
@@ -213,7 +256,7 @@ export const userSettingsRoute = {
   component: () => import('@/features/user-settings/ui/pages/UserSettingsPage.vue'),
   meta: {
     requiresAuth: true,
-    requiredPermissions: ['settings.view'],
+    requiredPermissions: ['profile.view'],
     titleKey: 'routes.userSettings',
   },
 }
@@ -235,7 +278,7 @@ export const auditLogsRoute = {
   component: () => import('@/features/audit-logs/ui/pages/AuditLogsPage.vue'),
   meta: {
     requiresAuth: true,
-    requiredPermissions: ['auditLogs.view'],
+    requiredPermissions: ['audit_logs.view'],
     titleKey: 'routes.auditLogs',
   },
 }
