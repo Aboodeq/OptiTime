@@ -14,6 +14,20 @@ use Illuminate\Http\Request;
 
 class CoordinatorEntityController extends Controller
 {
+    private function resourceKey(Request $request): string
+    {
+        $key = $request->route()?->parameter('resource');
+        if (is_string($key) && $key !== '') {
+            return $key;
+        }
+        $path = '/'.$request->path();
+        if (preg_match('#/coordinator/([^/]+)#', $path, $m)) {
+            return $m[1];
+        }
+
+        abort(404);
+    }
+
     private function meta(string $resource): array
     {
         return match ($resource) {
@@ -69,39 +83,72 @@ class CoordinatorEntityController extends Controller
         };
     }
 
-    public function index(Request $request, string $resource): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+        $resource = $this->resourceKey($request);
         $m = $this->meta($resource);
-        $q = $m['model']::query();
-        if ($resource === 'sections' && $request->filled('semester_id')) {
-            $courseIds = CourseOffering::query()
-                ->where('semester_id', $request->string('semester_id'))
-                ->pluck('course_id');
-            $q->whereIn('course_id', $courseIds);
+
+        if ($resource === 'courses') {
+            return response()->json(
+                Course::query()->with(['sections.instructors'])->orderBy('created_at')->get()
+            );
         }
+
+        if ($resource === 'sections') {
+            $q = CourseSection::query()->with('instructors');
+            if ($request->filled('semester_id')) {
+                $courseIds = CourseOffering::query()
+                    ->where('semester_id', $request->string('semester_id'))
+                    ->pluck('course_id');
+                $q->whereIn('course_id', $courseIds);
+            }
+
+            return response()->json($q->orderBy('created_at')->get());
+        }
+
+        $q = $m['model']::query();
 
         return response()->json($q->orderBy('created_at')->get());
     }
 
-    public function store(Request $request, string $resource): JsonResponse
+    public function store(Request $request): JsonResponse
     {
+        $resource = $this->resourceKey($request);
         $m = $this->meta($resource);
         $data = $request->validate($m['rules']);
         $row = $m['model']::query()->create($data);
         AuditLogger::log($request->user(), 'coordinator.'.$resource.'.create', $m['model'], $row->getKey(), $data, $request);
 
+        if ($resource === 'courses') {
+            /** @var Course $row */
+            return response()->json($row->fresh(['sections.instructors']), 201);
+        }
+        if ($resource === 'sections') {
+            /** @var CourseSection $row */
+            return response()->json($row->fresh('instructors'), 201);
+        }
+
         return response()->json($row, 201);
     }
 
-    public function show(string $resource, string $id): JsonResponse
+    public function show(Request $request, string $id): JsonResponse
     {
+        $resource = $this->resourceKey($request);
         $m = $this->meta($resource);
+
+        if ($resource === 'courses') {
+            return response()->json(Course::query()->with(['sections.instructors'])->findOrFail($id));
+        }
+        if ($resource === 'sections') {
+            return response()->json(CourseSection::query()->with('instructors')->findOrFail($id));
+        }
 
         return response()->json($m['model']::query()->findOrFail($id));
     }
 
-    public function update(Request $request, string $resource, string $id): JsonResponse
+    public function update(Request $request, string $id): JsonResponse
     {
+        $resource = $this->resourceKey($request);
         $m = $this->meta($resource);
         $row = $m['model']::query()->findOrFail($id);
         $rules = [];
@@ -112,11 +159,21 @@ class CoordinatorEntityController extends Controller
         $row->update($data);
         AuditLogger::log($request->user(), 'coordinator.'.$resource.'.update', $m['model'], $id, $data, $request);
 
+        if ($resource === 'courses') {
+            /** @var Course $row */
+            return response()->json($row->fresh(['sections.instructors']));
+        }
+        if ($resource === 'sections') {
+            /** @var CourseSection $row */
+            return response()->json($row->fresh('instructors'));
+        }
+
         return response()->json($row->fresh());
     }
 
-    public function destroy(Request $request, string $resource, string $id): JsonResponse
+    public function destroy(Request $request, string $id): JsonResponse
     {
+        $resource = $this->resourceKey($request);
         $m = $this->meta($resource);
         $row = $m['model']::query()->findOrFail($id);
         $row->delete();

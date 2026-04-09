@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Coordinator;
+namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\CourseSection;
@@ -9,7 +9,7 @@ use App\Services\SectionInstructorSyncService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class CoordinatorSectionInstructorController extends Controller
+class AdminSectionInstructorController extends Controller
 {
     public function __construct(
         private SectionInstructorSyncService $sectionInstructorSyncService

@@ -6,6 +6,7 @@ use App\Models\CourseOffering;
 use App\Models\InstructorAvailabilityCell;
 use App\Models\InstructorAvailabilityProfile;
 use App\Models\Room;
+use App\Models\ScheduleSessionStudent;
 use App\Models\ScheduleSetting;
 use App\Scheduling\BacktrackingScheduler;
 use App\Scheduling\DayMapping;
@@ -202,7 +203,46 @@ final class ScheduleGenerateService
             }
         }
 
-        return new SchedulingContext($legalCellKeys, $availMap, []);
+        return new SchedulingContext(
+            $legalCellKeys,
+            $availMap,
+            $this->buildSharedStudentSectionPairs()
+        );
+    }
+
+    private function buildSharedStudentSectionPairs(): array
+    {
+        $studentSections = ScheduleSessionStudent::query()
+            ->join('schedule_sessions', 'schedule_sessions.id', '=', 'schedule_session_students.schedule_session_id')
+            ->join('course_section_instructors', 'course_section_instructors.id', '=', 'schedule_sessions.section_instructor_id')
+            ->select('schedule_session_students.student_id', 'course_section_instructors.section_id')
+            ->get();
+
+        $sectionsByStudent = [];
+        foreach ($studentSections as $row) {
+            $studentId = (string) $row->student_id;
+            $sectionId = (string) $row->section_id;
+            if ($studentId === '' || $sectionId === '') {
+                continue;
+            }
+            $sectionsByStudent[$studentId][$sectionId] = true;
+        }
+
+        $pairs = [];
+        foreach ($sectionsByStudent as $sections) {
+            $ids = array_keys($sections);
+            sort($ids);
+            $count = count($ids);
+            for ($i = 0; $i < $count; $i++) {
+                for ($j = $i + 1; $j < $count; $j++) {
+                    $a = $ids[$i];
+                    $b = $ids[$j];
+                    $pairs[$a.'|'.$b] = [$a, $b];
+                }
+            }
+        }
+
+        return array_values($pairs);
     }
 
     private function resolveSettings(?array $payload, ?string $settingsId): ScheduleSettings

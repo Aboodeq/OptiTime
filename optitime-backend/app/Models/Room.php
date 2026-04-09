@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Room extends Model
 {
@@ -26,5 +27,10 @@ class Room extends Model
     public function isLabType(): bool
     {
         return $this->type === 'lab';
+    }
+
+    public function resources(): BelongsToMany
+    {
+        return $this->belongsToMany(Resource::class, 'room_resources')->using(RoomResource::class);
     }
 }

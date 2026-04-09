@@ -11,7 +11,7 @@ class ProfileController extends Controller
 {
     public function show(Request $request): JsonResponse
     {
-        return response()->json($request->user()->load(['role', 'instructor', 'student']));
+        return response()->json($request->user()->load(['role.permissions', 'instructor', 'student']));
     }
 
     public function update(Request $request): JsonResponse
@@ -24,6 +24,6 @@ class ProfileController extends Controller
         $request->user()->update($data);
         AuditLogger::log($request->user(), 'profile.update', 'User', $request->user()->id, $data, $request);
 
-        return response()->json($request->user()->fresh()->load(['role', 'instructor', 'student']));
+        return response()->json($request->user()->fresh()->load(['role.permissions', 'instructor', 'student']));
     }
 }

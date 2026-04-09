@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Course extends Model
 {
@@ -43,5 +44,15 @@ class Course extends Model
     public function offerings(): HasMany
     {
         return $this->hasMany(CourseOffering::class);
+    }
+
+    public function courseConstraint(): HasOne
+    {
+        return $this->hasOne(CourseConstraint::class);
+    }
+
+    public function coursePrerequisites(): HasMany
+    {
+        return $this->hasMany(CoursePrerequisite::class, 'course_id');
     }
 }

@@ -18,15 +18,15 @@ class CoordinatorCourseSemesterController extends Controller
             'status' => 'required|string|max:32',
         ]);
         $active = in_array(strtolower($data['status']), ['active', 'published', '1', 'true'], true);
-        CourseOffering::query()->updateOrCreate(
+        $offering = CourseOffering::query()->updateOrCreate(
             [
                 'course_id' => $data['course_id'],
                 'semester_id' => $data['semester_id'],
             ],
             ['is_active' => $active]
         );
-        AuditLogger::log($request->user(), 'course_offering.sync', 'course_offerings', $data['course_id'], $data, $request);
+        AuditLogger::log($request->user(), 'course_offering.sync', CourseOffering::class, $offering->getKey(), $data, $request);
 
-        return response()->json(['ok' => true]);
+        return response()->json($offering->fresh());
     }
 }
