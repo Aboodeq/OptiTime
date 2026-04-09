@@ -21,17 +21,22 @@
         @update:model-value="$emit('update:email', $event)"
       />
 
-      <AppInputField
-        input-id="user-password"
-        :label="t('pages.usersManagement.form.password')"
-        icon="bi bi-lock"
-        input-type="password"
-        autocomplete="new-password"
-        :model-value="draft.password"
-        :placeholder="t('pages.usersManagement.form.password')"
-        :disabled="!canEdit"
-        @update:model-value="$emit('update:password', $event)"
-      />
+      <div>
+        <AppInputField
+          input-id="user-password"
+          :label="t('pages.usersManagement.form.password')"
+          icon="bi bi-lock"
+          input-type="password"
+          autocomplete="new-password"
+          :model-value="draft.password"
+          :placeholder="t('pages.usersManagement.form.password')"
+          :disabled="!canEdit"
+          @update:model-value="$emit('update:password', $event)"
+        />
+        <p v-if="isEditing" class="form-text text-secondary small mb-0 mt-1">
+          {{ t('pages.usersManagement.form.passwordEditHint') }}
+        </p>
+      </div>
 
       <AppAutocompleteField
         input-id="user-faculty"
@@ -56,7 +61,7 @@
         :placeholder="t('pages.usersManagement.form.departmentPlaceholder')"
         :allow-create="canCreateEntities && Boolean(draft.faculty_id)"
         :empty-text="t('pages.usersManagement.form.noDepartmentFound')"
-        :disabled="!canEdit || !draft.faculty_id"
+        :disabled="!canEdit"
         @update:model-value="$emit('update:departmentId', $event)"
         @create-option="$emit('create:department', $event)"
       />

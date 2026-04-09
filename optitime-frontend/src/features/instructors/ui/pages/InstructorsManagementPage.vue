@@ -222,7 +222,6 @@ const {
   setSpecialityId,
 } = useInstructorsManagementPage()
 const organizationStore = useOrganizationStore()
-organizationStore.ensureInitialized()
 const specialitiesStore = useSpecialitiesStore()
 specialitiesStore.ensureInitialized()
 
@@ -373,11 +372,12 @@ function closeFacultyDialog() {
   }
 }
 
-function handleSaveFaculty() {
+async function handleSaveFaculty() {
   if (!canCreateOrganization.value) return
-  const created = organizationStore.createFacultyFromDraft(facultyDraft.value)
+  const codeKey = facultyDraft.value.code.trim().toLowerCase()
+  const created = await organizationStore.createFacultyFromDraft(facultyDraft.value)
   if (!created) return
-  const added = faculties.value[faculties.value.length - 1]
+  const added = faculties.value.find((f) => f.code === codeKey)
   if (added) setFacultyId(added.id)
   closeFacultyDialog()
 }
@@ -404,15 +404,16 @@ function closeDepartmentDialog() {
   }
 }
 
-function handleSaveDepartment() {
+async function handleSaveDepartment() {
   if (!canCreateOrganization.value || !draft.value.faculty_id) return
-  const created = organizationStore.createDepartmentFromDraft(
+  const codeKey = departmentDraft.value.code.trim().toLowerCase()
+  const created = await organizationStore.createDepartmentFromDraft(
     draft.value.faculty_id,
     departmentDraft.value,
   )
   if (!created) return
   const selectedFaculty = faculties.value.find((faculty) => faculty.id === draft.value.faculty_id)
-  const added = selectedFaculty?.departments[selectedFaculty.departments.length - 1]
+  const added = selectedFaculty?.departments.find((d) => d.code === codeKey)
   if (added) setDepartmentId(added.id)
   closeDepartmentDialog()
 }

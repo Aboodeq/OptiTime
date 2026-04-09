@@ -1,5 +1,5 @@
 import { storeToRefs } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useCoursesStore } from '@/features/courses/model/stores/courses.store'
 import { useInstructorsStore } from '@/features/instructors/model/stores/instructors.store'
 import { useOrganizationStore } from '@/features/organization/model/stores/organization.store'
@@ -10,7 +10,9 @@ export function useCoursesManagementPage() {
   const instructorsStore = useInstructorsStore()
   instructorsStore.ensureInitialized()
   const organizationStore = useOrganizationStore()
-  organizationStore.ensureInitialized()
+  onMounted(async () => {
+    await organizationStore.ensureInitialized()
+  })
 
   const { courses, coursesCount, coursesWithLabCount, coursesWithoutLabCount } = storeToRefs(coursesStore)
   const { activeCoursesCount, inactiveCoursesCount, currentSemesterId } = storeToRefs(coursesStore)

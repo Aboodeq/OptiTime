@@ -247,12 +247,13 @@
         "name": "Full name",
         "email": "Email",
         "password": "Password",
+        "passwordEditHint": "Leave blank to keep the current password.",
         "faculty": "Faculty",
-        "facultyPlaceholder": "Select faculty",
+        "facultyPlaceholder": "Select faculty (optional)",
         "noFacultyFound": "No matching faculty",
         "role": "Role",
         "department": "Department",
-        "departmentPlaceholder": "Select department",
+        "departmentPlaceholder": "Select department (optional)",
         "noDepartmentFound": "No matching department",
         "isActive": "Active account"
       },
@@ -269,7 +270,8 @@
         "cancel": "Cancel"
       },
       "errors": {
-        "invalidForm": "Please complete all required fields: name, email, password, faculty, department, and role."
+        "invalidForm": "Please complete all required fields: name, email, password (when creating), and role. Faculty and department are optional.",
+        "saveFailed": "Could not save the user. Check the data and try again."
       }
     },
     "instructorsManagement": {

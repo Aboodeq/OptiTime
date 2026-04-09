@@ -90,9 +90,17 @@ export const useOrganizationStore = defineStore('organization', () => {
     ),
   )
 
+  async function reloadFaculties() {
+    faculties.value = await organizationService.getFacultiesWithDepartments()
+  }
+
   async function ensureInitialized() {
     if (initialized.value) return
-    faculties.value = await organizationService.getFaculties()
+    try {
+      await reloadFaculties()
+    } catch {
+      faculties.value = []
+    }
     initialized.value = true
   }
 
@@ -119,82 +127,56 @@ export const useOrganizationStore = defineStore('organization', () => {
     }
   }
 
-  function createFacultyFromDraft(draft) {
+  async function createFacultyFromDraft(draft) {
     const normalized = normalizeFacultyDraft(draft)
     if (!normalized) return false
 
-    faculties.value = [
-      ...faculties.value,
-      {
-        id: `faculty-${normalized.code}-${Date.now()}`,
-        ...normalized,
-        departments: [],
-      },
-    ]
+    await organizationService.createFaculty(normalized)
+    await reloadFaculties()
     return true
   }
 
-  function updateFacultyFromDraft(facultyId, draft) {
+  async function updateFacultyFromDraft(facultyId, draft) {
     const normalized = normalizeFacultyDraft(draft)
     if (!normalized) return false
 
-    faculties.value = faculties.value.map((faculty) =>
-      faculty.id === facultyId ? { ...faculty, ...normalized } : faculty,
-    )
+    await organizationService.updateFaculty(facultyId, normalized)
+    await reloadFaculties()
     return true
   }
 
-  function deleteFaculty(facultyId) {
-    faculties.value = faculties.value.filter((faculty) => faculty.id !== facultyId)
+  async function deleteFaculty(facultyId) {
+    await organizationService.deleteFaculty(facultyId)
+    await reloadFaculties()
   }
 
-  function createDepartmentFromDraft(facultyId, draft) {
+  async function createDepartmentFromDraft(facultyId, draft) {
     const normalized = normalizeDepartmentDraft(draft)
     if (!normalized) return false
 
-    faculties.value = faculties.value.map((faculty) =>
-      faculty.id === facultyId
-        ? {
-            ...faculty,
-            departments: [
-              ...faculty.departments,
-              {
-                id: `department-${normalized.code}-${Date.now()}`,
-                ...normalized,
-              },
-            ],
-          }
-        : faculty,
-    )
+    await organizationService.createDepartment({
+      faculty_id: facultyId,
+      ...normalized,
+    })
+    await reloadFaculties()
     return true
   }
 
-  function updateDepartmentFromDraft(facultyId, departmentId, draft) {
+  async function updateDepartmentFromDraft(facultyId, departmentId, draft) {
     const normalized = normalizeDepartmentDraft(draft)
     if (!normalized) return false
 
-    faculties.value = faculties.value.map((faculty) =>
-      faculty.id === facultyId
-        ? {
-            ...faculty,
-            departments: faculty.departments.map((department) =>
-              department.id === departmentId ? { ...department, ...normalized } : department,
-            ),
-          }
-        : faculty,
-    )
+    await organizationService.updateDepartment(departmentId, {
+      faculty_id: facultyId,
+      ...normalized,
+    })
+    await reloadFaculties()
     return true
   }
 
-  function deleteDepartment(facultyId, departmentId) {
-    faculties.value = faculties.value.map((faculty) =>
-      faculty.id === facultyId
-        ? {
-            ...faculty,
-            departments: faculty.departments.filter((department) => department.id !== departmentId),
-          }
-        : faculty,
-    )
+  async function deleteDepartment(facultyId, departmentId) {
+    await organizationService.deleteDepartment(departmentId)
+    await reloadFaculties()
   }
 
   return {
@@ -204,6 +186,7 @@ export const useOrganizationStore = defineStore('organization', () => {
     activeFacultiesCount,
     activeDepartmentsCount,
     ensureInitialized,
+    reloadFaculties,
     createEmptyFacultyDraft,
     createEmptyDepartmentDraft,
     buildFacultyDraftFromItem,

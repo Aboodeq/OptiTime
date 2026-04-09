@@ -1,5 +1,5 @@
 import { storeToRefs } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useOrganizationStore } from '@/features/organization/model/stores/organization.store'
 import { useStudentsStore } from '@/features/students/model/stores/students.store'
 
@@ -7,7 +7,9 @@ export function useStudentsManagementPage() {
   const studentsStore = useStudentsStore()
   studentsStore.ensureInitialized()
   const organizationStore = useOrganizationStore()
-  organizationStore.ensureInitialized()
+  onMounted(async () => {
+    await organizationStore.ensureInitialized()
+  })
 
   const { students, studentsCount, activeStudentsCount, inactiveStudentsCount } = storeToRefs(studentsStore)
   const { faculties } = storeToRefs(organizationStore)
