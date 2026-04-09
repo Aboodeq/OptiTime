@@ -61,6 +61,7 @@
           @select-session="handleSelectSession"
         />
       </AppSectionPanel>
+
     </section>
 
     <GeneratedSchedulePreviewDialog
@@ -81,6 +82,7 @@
       :students="selectedLectureStudents"
       @close="detailsDialogOpen = false"
     />
+
   </AppShell>
 </template>
 
@@ -204,6 +206,7 @@ async function handleConfirmGenerated() {
   }
   toast.success(t('pages.coordinatorWeeklySchedule.toasts.generatedSaved'))
 }
+
 </script>
 
 <style scoped>

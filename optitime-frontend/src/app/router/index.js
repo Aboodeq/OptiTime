@@ -2,11 +2,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/store/auth.store'
 import {
   coursesManagementRoute,
+  coordinatorLectureRequestsRoute,
   constraintsManagementRoute,
   coordinatorWeeklyScheduleRoute,
   dashboardRoute,
   auditLogsRoute,
   fallbackRoutes,
+  instructorLectureRequestsRoute,
   instructorSelfAvailabilityRoute,
   instructorWeeklyScheduleRoute,
   instructorsManagementRoute,
@@ -35,7 +37,9 @@ const router = createRouter({
     instructorsManagementRoute,
     instructorSelfAvailabilityRoute,
     instructorWeeklyScheduleRoute,
+    instructorLectureRequestsRoute,
     coordinatorWeeklyScheduleRoute,
+    coordinatorLectureRequestsRoute,
     studentWeeklyScheduleRoute,
     studentsManagementRoute,
     resourcesManagementRoute,

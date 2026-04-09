@@ -6,7 +6,8 @@
     "english": "English",
     "actions": {
       "logout": "تسجيل الخروج",
-      "close": "إغلاق"
+      "close": "إغلاق",
+      "cancel": "إلغاء"
     }
   }
 }

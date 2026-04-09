@@ -5,9 +5,20 @@
       class="app-input-field__wrapper"
       :class="{ 'is-focused': focused, 'has-value': modelValue, 'is-invalid': error }"
     >
-      <i :class="[icon, 'app-input-field__icon']"></i>
+      <button
+        v-if="isDateInput"
+        type="button"
+        class="app-input-field__icon-button"
+        :disabled="disabled"
+        :aria-label="label"
+        @click="openDatePicker"
+      >
+        <i :class="[icon, 'app-input-field__icon']"></i>
+      </button>
+      <i v-else :class="[icon, 'app-input-field__icon']"></i>
       <input
         :id="inputId"
+        ref="inputRef"
         class="app-input-field__control"
         :type="inputType"
         :value="modelValue"
@@ -33,9 +44,10 @@
 </template>
 
 <script setup>
+import { computed, ref } from 'vue'
 import AppIconButton from '@/components/common/AppIconButton.vue'
 
-defineProps({
+const props = defineProps({
   inputId: {
     type: String,
     required: true,
@@ -91,6 +103,21 @@ defineProps({
 })
 
 defineEmits(['update:modelValue', 'focus', 'blur', 'toggle-visibility'])
+
+const inputRef = ref(null)
+const isDateInput = computed(() => props.inputType === 'date')
+
+function openDatePicker() {
+  if (!isDateInput.value || props.disabled) return
+  const target = inputRef.value
+  if (!target) return
+  if (typeof target.showPicker === 'function') {
+    target.showPicker()
+    return
+  }
+  target.focus()
+  target.click()
+}
 </script>
 
 <style scoped>
@@ -136,6 +163,20 @@ defineEmits(['update:modelValue', 'focus', 'blur', 'toggle-visibility'])
   flex-shrink: 0;
 }
 
+.app-input-field__icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+.app-input-field__icon-button:disabled {
+  cursor: not-allowed;
+}
+
 .app-input-field__wrapper.is-focused .app-input-field__icon {
   color: #4361ee;
 }
@@ -161,7 +202,16 @@ defineEmits(['update:modelValue', 'focus', 'blur', 'toggle-visibility'])
   -webkit-appearance: none;
 }
 
+.app-input-field__control[type='date']::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
 .app-input-field__control[type='time'] {
+  appearance: textfield;
+}
+
+.app-input-field__control[type='date'] {
   appearance: textfield;
 }
 

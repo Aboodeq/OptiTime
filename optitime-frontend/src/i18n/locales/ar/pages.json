@@ -317,7 +317,8 @@
       "sections": {
         "board": "لوحة الجدول الأسبوعي",
         "generation": "خيارات التوليد",
-        "kpis": "مؤشرات الأداء"
+        "kpis": "مؤشرات الأداء",
+        "requests": "طلبات المحاضرات"
       },
       "hints": {
         "board": "اسحب وأفلت الجلسات بين الخانات الصالحة. خانات الاستراحة محجوبة."
@@ -347,6 +348,10 @@
         "day": "اليوم",
         "time": "الوقت",
         "ids": "المعرفات المرجعية",
+        "actions": {
+          "requestApology": "طلب اعتذار",
+          "requestMakeup": "طلب تعويض"
+        },
         "studentsTitle": "الطلاب المسجلون",
         "students": {
           "name": "الطالب",
@@ -373,6 +378,55 @@
         "saved": "تم تحديث الجدول بنجاح",
         "generated": "تم توليد جدول جديد. يرجى مراجعته قبل الحفظ.",
         "generatedSaved": "تم تأكيد الجدول المولد وحفظه"
+      },
+      "requests": {
+        "empty": "لا توجد طلبات محاضرات.",
+        "columns": {
+          "type": "النوع",
+          "instructor": "المدرس",
+          "course": "المقرر",
+          "lectureDay": "يوم المحاضرة",
+          "requestedDate": "التاريخ المطلوب",
+          "status": "الحالة",
+          "actions": "الإجراءات"
+        },
+        "types": {
+          "apology": "اعتذار",
+          "makeup": "تعويض"
+        },
+        "statuses": {
+          "pending": "قيد الانتظار",
+          "approved": "مقبول",
+          "rejected": "مرفوض"
+        },
+        "actions": {
+          "check": "تدقيق",
+          "modify": "تعديل",
+          "delete": "حذف",
+          "saveReview": "حفظ التدقيق",
+          "saveChanges": "حفظ التعديلات"
+        },
+        "reviewDialog": {
+          "title": "تدقيق الطلب",
+          "status": "الحالة",
+          "note": "ملاحظة التدقيق",
+          "notePlaceholder": "اكتب ملاحظة التدقيق..."
+        },
+        "editDialog": {
+          "title": "تعديل الطلب",
+          "requestedDate": "التاريخ المطلوب",
+          "note": "السبب",
+          "notePlaceholder": "حدّث سبب الطلب..."
+        },
+        "deleteDialog": {
+          "title": "حذف الطلب",
+          "message": "هل أنت متأكد من حذف هذا الطلب؟"
+        },
+        "toasts": {
+          "reviewSaved": "تم حفظ تدقيق الطلب.",
+          "requestUpdated": "تم تعديل الطلب بنجاح.",
+          "requestDeleted": "تم حذف الطلب بنجاح."
+        }
       }
     },
     "instructorWeeklySchedule": {
@@ -381,7 +435,53 @@
       "activeSemester": "الفصل النشط: {name}",
       "sections": {
         "board": "لوحتي الأسبوعية"
+      },
+      "requests": {
+        "fields": {
+          "requestedDate": "التاريخ المطلوب",
+          "reason": "السبب"
+        },
+        "actions": {
+          "submit": "إرسال الطلب"
+        },
+        "errors": {
+          "requestedDateRequired": "التاريخ المطلوب إلزامي.",
+          "requestedDateFuture": "يجب أن يكون التاريخ المطلوب في المستقبل.",
+          "requestedDateDayMismatch": "يجب أن يكون التاريخ المطلوب يوم {day}.",
+          "reasonRequired": "السبب إلزامي."
+        },
+        "toasts": {
+          "apologySubmitted": "تم إرسال طلب الاعتذار بنجاح.",
+          "makeupSubmitted": "تم إرسال طلب التعويض بنجاح."
+        },
+        "logs": {
+          "apologyPrepared": "تم تجهيز حمولة طلب الاعتذار:",
+          "makeupPrepared": "تم تجهيز حمولة طلب التعويض:"
+        },
+        "apology": {
+          "title": "طلب اعتذار",
+          "hint": "أرسل طلب اعتذار لهذه المحاضرة مع تاريخ مستقبلي وسبب.",
+          "hintWithDay": "أرسل طلب اعتذار بتاريخ مستقبلي على يوم {day}.",
+          "reasonPlaceholder": "أدخل سبب الاعتذار..."
+        },
+        "makeup": {
+          "title": "طلب تعويض محاضرة",
+          "hint": "أرسل طلب تعويض محاضرة مع تاريخ مستقبلي وسبب داعم.",
+          "reasonPlaceholder": "أدخل سبب طلب التعويض..."
+        }
       }
+    },
+    "instructorLectureRequests": {
+      "title": "طلباتي للمحاضرات",
+      "subtitle": "تابع طلبات الاعتذار والتعويض التي أرسلتها من جدولك.",
+      "empty": "لا توجد طلبات محاضرات مرسلة حتى الآن.",
+      "columns": {
+        "note": "السبب"
+      }
+    },
+    "coordinatorLectureRequests": {
+      "title": "إدارة طلبات المحاضرات",
+      "subtitle": "تدقيق وتعديل وحذف طلبات المحاضرات للمدرسين."
     },
     "studentWeeklySchedule": {
       "title": "جدولي الأسبوعي",
