@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Admin\AdminAuditController;
 use App\Http\Controllers\Api\Admin\AdminEntityController;
 use App\Http\Controllers\Api\Admin\AdminInstructorController;
 use App\Http\Controllers\Api\Admin\AdminRoleController;
+use App\Http\Controllers\Api\Admin\AdminScheduleSettingCurrentController;
 use App\Http\Controllers\Api\Admin\AdminStudentController;
 use App\Http\Controllers\Api\Admin\AdminUserController;
 use App\Http\Controllers\Api\AuthController;
@@ -67,6 +68,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::middleware('permission:roles.update')->put('/roles/{id}', [AdminRoleController::class, 'update']);
         Route::middleware('permission:roles.delete')->delete('/roles/{id}', [AdminRoleController::class, 'destroy']);
         Route::middleware('permission:roles.view')->get('/permissions', [AdminRoleController::class, 'permissions']);
+
+        Route::middleware('permission:schedule_settings.view')->get('/schedule-settings/current', [AdminScheduleSettingCurrentController::class, 'show']);
+        Route::middleware('permission:schedule_settings.update')->put('/schedule-settings/current', [AdminScheduleSettingCurrentController::class, 'update']);
 
         foreach (['faculties', 'departments', 'specializations', 'semesters', 'rooms', 'resources', 'courses', 'sections', 'schedule-settings'] as $res) {
             Route::middleware('permission:'.str_replace('-', '_', $res).'.view')->get('/'.$res, [AdminEntityController::class, 'index'])->defaults('resource', $res);
