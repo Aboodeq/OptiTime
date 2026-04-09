@@ -1156,7 +1156,10 @@
         "weakPassword": "يجب أن تكون كلمة المرور الجديدة 8 أحرف على الأقل.",
         "samePassword": "يجب أن تختلف كلمة المرور الجديدة عن الحالية.",
         "passwordUpdateFailed": "تعذر تحديث كلمة المرور.",
-        "notificationsSaveFailed": "تعذر حفظ إعدادات الإشعارات."
+        "notificationsSaveFailed": "تعذر حفظ إعدادات الإشعارات.",
+        "notificationsSaveNeedLogin": "تعذر الحفظ: لا يوجد رمز API. سجّل الخروج ثم الدخول مجدداً (أو امسح بيانات الموقع)، وتأكد أن الخادم يعمل على العنوان المحدد في VITE_API_BASE_URL.",
+        "notificationsSaveForbidden": "ليس لديك صلاحية لتحديث إعدادات الإشعارات.",
+        "notificationsSaveServer": "تعذر الاتصال بالواجهة البرمجية. تأكد من تشغيل خادم Laravel وأن VITE_API_BASE_URL يطابقه (مثلاً http://localhost:8000/api)."
       },
       "toasts": {
         "profileSaved": "تم تحديث الملف الشخصي",

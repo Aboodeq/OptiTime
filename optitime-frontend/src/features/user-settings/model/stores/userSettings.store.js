@@ -17,13 +17,16 @@ export const useUserSettingsStore = defineStore('userSettings', () => {
     initializedUserId.value = userId
   }
 
+  /**
+   * @returns {Promise<{ ok: true } | { ok: false, code: string, status?: number }>}
+   */
   async function saveSettings(userId, nextSettings) {
-    if (!userId) return false
-    const saved = await userSettingsService.saveSettings(userId, nextSettings)
-    if (!saved) return false
+    if (!userId) return { ok: false, code: 'NO_USER' }
+    const result = await userSettingsService.saveSettings(userId, nextSettings)
+    if (!result.ok) return result
     settings.value = await userSettingsService.getSettings(userId)
     initializedUserId.value = userId
-    return true
+    return { ok: true }
   }
 
   function createDraft() {
