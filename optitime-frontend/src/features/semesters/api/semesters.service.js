@@ -1,60 +1,49 @@
-const SEMESTERS_SEED = [
-  {
-    id: 'semester-1',
-    name: 'Fall Semester',
-    code: '2026-s1',
-    academic_year: '2026-2027',
-    start_date: '2026-09-01',
-    end_date: '2027-01-15',
-    is_active: true,
-  },
-  {
-    id: 'semester-2',
-    name: 'Spring Semester',
-    code: '2026-s2',
-    academic_year: '2026-2027',
-    start_date: '2027-02-10',
-    end_date: '2027-06-20',
-    is_active: false,
-  },
-]
+import { apiJson } from '@/api/client'
 
-let semestersDb = SEMESTERS_SEED.map((item) => ({ ...item }))
+/**
+ * Laravel date casts serialize as ISO strings; keep YYYY-MM-DD for forms and tables.
+ */
+function toYmd(value) {
+  if (value == null || value === '') return ''
+  const s = String(value)
+  if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0, 10)
+  return s
+}
 
-function cloneSemester(semester) {
-  return { ...semester }
+function mapApiSemester(row) {
+  if (!row || typeof row !== 'object') return row
+  return {
+    ...row,
+    start_date: toYmd(row.start_date),
+    end_date: toYmd(row.end_date),
+  }
 }
 
 export const semestersService = {
   async getSemesters() {
-    return semestersDb.map(cloneSemester)
+    const { data } = await apiJson('/admin/semesters')
+    const list = Array.isArray(data) ? data : []
+    return list.map(mapApiSemester)
   },
 
   async createSemester(payload) {
-    const semester = {
-      ...payload,
-      id: `semester-${Date.now()}`,
-    }
-    semestersDb = [...semestersDb, semester]
-    return cloneSemester(semester)
+    const { data } = await apiJson('/admin/semesters', {
+      method: 'POST',
+      json: payload,
+    })
+    return mapApiSemester(data)
   },
 
   async updateSemester(semesterId, payload) {
-    let updatedSemester = null
-    semestersDb = semestersDb.map((item) => {
-      if (item.id !== semesterId) return item
-      updatedSemester = {
-        ...item,
-        ...payload,
-      }
-      return updatedSemester
+    const { data } = await apiJson(`/admin/semesters/${semesterId}`, {
+      method: 'PUT',
+      json: payload,
     })
-    return updatedSemester ? cloneSemester(updatedSemester) : null
+    return mapApiSemester(data)
   },
 
   async deleteSemester(semesterId) {
-    const before = semestersDb.length
-    semestersDb = semestersDb.filter((item) => item.id !== semesterId)
-    return semestersDb.length < before
+    await apiJson(`/admin/semesters/${semesterId}`, { method: 'DELETE' })
+    return true
   },
 }
