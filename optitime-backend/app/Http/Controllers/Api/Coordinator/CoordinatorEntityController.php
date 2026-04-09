@@ -87,13 +87,26 @@ class CoordinatorEntityController extends Controller
     {
         $resource = $this->resourceKey($request);
         $m = $this->meta($resource);
-        $q = $m['model']::query();
-        if ($resource === 'sections' && $request->filled('semester_id')) {
-            $courseIds = CourseOffering::query()
-                ->where('semester_id', $request->string('semester_id'))
-                ->pluck('course_id');
-            $q->whereIn('course_id', $courseIds);
+
+        if ($resource === 'courses') {
+            return response()->json(
+                Course::query()->with(['sections.instructors'])->orderBy('created_at')->get()
+            );
         }
+
+        if ($resource === 'sections') {
+            $q = CourseSection::query()->with('instructors');
+            if ($request->filled('semester_id')) {
+                $courseIds = CourseOffering::query()
+                    ->where('semester_id', $request->string('semester_id'))
+                    ->pluck('course_id');
+                $q->whereIn('course_id', $courseIds);
+            }
+
+            return response()->json($q->orderBy('created_at')->get());
+        }
+
+        $q = $m['model']::query();
 
         return response()->json($q->orderBy('created_at')->get());
     }
@@ -106,6 +119,15 @@ class CoordinatorEntityController extends Controller
         $row = $m['model']::query()->create($data);
         AuditLogger::log($request->user(), 'coordinator.'.$resource.'.create', $m['model'], $row->getKey(), $data, $request);
 
+        if ($resource === 'courses') {
+            /** @var Course $row */
+            return response()->json($row->fresh(['sections.instructors']), 201);
+        }
+        if ($resource === 'sections') {
+            /** @var CourseSection $row */
+            return response()->json($row->fresh('instructors'), 201);
+        }
+
         return response()->json($row, 201);
     }
 
@@ -113,6 +135,13 @@ class CoordinatorEntityController extends Controller
     {
         $resource = $this->resourceKey($request);
         $m = $this->meta($resource);
+
+        if ($resource === 'courses') {
+            return response()->json(Course::query()->with(['sections.instructors'])->findOrFail($id));
+        }
+        if ($resource === 'sections') {
+            return response()->json(CourseSection::query()->with('instructors')->findOrFail($id));
+        }
 
         return response()->json($m['model']::query()->findOrFail($id));
     }
@@ -129,6 +158,15 @@ class CoordinatorEntityController extends Controller
         $data = $request->validate($rules);
         $row->update($data);
         AuditLogger::log($request->user(), 'coordinator.'.$resource.'.update', $m['model'], $id, $data, $request);
+
+        if ($resource === 'courses') {
+            /** @var Course $row */
+            return response()->json($row->fresh(['sections.instructors']));
+        }
+        if ($resource === 'sections') {
+            /** @var CourseSection $row */
+            return response()->json($row->fresh('instructors'));
+        }
 
         return response()->json($row->fresh());
     }

@@ -217,4 +217,42 @@ final class ScheduleSettingAdminSerializer
             ]);
         }
     }
+
+    /**
+     * Minimal schedule fields for instructor availability UI (no admin-only data).
+     *
+     * @return array<string, mixed>
+     */
+    public static function toInstructorAvailabilityGridContext(ScheduleSetting $root): array
+    {
+        $root->load(['studyDays', 'breakTimes']);
+
+        $studyDays = [];
+        foreach ($root->studyDays as $sd) {
+            $studyDays[] = [
+                'value' => (string) $sd->day_value,
+                'enabled' => (bool) $sd->enabled,
+            ];
+        }
+
+        $breaks = [];
+        foreach ($root->breakTimes as $bt) {
+            $breaks[] = [
+                'key' => (string) $bt->break_key,
+                'start' => self::formatTime($bt->start_time),
+                'end' => self::formatTime($bt->end_time),
+                'enabled' => (bool) $bt->enabled,
+            ];
+        }
+
+        return [
+            'day_start' => self::formatTime($root->day_start),
+            'day_end' => self::formatTime($root->day_end),
+            'slot_minutes' => (int) $root->slot_minutes,
+            'gap_minutes' => (int) $root->gap_minutes,
+            'max_daily_lectures' => (int) $root->max_daily_lectures,
+            'study_days' => $studyDays,
+            'break_times' => $breaks,
+        ];
+    }
 }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
+use App\Models\CourseConstraint;
+use App\Models\CoursePrerequisite;
 use App\Models\CourseSection;
 use App\Models\Department;
 use App\Models\Faculty;
@@ -15,6 +17,8 @@ use App\Models\Specialization;
 use App\Services\AuditLogger;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Validation\ValidationException;
 
 class AdminEntityController extends Controller
 {
@@ -175,6 +179,21 @@ class AdminEntityController extends Controller
             return response()->json($rows->values()->all());
         }
 
+        if ($resource === 'courses') {
+            return response()->json(
+                Course::query()
+                    ->with(['sections.instructors', 'courseConstraint', 'coursePrerequisites'])
+                    ->orderBy('created_at')
+                    ->get()
+            );
+        }
+
+        if ($resource === 'sections') {
+            return response()->json(
+                CourseSection::query()->with('instructors')->orderBy('created_at')->get()
+            );
+        }
+
         $q = $m['model']::query();
 
         return response()->json($q->orderBy('created_at')->get());
@@ -184,6 +203,21 @@ class AdminEntityController extends Controller
     {
         $resource = $this->resourceKey($request);
         $m = $this->meta($resource);
+
+        if ($resource === 'courses') {
+            $rules = array_merge($m['rules'], $this->courseExtraRules(false));
+            $data = $request->validate($rules);
+            $this->assertCourseLevelsValid($data);
+            $extras = Arr::only($data, $this->courseExtraFieldKeys());
+            $core = Arr::except($data, $this->courseExtraFieldKeys());
+            /** @var Course $row */
+            $row = Course::query()->create($core);
+            $this->syncCourseExtras($row, $extras, true, true);
+            AuditLogger::log($request->user(), $resource.'.create', $m['model'], $row->getKey(), $data, $request);
+
+            return response()->json($this->freshCourseWithRelations($row), 201);
+        }
+
         $data = $request->validate($m['rules']);
 
         if ($resource === 'rooms') {
@@ -207,6 +241,11 @@ class AdminEntityController extends Controller
         $row = $m['model']::query()->create($data);
         AuditLogger::log($request->user(), $resource.'.create', $m['model'], $row->getKey(), $data, $request);
 
+        if ($resource === 'sections') {
+            /** @var CourseSection $row */
+            return response()->json($row->fresh('instructors'), 201);
+        }
+
         return response()->json($row, 201);
     }
 
@@ -221,6 +260,17 @@ class AdminEntityController extends Controller
             return response()->json($this->formatRoomResponse($row));
         }
 
+        if ($resource === 'courses') {
+            return response()->json(
+                Course::query()
+                    ->with(['sections.instructors', 'courseConstraint', 'coursePrerequisites'])
+                    ->findOrFail($id)
+            );
+        }
+        if ($resource === 'sections') {
+            return response()->json(CourseSection::query()->with('instructors')->findOrFail($id));
+        }
+
         $row = $m['model']::query()->findOrFail($id);
 
         return response()->json($row);
@@ -231,6 +281,34 @@ class AdminEntityController extends Controller
         $resource = $this->resourceKey($request);
         $m = $this->meta($resource);
         $row = $m['model']::query()->findOrFail($id);
+
+        if ($resource === 'courses') {
+            $rules = [];
+            foreach ($m['rules'] as $k => $r) {
+                $rules[$k] = 'sometimes|'.$r;
+            }
+            foreach ($this->courseExtraRules(true) as $k => $r) {
+                $rules[$k] = $r;
+            }
+            $data = $request->validate($rules);
+            $this->assertCourseLevelsValid($data);
+            /** @var Course $row */
+            $row = Course::query()->findOrFail($id);
+            $extras = Arr::only($data, $this->courseExtraFieldKeys());
+            $core = Arr::except($data, $this->courseExtraFieldKeys());
+            if ($core !== []) {
+                $row->update($core);
+            }
+            $levelsPresent = array_key_exists('min_student_year_level', $data) || array_key_exists('max_student_year_level', $data);
+            $prereqPresent = array_key_exists('prerequisite_course_ids', $data);
+            if ($levelsPresent || $prereqPresent) {
+                $this->syncCourseExtras($row, $extras, $levelsPresent, $prereqPresent);
+            }
+            AuditLogger::log($request->user(), $resource.'.update', $m['model'], $id, $data, $request);
+
+            return response()->json($this->freshCourseWithRelations($row));
+        }
+
         $rules = [];
         foreach ($m['rules'] as $k => $r) {
             $rules[$k] = 'sometimes|'.$r;
@@ -258,6 +336,11 @@ class AdminEntityController extends Controller
         $row->update($data);
         AuditLogger::log($request->user(), $resource.'.update', $m['model'], $id, $data, $request);
 
+        if ($resource === 'sections') {
+            /** @var CourseSection $row */
+            return response()->json($row->fresh('instructors'));
+        }
+
         return response()->json($row->fresh());
     }
 
@@ -270,6 +353,83 @@ class AdminEntityController extends Controller
         AuditLogger::log($request->user(), $resource.'.delete', $m['model'], $id, null, $request);
 
         return response()->json(['deleted' => true]);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function courseExtraFieldKeys(): array
+    {
+        return ['min_student_year_level', 'max_student_year_level', 'prerequisite_course_ids'];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function courseExtraRules(bool $forUpdate): array
+    {
+        $p = $forUpdate ? 'sometimes|' : '';
+
+        return [
+            'min_student_year_level' => $p.'nullable|integer|min:1',
+            'max_student_year_level' => $p.'nullable|integer|min:1',
+            'prerequisite_course_ids' => $p.'nullable|array',
+            'prerequisite_course_ids.*' => 'uuid|exists:courses,id',
+        ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    private function assertCourseLevelsValid(array $data): void
+    {
+        $min = $data['min_student_year_level'] ?? null;
+        $max = $data['max_student_year_level'] ?? null;
+        if ($min !== null && $max !== null && $min > $max) {
+            throw ValidationException::withMessages([
+                'max_student_year_level' => ['Must be greater than or equal to min_student_year_level.'],
+            ]);
+        }
+    }
+
+    /**
+     * @param  array<string, mixed>  $extras
+     */
+    private function syncCourseExtras(Course $course, array $extras, bool $levelsPresent, bool $prereqPresent): void
+    {
+        if ($levelsPresent) {
+            CourseConstraint::query()->updateOrCreate(
+                ['course_id' => $course->id],
+                [
+                    'min_student_year_level' => $extras['min_student_year_level'] ?? null,
+                    'max_student_year_level' => $extras['max_student_year_level'] ?? null,
+                ]
+            );
+        }
+
+        if ($prereqPresent) {
+            $ids = $extras['prerequisite_course_ids'] ?? [];
+            if (! is_array($ids)) {
+                $ids = [];
+            }
+            CoursePrerequisite::query()->where('course_id', $course->id)->delete();
+            foreach (array_unique($ids) as $pid) {
+                if (! is_string($pid) || $pid === $course->id) {
+                    continue;
+                }
+                CoursePrerequisite::query()->create([
+                    'course_id' => $course->id,
+                    'prerequisite_course_id' => $pid,
+                ]);
+            }
+        }
+    }
+
+    private function freshCourseWithRelations(Course $course): Course
+    {
+        return Course::query()
+            ->with(['sections.instructors', 'courseConstraint', 'coursePrerequisites'])
+            ->findOrFail($course->id);
     }
 
     /**

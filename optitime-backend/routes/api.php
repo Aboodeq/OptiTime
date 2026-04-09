@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\AdminAuditController;
+use App\Http\Controllers\Api\Admin\AdminCourseOfferingController;
 use App\Http\Controllers\Api\Admin\AdminEntityController;
 use App\Http\Controllers\Api\Admin\AdminInstructorController;
+use App\Http\Controllers\Api\Admin\AdminSectionInstructorController;
 use App\Http\Controllers\Api\Admin\AdminRoleController;
 use App\Http\Controllers\Api\Admin\AdminScheduleSettingCurrentController;
 use App\Http\Controllers\Api\Admin\AdminStudentController;
@@ -17,6 +19,7 @@ use App\Http\Controllers\Api\Coordinator\CoordinatorSectionInstructorController;
 use App\Http\Controllers\Api\Exams\ExamGradeController;
 use App\Http\Controllers\Api\Exams\ExamSessionController;
 use App\Http\Controllers\Api\Instructor\InstructorAvailabilityController;
+use App\Http\Controllers\Api\Instructor\InstructorAvailabilityGridContextController;
 use App\Http\Controllers\Api\Instructor\InstructorLectureRequestController;
 use App\Http\Controllers\Api\Instructor\InstructorPdfController;
 use App\Http\Controllers\Api\Instructor\InstructorScheduleController;
@@ -84,6 +87,10 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::middleware('permission:'.str_replace('-', '_', $res).'.delete')->delete('/'.$res.'/{id}', [AdminEntityController::class, 'destroy'])->defaults('resource', $res);
         }
 
+        Route::middleware('permission:sections.update')->post('/sections/{section}/instructors', [AdminSectionInstructorController::class, 'sync']);
+        Route::middleware('permission:courses.view')->get('/course-offerings', [AdminCourseOfferingController::class, 'index']);
+        Route::middleware('permission:courses.update')->post('/course-semester', [CoordinatorCourseSemesterController::class, 'sync']);
+
         Route::middleware('permission:audit_logs.view')->get('/audit-logs', [AdminAuditController::class, 'index']);
     });
 
@@ -122,6 +129,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('instructor')->group(function () {
+        Route::middleware('permission:instructor_availability.view')->get('/availability-grid-context', [InstructorAvailabilityGridContextController::class, 'show']);
         Route::middleware('permission:instructor_availability.view')->get('/availabilities', [InstructorAvailabilityController::class, 'index']);
         Route::middleware('permission:instructor_availability.create')->post('/availabilities', [InstructorAvailabilityController::class, 'store']);
         Route::middleware('permission:instructor_availability.update')->put('/availabilities/{availability}', [InstructorAvailabilityController::class, 'update']);
@@ -159,5 +167,5 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user()->load(['role.permissions']);
+    return $request->user()->load(['role.permissions', 'instructor']);
 });
