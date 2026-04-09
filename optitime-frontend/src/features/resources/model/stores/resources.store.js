@@ -36,6 +36,11 @@ export const useResourcesStore = defineStore('resources', () => {
     initialized.value = true
   }
 
+  function resetCache() {
+    resources.value = []
+    initialized.value = false
+  }
+
   function buildDraftFromResource(resource) {
     return {
       name_ar: resource.name_ar ?? '',
@@ -113,5 +118,6 @@ export const useResourcesStore = defineStore('resources', () => {
     createResourceFromDraft,
     updateResourceFromDraft,
     deleteResource,
+    resetCache,
   }
 })

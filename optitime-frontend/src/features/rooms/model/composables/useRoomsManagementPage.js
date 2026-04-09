@@ -29,10 +29,15 @@ export function useRoomsManagementPage(options = {}) {
     () => managedRoomsCount.value - managedAvailableRoomsCount.value,
   )
   const resourceOptions = computed(() =>
-    resources.value.map((resource) => ({
-      value: resource.id,
-      label: resource.name,
-    })),
+    resources.value.map((resource) => {
+      const en = resource.name_en?.trim() || ''
+      const ar = resource.name_ar?.trim() || ''
+      const label = [en, ar].filter(Boolean).join(' / ') || resource.id
+      return {
+        value: resource.id,
+        label,
+      }
+    }),
   )
 
   function applyTypeRules(nextDraft) {

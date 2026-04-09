@@ -36,6 +36,11 @@ export const useRoomsStore = defineStore('rooms', () => {
     initialized.value = true
   }
 
+  function resetCache() {
+    rooms.value = []
+    initialized.value = false
+  }
+
   function buildDraftFromRoom(room) {
     return {
       name_ar: room.name_ar ?? '',
@@ -119,5 +124,6 @@ export const useRoomsStore = defineStore('rooms', () => {
     createRoomFromDraft,
     updateRoomFromDraft,
     deleteRoom,
+    resetCache,
   }
 })
