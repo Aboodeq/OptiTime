@@ -106,12 +106,17 @@ select.form-select {
 
 .dashboard-layout__content {
   min-width: 0;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
   transition: transform 280ms cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
+}
+
+.dashboard-layout__content > * {
+  width: 100%;
 }
 
 .mobile-sidebar-trigger {
@@ -240,6 +245,7 @@ html[dir='ltr'] .dashboard-card {
   }
 
   .dashboard-layout__content {
+    width: 100%;
     justify-content: stretch;
   }
 
@@ -317,6 +323,7 @@ html[dir='rtl'] .dashboard-layout.is-mobile .dashboard-layout__sidebar.mobile-op
 
 .dashboard-layout.is-mobile .dashboard-layout__content {
   position: relative;
+  width: 100%;
   z-index: 1;
   justify-content: stretch;
 }

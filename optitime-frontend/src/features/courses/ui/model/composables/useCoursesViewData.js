@@ -8,6 +8,10 @@ export function useCoursesViewData({
   coursesCount,
   coursesWithLabCount,
   coursesWithoutLabCount,
+  activeCoursesCount,
+  inactiveCoursesCount,
+  isCourseActiveThisSemester,
+  isCourseToggleInFlight,
   search,
   t,
 }) {
@@ -64,6 +68,8 @@ export function useCoursesViewData({
       sections: Array.isArray(course.sections) ? course.sections : [],
       section_instructor_rows: collectInstructorsBySection(course.sections),
       has_lab_component: (course.sections || []).some((section) => section.section_type === 'lab'),
+      is_active_current_semester: isCourseActiveThisSemester(course.id),
+      is_toggling_activation: isCourseToggleInFlight(course.id),
       room_consumed_hours: course.room_consumed_hours ?? null,
       lab_consumed_hours: (course.sections || []).some((section) => section.section_type === 'lab')
         ? course.lab_consumed_hours
@@ -98,6 +104,20 @@ export function useCoursesViewData({
       label: t('pages.coursesManagement.stats.totalCourses'),
       icon: 'bi bi-journals',
       iconColor: '#8b5cf6',
+    },
+    {
+      id: 'active-current-semester',
+      value: activeCoursesCount.value,
+      label: t('pages.coursesManagement.stats.activeCurrentSemesterCourses'),
+      icon: 'bi bi-check2-circle',
+      iconColor: '#22c55e',
+    },
+    {
+      id: 'inactive-current-semester',
+      value: inactiveCoursesCount.value,
+      label: t('pages.coursesManagement.stats.inactiveCurrentSemesterCourses'),
+      icon: 'bi bi-slash-circle',
+      iconColor: '#ef4444',
     },
     {
       id: 'room-only',

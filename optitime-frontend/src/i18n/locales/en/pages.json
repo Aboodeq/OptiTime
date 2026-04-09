@@ -281,6 +281,116 @@
         "invalidForm": "Please complete all required fields and ensure min/max weekly work hours are valid."
       }
     },
+    "instructorSelfAvailability": {
+      "title": "My availability",
+      "subtitle": "Set your preferred teaching days and time window.",
+      "weeklyHoursRange": "Weekly chosen hours: {current}h (required {min}h - {max}h)",
+      "sections": {
+        "days": "Availability grid"
+      },
+      "hints": {
+        "days": "Click cells in the week grid to mark preferred/unavailable slots; break times are locked."
+      },
+      "grid": {
+        "title": "Availability grid",
+        "time": "Time",
+        "preferred": "Preferred",
+        "available": "Available",
+        "unavailable": "Unavailable",
+        "blocked": "Break"
+      },
+      "actions": {
+        "save": "Save my availability"
+      },
+      "errors": {
+        "invalidForm": "Please set valid day intervals within configured working hours and slot boundaries.",
+        "minWeeklyHoursRequired": "You must keep at least {min} chosen hours per week."
+      },
+      "toasts": {
+        "saved": "Your availability has been saved"
+      }
+    },
+    "coordinatorWeeklySchedule": {
+      "title": "Coordinator weekly schedule",
+      "subtitle": "View, edit, and generate the current semester schedule with constraints.",
+      "activeSemester": "Active semester: {name}",
+      "sections": {
+        "board": "Weekly schedule board",
+        "generation": "Generation controls",
+        "kpis": "Key indicators"
+      },
+      "hints": {
+        "board": "Drag and drop sessions between valid slots. Break slots are blocked."
+      },
+      "algorithms": {
+        "genetic": "Genetic algorithm",
+        "geneticDescription": "Faster global search, good for broad optimization.",
+        "backtracking": "Backtracking",
+        "backtrackingDescription": "Step-by-step exact search, stronger on hard constraints."
+      },
+      "actions": {
+        "save": "Save changes",
+        "generate": "Generate schedule",
+        "confirmGenerated": "Confirm and save generated",
+        "cancelPreview": "Cancel preview"
+      },
+      "preview": {
+        "title": "Generated schedule preview",
+        "subtitle": "Review the generated schedule before saving."
+      },
+      "details": {
+        "title": "Lecture details",
+        "course": "Course",
+        "section": "Section",
+        "instructor": "Instructor",
+        "room": "Room",
+        "day": "Day",
+        "time": "Time",
+        "ids": "Reference IDs",
+        "studentsTitle": "Assigned students",
+        "students": {
+          "name": "Student",
+          "universityNumber": "University number",
+          "year": "Year",
+          "status": "Status",
+          "empty": "No students assigned to this lecture section.",
+          "searchPlaceholder": "Search students by name"
+        }
+      },
+      "kpis": {
+        "totalSessions": "Total sessions",
+        "roomUtilization": "Room utilization",
+        "instructorBalance": "Instructor load balance",
+        "conflicts": "Conflicts"
+      },
+      "errors": {
+        "noActiveSemester": "No active semester found.",
+        "invalidSchedule": "Schedule has conflicts or invalid slot assignments.",
+        "saveFailed": "Could not save schedule changes.",
+        "generateFailed": "Could not generate a valid schedule."
+      },
+      "toasts": {
+        "saved": "Schedule updated successfully",
+        "generated": "New schedule generated. Please review before saving.",
+        "generatedSaved": "Generated schedule confirmed and saved"
+      }
+    },
+    "instructorWeeklySchedule": {
+      "title": "My weekly schedule",
+      "subtitle": "View your assigned lectures for the current semester.",
+      "activeSemester": "Active semester: {name}",
+      "sections": {
+        "board": "My weekly board"
+      }
+    },
+    "studentWeeklySchedule": {
+      "title": "My weekly schedule",
+      "subtitle": "View your lecture schedule for the current semester.",
+      "activeSemester": "Active semester: {name}",
+      "sections": {
+        "board": "My weekly board"
+      }
+    },
     "studentsManagement": {
       "title": "Students management",
       "subtitle": "Manage student accounts including completed hours and academic level.",
@@ -484,8 +594,14 @@
       },
       "stats": {
         "totalCourses": "Total courses",
+        "activeCurrentSemesterCourses": "Active this semester",
+        "inactiveCurrentSemesterCourses": "Inactive this semester",
         "roomOnlyCourses": "Room-only courses",
         "roomLabCourses": "Room + Lab courses"
+      },
+      "status": {
+        "active": "Active this semester",
+        "inactive": "Inactive this semester"
       },
       "labels": {
         "faculty": "Faculty",
@@ -544,6 +660,9 @@
       },
       "actions": {
         "newCourse": "New course",
+        "activate": "Activate",
+        "deactivate": "Deactivate",
+        "savingStatus": "Saving...",
         "edit": "Edit",
         "delete": "Delete",
         "save": "Save course"
@@ -555,7 +674,12 @@
         "cancel": "Cancel"
       },
       "errors": {
-        "invalidForm": "Please complete required fields, keep hours greater than zero, and set valid sections with capacity and instructors."
+        "invalidForm": "Please complete required fields, keep hours greater than zero, and set valid sections with capacity and instructors.",
+        "statusUpdateFailed": "Could not update course status for the current semester."
+      },
+      "toasts": {
+        "courseActivated": "\"{course}\" is now active for the current semester.",
+        "courseDeactivated": "\"{course}\" is now inactive for the current semester."
       }
     },
     "specialitiesManagement": {

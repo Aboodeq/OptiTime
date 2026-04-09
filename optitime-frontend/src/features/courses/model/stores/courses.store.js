@@ -61,17 +61,32 @@ function normalizeSections(values) {
 export const useCoursesStore = defineStore('courses', () => {
   const courses = ref([])
   const initialized = ref(false)
+  const currentSemesterId = ref('')
+  const semesterOfferings = ref([])
+  const togglingCourseIds = ref([])
 
   const coursesCount = computed(() => courses.value.length)
   const coursesWithLabCount = computed(
     () => courses.value.filter((course) => course.sections.some((section) => section.section_type === 'lab')).length,
   )
   const coursesWithoutLabCount = computed(() => coursesCount.value - coursesWithLabCount.value)
+  const activeCoursesCount = computed(() => semesterOfferings.value.filter((item) => item.is_active).length)
+  const inactiveCoursesCount = computed(() => coursesCount.value - activeCoursesCount.value)
+  const isCourseToggleInFlight = computed(
+    () => (courseId) => togglingCourseIds.value.includes(courseId),
+  )
 
   async function ensureInitialized() {
     if (initialized.value) return
     courses.value = await coursesService.getCourses()
+    currentSemesterId.value = await coursesService.getCurrentSemesterId()
+    semesterOfferings.value = await coursesService.getCourseOfferingsBySemester(currentSemesterId.value)
     initialized.value = true
+  }
+
+  function isCourseActiveThisSemester(courseId) {
+    const offering = semesterOfferings.value.find((item) => item.course_id === courseId)
+    return Boolean(offering?.is_active)
   }
 
   function buildDraftFromCourse(course) {
@@ -202,7 +217,34 @@ export const useCoursesStore = defineStore('courses', () => {
     const deleted = await coursesService.deleteCourse(courseId)
     if (!deleted) return false
     courses.value = courses.value.filter((item) => item.id !== courseId)
+    semesterOfferings.value = semesterOfferings.value.filter((item) => item.course_id !== courseId)
     return true
+  }
+
+  async function refreshCurrentSemesterOfferings() {
+    if (!currentSemesterId.value) {
+      currentSemesterId.value = await coursesService.getCurrentSemesterId()
+    }
+    semesterOfferings.value = await coursesService.getCourseOfferingsBySemester(currentSemesterId.value)
+  }
+
+  async function toggleCourseActivation(courseId) {
+    if (!currentSemesterId.value || togglingCourseIds.value.includes(courseId)) return null
+    togglingCourseIds.value = [...togglingCourseIds.value, courseId]
+    try {
+      const nextValue = !isCourseActiveThisSemester(courseId)
+      const updated = await coursesService.setCourseOfferingActivation({
+        semesterId: currentSemesterId.value,
+        courseId,
+        isActive: nextValue,
+      })
+      semesterOfferings.value = semesterOfferings.value.some((item) => item.id === updated.id)
+        ? semesterOfferings.value.map((item) => (item.id === updated.id ? updated : item))
+        : [...semesterOfferings.value, updated]
+      return updated
+    } finally {
+      togglingCourseIds.value = togglingCourseIds.value.filter((id) => id !== courseId)
+    }
   }
 
   return {
@@ -210,11 +252,19 @@ export const useCoursesStore = defineStore('courses', () => {
     coursesCount,
     coursesWithLabCount,
     coursesWithoutLabCount,
+    activeCoursesCount,
+    inactiveCoursesCount,
+    currentSemesterId,
+    semesterOfferings,
+    isCourseToggleInFlight,
     ensureInitialized,
     createEmptyDraft,
     buildDraftFromCourse,
     createCourseFromDraft,
     updateCourseFromDraft,
     deleteCourse,
+    refreshCurrentSemesterOfferings,
+    toggleCourseActivation,
+    isCourseActiveThisSemester,
   }
 })

@@ -13,6 +13,7 @@ export function useCoursesManagementPage() {
   organizationStore.ensureInitialized()
 
   const { courses, coursesCount, coursesWithLabCount, coursesWithoutLabCount } = storeToRefs(coursesStore)
+  const { activeCoursesCount, inactiveCoursesCount, currentSemesterId } = storeToRefs(coursesStore)
   const { instructors } = storeToRefs(instructorsStore)
   const { faculties } = storeToRefs(organizationStore)
   const activeCourseId = ref(null)
@@ -150,6 +151,11 @@ export function useCoursesManagementPage() {
     }
   }
 
+  async function toggleCourseActivation(courseId) {
+    const updatedOffering = await coursesStore.toggleCourseActivation(courseId)
+    return Boolean(updatedOffering)
+  }
+
   return {
     courses,
     faculties,
@@ -157,6 +163,9 @@ export function useCoursesManagementPage() {
     coursesCount,
     coursesWithLabCount,
     coursesWithoutLabCount,
+    activeCoursesCount,
+    inactiveCoursesCount,
+    currentSemesterId,
     facultyOptions,
     departmentOptions,
     instructorOptions,
@@ -169,6 +178,9 @@ export function useCoursesManagementPage() {
     closeDialog,
     saveCourse,
     removeCourse,
+    toggleCourseActivation,
+    isCourseActiveThisSemester: coursesStore.isCourseActiveThisSemester,
+    isCourseToggleInFlight: coursesStore.isCourseToggleInFlight,
     setFacultyId,
     setDepartmentId,
     addSection,

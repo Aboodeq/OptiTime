@@ -15,7 +15,7 @@ const COURSES_SEED = [
         section_name: 'Section A',
         section_type: 'room',
         capacity: 40,
-        instructor_ids: ['instructor-1'],
+        instructor_ids: ['instructor-1', 'instructor-4', 'instructor-demo'],
       },
       {
         id: 'course-1-sec-2',
@@ -52,9 +52,124 @@ const COURSES_SEED = [
     max_student_year_level: 4,
     prerequisite_course_ids: [],
   },
+  {
+    id: 'course-3',
+    code: 'DB-220',
+    name_ar: 'قواعد البيانات',
+    name_en: 'Databases',
+    faculty_id: 'faculty-informatics',
+    department_id: 'dept-software',
+    required_hours: 3,
+    room_consumed_hours: 2,
+    lab_consumed_hours: 2,
+    sections: [
+      {
+        id: 'course-3-sec-1',
+        section_name: 'Section A',
+        section_type: 'room',
+        capacity: 50,
+        instructor_ids: ['instructor-1', 'instructor-4', 'instructor-demo'],
+      },
+      {
+        id: 'course-3-sec-2',
+        section_name: 'Lab Group A',
+        section_type: 'lab',
+        capacity: 25,
+        instructor_ids: ['instructor-3'],
+      },
+    ],
+    min_student_year_level: 2,
+    max_student_year_level: 4,
+    prerequisite_course_ids: [],
+  },
+  {
+    id: 'course-4',
+    code: 'NET-330',
+    name_ar: 'شبكات الحاسوب',
+    name_en: 'Computer Networks',
+    faculty_id: 'faculty-informatics',
+    department_id: 'dept-networks',
+    required_hours: 3,
+    room_consumed_hours: 2,
+    lab_consumed_hours: 2,
+    sections: [
+      {
+        id: 'course-4-sec-1',
+        section_name: 'Section A',
+        section_type: 'room',
+        capacity: 55,
+        instructor_ids: ['instructor-5'],
+      },
+      {
+        id: 'course-4-sec-2',
+        section_name: 'Lab Group A',
+        section_type: 'lab',
+        capacity: 30,
+        instructor_ids: ['instructor-3', 'instructor-5'],
+      },
+    ],
+    min_student_year_level: 3,
+    max_student_year_level: 5,
+    prerequisite_course_ids: [],
+  },
+  {
+    id: 'course-5',
+    code: 'SWE-340',
+    name_ar: 'هندسة البرمجيات المتقدمة',
+    name_en: 'Advanced Software Engineering',
+    faculty_id: 'faculty-informatics',
+    department_id: 'dept-software',
+    required_hours: 3,
+    room_consumed_hours: 3,
+    lab_consumed_hours: null,
+    sections: [
+      {
+        id: 'course-5-sec-1',
+        section_name: 'Section A',
+        section_type: 'room',
+        capacity: 55,
+        instructor_ids: ['instructor-4', 'instructor-1'],
+      },
+    ],
+    min_student_year_level: 3,
+    max_student_year_level: 5,
+    prerequisite_course_ids: ['course-1'],
+  },
+  {
+    id: 'course-6',
+    code: 'FIN-320',
+    name_ar: 'إدارة المخاطر المالية',
+    name_en: 'Financial Risk Management',
+    faculty_id: 'faculty-business',
+    department_id: 'dept-finance',
+    required_hours: 2,
+    room_consumed_hours: 2,
+    lab_consumed_hours: null,
+    sections: [
+      {
+        id: 'course-6-sec-1',
+        section_name: 'Section A',
+        section_type: 'room',
+        capacity: 70,
+        instructor_ids: ['instructor-2', 'instructor-6'],
+      },
+    ],
+    min_student_year_level: 3,
+    max_student_year_level: 5,
+    prerequisite_course_ids: ['course-2'],
+  },
 ]
 
 let coursesDb = COURSES_SEED.map((item) => ({ ...item }))
+const CURRENT_SEMESTER_ID = 'semester-1'
+let courseOfferingsDb = [
+  { id: 'offering-1', course_id: 'course-1', semester_id: CURRENT_SEMESTER_ID, is_active: true },
+  { id: 'offering-2', course_id: 'course-2', semester_id: CURRENT_SEMESTER_ID, is_active: true },
+  { id: 'offering-3', course_id: 'course-3', semester_id: CURRENT_SEMESTER_ID, is_active: true },
+  { id: 'offering-4', course_id: 'course-4', semester_id: CURRENT_SEMESTER_ID, is_active: true },
+  { id: 'offering-5', course_id: 'course-5', semester_id: CURRENT_SEMESTER_ID, is_active: true },
+  { id: 'offering-6', course_id: 'course-6', semester_id: CURRENT_SEMESTER_ID, is_active: true },
+]
 
 function cloneCourse(course) {
   return {
@@ -101,6 +216,37 @@ export const coursesService = {
   async deleteCourse(courseId) {
     const before = coursesDb.length
     coursesDb = coursesDb.filter((item) => item.id !== courseId)
+    courseOfferingsDb = courseOfferingsDb.filter((item) => item.course_id !== courseId)
     return coursesDb.length < before
+  },
+
+  async getCurrentSemesterId() {
+    return CURRENT_SEMESTER_ID
+  },
+
+  async getCourseOfferingsBySemester(semesterId) {
+    return courseOfferingsDb
+      .filter((item) => item.semester_id === semesterId)
+      .map((item) => ({ ...item }))
+  },
+
+  async setCourseOfferingActivation({ semesterId, courseId, isActive }) {
+    const normalizedActive = Boolean(isActive)
+    let updated = null
+    courseOfferingsDb = courseOfferingsDb.map((item) => {
+      if (item.semester_id !== semesterId || item.course_id !== courseId) return item
+      updated = { ...item, is_active: normalizedActive }
+      return updated
+    })
+    if (!updated) {
+      updated = {
+        id: `offering-${Date.now()}`,
+        course_id: courseId,
+        semester_id: semesterId,
+        is_active: normalizedActive,
+      }
+      courseOfferingsDb = [...courseOfferingsDb, updated]
+    }
+    return { ...updated }
   },
 }
