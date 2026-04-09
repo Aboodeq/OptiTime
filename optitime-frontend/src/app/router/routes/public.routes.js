@@ -80,6 +80,21 @@ export const instructorWeeklyScheduleRoute = {
   },
 }
 
+export const instructorLectureRequestsRoute = {
+  path: '/instructor/lecture-requests',
+  name: 'instructor-lecture-requests',
+  component: () =>
+    import('@/features/lecture-requests/ui/pages/InstructorLectureRequestsPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: [
+      'instructorSchedule.apologyRequest.create',
+      'instructorSchedule.makeupRequest.create',
+    ],
+    titleKey: 'routes.instructorLectureRequests',
+  },
+}
+
 export const studentWeeklyScheduleRoute = {
   path: '/student/weekly-schedule',
   name: 'student-weekly-schedule',
@@ -100,6 +115,18 @@ export const coordinatorWeeklyScheduleRoute = {
     requiresAuth: true,
     requiredPermissions: ['schedule.view'],
     titleKey: 'routes.coordinatorWeeklySchedule',
+  },
+}
+
+export const coordinatorLectureRequestsRoute = {
+  path: '/coordinator/lecture-requests',
+  name: 'coordinator-lecture-requests',
+  component: () =>
+    import('@/features/lecture-requests/ui/pages/CoordinatorLectureRequestsPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['instructorSchedule.requests.review'],
+    titleKey: 'routes.coordinatorLectureRequests',
   },
 }
 

@@ -27,7 +27,25 @@
       :lecture="selectedLecture"
       :day-label="localizedDayLabel(selectedLecture?.day)"
       :students="selectedLectureStudents"
+      :can-request-apology="canRequestApologyLecture"
+      :can-request-makeup="canRequestMakeupLecture"
+      @request-apology="openApologyDialog"
+      @request-makeup="openMakeupDialog"
       @close="detailsDialogOpen = false"
+    />
+
+    <LectureApologyRequestDialog
+      :open="apologyDialogOpen"
+      :lecture-day="selectedLecture?.day"
+      :lecture-day-label="localizedDayLabel(selectedLecture?.day)"
+      @close="apologyDialogOpen = false"
+      @submit="handleApologySubmit"
+    />
+
+    <MakeupLectureRequestDialog
+      :open="makeupDialogOpen"
+      @close="makeupDialogOpen = false"
+      @submit="handleMakeupSubmit"
     />
   </AppShell>
 </template>
@@ -35,15 +53,31 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useToast } from 'vue-toastification'
 import AppSectionPanel from '@/components/common/AppSectionPanel.vue'
 import AppShell from '@/components/layout/AppShell.vue'
 import { useSelfWeeklySchedulePage } from '@/features/coordinator-schedule/model/composables/useSelfWeeklySchedulePage'
+import LectureApologyRequestDialog from '@/features/coordinator-schedule/ui/components/LectureApologyRequestDialog.vue'
 import LectureDetailsDialog from '@/features/coordinator-schedule/ui/components/LectureDetailsDialog.vue'
+import MakeupLectureRequestDialog from '@/features/coordinator-schedule/ui/components/MakeupLectureRequestDialog.vue'
+import { useLectureRequestsStore } from '@/features/lecture-requests/model/stores/lectureRequests.store'
 import WeeklyScheduleBoard from '@/features/coordinator-schedule/ui/components/WeeklyScheduleBoard.vue'
+import { useAuthStore } from '@/store/auth.store'
 
 const { t } = useI18n()
+const toast = useToast()
+const authStore = useAuthStore()
+const lectureRequestsStore = useLectureRequestsStore()
 const detailsDialogOpen = ref(false)
+const apologyDialogOpen = ref(false)
+const makeupDialogOpen = ref(false)
 const selectedLecture = ref(null)
+const canRequestApologyLecture = computed(() =>
+  authStore.hasPermission('instructorSchedule.apologyRequest.create'),
+)
+const canRequestMakeupLecture = computed(() =>
+  authStore.hasPermission('instructorSchedule.makeupRequest.create'),
+)
 
 const { activeSemester, dayOptions, timeSlots, blockedSlotStarts, sessions, getLectureStudents } =
   useSelfWeeklySchedulePage('instructor')
@@ -71,6 +105,49 @@ const selectedLectureStudents = computed(() =>
 function handleSelectSession(session) {
   selectedLecture.value = session
   detailsDialogOpen.value = true
+}
+
+function openApologyDialog(lecture) {
+  if (!canRequestApologyLecture.value) return
+  selectedLecture.value = lecture ?? selectedLecture.value
+  detailsDialogOpen.value = false
+  apologyDialogOpen.value = true
+}
+
+function openMakeupDialog(lecture) {
+  if (!canRequestMakeupLecture.value) return
+  selectedLecture.value = lecture ?? selectedLecture.value
+  detailsDialogOpen.value = false
+  makeupDialogOpen.value = true
+}
+
+function handleApologySubmit(form) {
+  if (!canRequestApologyLecture.value) return
+  const payload = buildRequestPayload('apology', form)
+  lectureRequestsStore.createRequest(payload)
+  console.info(t('pages.instructorWeeklySchedule.requests.logs.apologyPrepared'), payload)
+  toast.success(t('pages.instructorWeeklySchedule.requests.toasts.apologySubmitted'))
+  apologyDialogOpen.value = false
+}
+
+function handleMakeupSubmit(form) {
+  if (!canRequestMakeupLecture.value) return
+  const payload = buildRequestPayload('makeup', form)
+  lectureRequestsStore.createRequest(payload)
+  console.info(t('pages.instructorWeeklySchedule.requests.logs.makeupPrepared'), payload)
+  toast.success(t('pages.instructorWeeklySchedule.requests.toasts.makeupSubmitted'))
+  makeupDialogOpen.value = false
+}
+
+function buildRequestPayload(type, form) {
+  const lecture = selectedLecture.value ?? {}
+  return {
+    request_type: type,
+    schedule_session_id: lecture.id ?? null,
+    instructor_id: lecture.instructor_id ?? null,
+    requested_date: form.requested_date,
+    note: form.note,
+  }
 }
 
 function localizedDayLabel(day) {

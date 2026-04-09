@@ -39,6 +39,13 @@ export const BASE_SIDEBAR_SECTIONS = Object.freeze([
         permissions: ['instructorSchedule.self.view'],
       },
       {
+        id: 'instructor-lecture-requests',
+        routeName: 'instructor-lecture-requests',
+        icon: 'bi bi-envelope-paper',
+        labelKey: 'routes.instructorLectureRequests',
+        permissions: ['instructorSchedule.apologyRequest.create'],
+      },
+      {
         id: 'student-weekly-schedule',
         routeName: 'student-weekly-schedule',
         icon: 'bi bi-calendar-check',
@@ -51,6 +58,13 @@ export const BASE_SIDEBAR_SECTIONS = Object.freeze([
         icon: 'bi bi-calendar3-week',
         labelKey: 'routes.coordinatorWeeklySchedule',
         permissions: ['schedule.view'],
+      },
+      {
+        id: 'coordinator-lecture-requests',
+        routeName: 'coordinator-lecture-requests',
+        icon: 'bi bi-list-check',
+        labelKey: 'routes.coordinatorLectureRequests',
+        permissions: ['instructorSchedule.requests.review'],
       },
     ],
   },

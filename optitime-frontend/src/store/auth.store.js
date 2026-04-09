@@ -60,6 +60,15 @@ function normalizePermissions(permissions) {
       if (permission === 'instructorPreferences.self.manage') {
         return ['instructorPreferences.self.view', 'instructorPreferences.self.update']
       }
+      if (permission === 'instructorSchedule.self.manage') {
+        return [
+          'instructorSchedule.self.view',
+          'instructorSchedule.apologyRequest.create',
+          'instructorSchedule.makeupRequest.create',
+          'instructorSchedule.requests.self.update',
+          'instructorSchedule.requests.self.delete',
+        ]
+      }
       if (permission === 'students.manage') {
         return ['students.create', 'students.update', 'students.delete', 'students.view']
       }
@@ -67,7 +76,14 @@ function normalizePermissions(permissions) {
         return ['courses.create', 'courses.update', 'courses.delete', 'courses.view']
       }
       if (permission === 'schedule.manage') {
-        return ['schedule.view', 'schedule.update', 'schedule.generate']
+        return [
+          'schedule.view',
+          'schedule.update',
+          'schedule.generate',
+          'instructorSchedule.requests.review',
+          'instructorSchedule.requests.update',
+          'instructorSchedule.requests.delete',
+        ]
       }
       if (permission === 'resources.manage') {
         return ['resources.create', 'resources.update', 'resources.delete', 'resources.view']
@@ -124,10 +140,20 @@ function normalizeUser(userData) {
           color: '#334155',
         }
 
+  const normalizedPermissions = normalizePermissions(userData.permissions)
+  const effectivePermissions =
+    role.key === 'coordinator'
+      ? normalizedPermissions.filter(
+          (permission) =>
+            permission !== 'instructorSchedule.requests.update' &&
+            permission !== 'instructorSchedule.requests.delete',
+        )
+      : normalizedPermissions
+
   return {
     ...userData,
     role,
-    permissions: normalizePermissions(userData.permissions),
+    permissions: effectivePermissions,
   }
 }
 
