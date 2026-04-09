@@ -310,6 +310,87 @@
         "saved": "تم حفظ توفرك"
       }
     },
+    "coordinatorWeeklySchedule": {
+      "title": "الجدول الأسبوعي للمنسق",
+      "subtitle": "عرض وتعديل وتوليد جدول الفصل الحالي مع مراعاة القيود.",
+      "activeSemester": "الفصل النشط: {name}",
+      "sections": {
+        "board": "لوحة الجدول الأسبوعي",
+        "generation": "خيارات التوليد",
+        "kpis": "مؤشرات الأداء"
+      },
+      "hints": {
+        "board": "اسحب وأفلت الجلسات بين الخانات الصالحة. خانات الاستراحة محجوبة."
+      },
+      "algorithms": {
+        "genetic": "الخوارزمية الجينية",
+        "geneticDescription": "بحث أسرع على مستوى عام ومناسب للتحسين الواسع.",
+        "backtracking": "التراجع والتتبع",
+        "backtrackingDescription": "بحث دقيق خطوة بخطوة ومناسب للقيود الصارمة."
+      },
+      "actions": {
+        "save": "حفظ التعديلات",
+        "generate": "توليد جدول",
+        "confirmGenerated": "تأكيد وحفظ الناتج",
+        "cancelPreview": "إلغاء المعاينة"
+      },
+      "preview": {
+        "title": "معاينة الجدول المولد",
+        "subtitle": "راجع الجدول المولد قبل حفظه."
+      },
+      "details": {
+        "title": "تفاصيل المحاضرة",
+        "course": "المقرر",
+        "section": "الشعبة",
+        "instructor": "المدرس",
+        "room": "القاعة",
+        "day": "اليوم",
+        "time": "الوقت",
+        "ids": "المعرفات المرجعية",
+        "studentsTitle": "الطلاب المسجلون",
+        "students": {
+          "name": "الطالب",
+          "universityNumber": "الرقم الجامعي",
+          "year": "السنة",
+          "status": "الحالة",
+          "empty": "لا يوجد طلاب مخصصون لهذه الشعبة حالياً.",
+          "searchPlaceholder": "ابحث عن طالب بالاسم"
+        }
+      },
+      "kpis": {
+        "totalSessions": "إجمالي الجلسات",
+        "roomUtilization": "استثمار القاعات",
+        "instructorBalance": "توازن حمل المدرسين",
+        "conflicts": "التعارضات"
+      },
+      "errors": {
+        "noActiveSemester": "لا يوجد فصل نشط حالياً.",
+        "invalidSchedule": "الجدول يحتوي تعارضات أو خانات غير صالحة.",
+        "saveFailed": "تعذر حفظ تعديلات الجدول.",
+        "generateFailed": "تعذر توليد جدول صالح."
+      },
+      "toasts": {
+        "saved": "تم تحديث الجدول بنجاح",
+        "generated": "تم توليد جدول جديد. يرجى مراجعته قبل الحفظ.",
+        "generatedSaved": "تم تأكيد الجدول المولد وحفظه"
+      }
+    },
+    "instructorWeeklySchedule": {
+      "title": "جدولي الأسبوعي",
+      "subtitle": "عرض المحاضرات المسندة إليك في الفصل الحالي.",
+      "activeSemester": "الفصل النشط: {name}",
+      "sections": {
+        "board": "لوحتي الأسبوعية"
+      }
+    },
+    "studentWeeklySchedule": {
+      "title": "جدولي الأسبوعي",
+      "subtitle": "عرض جدول محاضراتك للفصل الحالي.",
+      "activeSemester": "الفصل النشط: {name}",
+      "sections": {
+        "board": "لوحتي الأسبوعية"
+      }
+    },
     "studentsManagement": {
       "title": "إدارة الطلاب",
       "subtitle": "إدارة حسابات الطلاب مع الساعات المنجزة والمستوى الدراسي.",

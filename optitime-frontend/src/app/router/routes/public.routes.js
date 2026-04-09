@@ -68,6 +68,41 @@ export const instructorSelfAvailabilityRoute = {
   },
 }
 
+export const instructorWeeklyScheduleRoute = {
+  path: '/instructor/weekly-schedule',
+  name: 'instructor-weekly-schedule',
+  component: () =>
+    import('@/features/coordinator-schedule/ui/pages/InstructorWeeklySchedulePage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['instructorSchedule.self.view'],
+    titleKey: 'routes.instructorWeeklySchedule',
+  },
+}
+
+export const studentWeeklyScheduleRoute = {
+  path: '/student/weekly-schedule',
+  name: 'student-weekly-schedule',
+  component: () => import('@/features/coordinator-schedule/ui/pages/StudentWeeklySchedulePage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['studentSchedule.self.view'],
+    titleKey: 'routes.studentWeeklySchedule',
+  },
+}
+
+export const coordinatorWeeklyScheduleRoute = {
+  path: '/coordinator/weekly-schedule',
+  name: 'coordinator-weekly-schedule',
+  component: () =>
+    import('@/features/coordinator-schedule/ui/pages/CoordinatorWeeklySchedulePage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['schedule.view'],
+    titleKey: 'routes.coordinatorWeeklySchedule',
+  },
+}
+
 export const studentsManagementRoute = {
   path: '/admin/students',
   name: 'students-management',
