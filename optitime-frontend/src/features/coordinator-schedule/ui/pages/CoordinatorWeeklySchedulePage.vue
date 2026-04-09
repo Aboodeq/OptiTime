@@ -67,6 +67,7 @@
     <GeneratedSchedulePreviewDialog
       :open="previewOpen"
       :sessions="generatedDraft?.sessions ?? []"
+      :evaluation-meta="generatedDraft?.meta ?? {}"
       :day-options="localizedDayOptions"
       :time-slots="timeSlots"
       :blocked-slot-starts="blockedSlotStarts"

@@ -602,12 +602,15 @@ export const useCoordinatorScheduleStore = defineStore('coordinatorSchedule', ()
         return false
       }
 
-      generatedDraft.value = sanitizeDraft(
-        enrichDraftRelations({
-          semester_id: activeSemester.value.id,
-          sessions: data.sessions,
-        }),
-      )
+      generatedDraft.value = {
+        ...sanitizeDraft(
+          enrichDraftRelations({
+            semester_id: activeSemester.value.id,
+            sessions: data.sessions,
+          }),
+        ),
+        meta: data.meta && typeof data.meta === 'object' ? { ...data.meta } : {},
+      }
       return validateDraft(generatedDraft.value)
     } finally {
       generating.value = false
