@@ -18,6 +18,25 @@ use Illuminate\Http\Request;
 
 class AdminEntityController extends Controller
 {
+    /**
+     * Admin routes use ->defaults('resource', $name); that value must be read here.
+     * Relying on method injection for `string $resource` can yield an empty value (e.g. name clash
+     * with the Resource model), which triggers "Unknown resource".
+     */
+    private function resourceKey(Request $request): string
+    {
+        $key = $request->route()?->parameter('resource');
+        if (is_string($key) && $key !== '') {
+            return $key;
+        }
+        $path = '/'.$request->path();
+        if (preg_match('#/admin/([^/]+)#', $path, $m)) {
+            return $m[1];
+        }
+
+        abort(404, 'Unknown resource');
+    }
+
     private function meta(string $resource): array
     {
         return match ($resource) {
@@ -82,6 +101,8 @@ class AdminEntityController extends Controller
                     'status' => 'nullable|string|max:30',
                     'notes_ar' => 'nullable|string',
                     'notes_en' => 'nullable|string',
+                    'resource_ids' => 'nullable|array',
+                    'resource_ids.*' => 'uuid|exists:resources,id',
                 ],
             ],
             'resources' => [
@@ -139,34 +160,75 @@ class AdminEntityController extends Controller
         };
     }
 
-    public function index(Request $request, string $resource): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+        $resource = $this->resourceKey($request);
         $m = $this->meta($resource);
+
+        if ($resource === 'rooms') {
+            $rows = Room::query()
+                ->with('resources')
+                ->orderBy('created_at')
+                ->get()
+                ->map(fn (Room $room) => $this->formatRoomResponse($room));
+
+            return response()->json($rows->values()->all());
+        }
+
         $q = $m['model']::query();
 
         return response()->json($q->orderBy('created_at')->get());
     }
 
-    public function store(Request $request, string $resource): JsonResponse
+    public function store(Request $request): JsonResponse
     {
+        $resource = $this->resourceKey($request);
         $m = $this->meta($resource);
         $data = $request->validate($m['rules']);
+
+        if ($resource === 'rooms') {
+            $resourceIds = $data['resource_ids'] ?? [];
+            unset($data['resource_ids']);
+            /** @var Room $row */
+            $row = Room::query()->create($data);
+            $row->resources()->sync(is_array($resourceIds) ? $resourceIds : []);
+            AuditLogger::log(
+                $request->user(),
+                $resource.'.create',
+                $m['model'],
+                $row->getKey(),
+                array_merge($data, ['resource_ids' => is_array($resourceIds) ? $resourceIds : []]),
+                $request,
+            );
+
+            return response()->json($this->formatRoomResponse($row->fresh()), 201);
+        }
+
         $row = $m['model']::query()->create($data);
         AuditLogger::log($request->user(), $resource.'.create', $m['model'], $row->getKey(), $data, $request);
 
         return response()->json($row, 201);
     }
 
-    public function show(Request $request, string $resource, string $id): JsonResponse
+    public function show(Request $request, string $id): JsonResponse
     {
+        $resource = $this->resourceKey($request);
         $m = $this->meta($resource);
+
+        if ($resource === 'rooms') {
+            $row = Room::query()->with('resources')->findOrFail($id);
+
+            return response()->json($this->formatRoomResponse($row));
+        }
+
         $row = $m['model']::query()->findOrFail($id);
 
         return response()->json($row);
     }
 
-    public function update(Request $request, string $resource, string $id): JsonResponse
+    public function update(Request $request, string $id): JsonResponse
     {
+        $resource = $this->resourceKey($request);
         $m = $this->meta($resource);
         $row = $m['model']::query()->findOrFail($id);
         $rules = [];
@@ -174,19 +236,52 @@ class AdminEntityController extends Controller
             $rules[$k] = 'sometimes|'.$r;
         }
         $data = $request->validate($rules);
+
+        if ($resource === 'rooms') {
+            /** @var Room $row */
+            $auditPayload = $data;
+            if ($request->has('resource_ids')) {
+                $ids = $data['resource_ids'] ?? [];
+                unset($data['resource_ids']);
+                $row->resources()->sync(is_array($ids) ? $ids : []);
+            } else {
+                unset($data['resource_ids']);
+            }
+            if ($data !== []) {
+                $row->update($data);
+            }
+            AuditLogger::log($request->user(), $resource.'.update', $m['model'], $id, $auditPayload, $request);
+
+            return response()->json($this->formatRoomResponse($row->fresh()));
+        }
+
         $row->update($data);
         AuditLogger::log($request->user(), $resource.'.update', $m['model'], $id, $data, $request);
 
         return response()->json($row->fresh());
     }
 
-    public function destroy(Request $request, string $resource, string $id): JsonResponse
+    public function destroy(Request $request, string $id): JsonResponse
     {
+        $resource = $this->resourceKey($request);
         $m = $this->meta($resource);
         $row = $m['model']::query()->findOrFail($id);
         $row->delete();
         AuditLogger::log($request->user(), $resource.'.delete', $m['model'], $id, null, $request);
 
         return response()->json(['deleted' => true]);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function formatRoomResponse(Room $room): array
+    {
+        $room->loadMissing('resources');
+        $base = $room->toArray();
+        unset($base['resources']);
+        $base['resource_ids'] = $room->resources->pluck('id')->values()->all();
+
+        return $base;
     }
 }

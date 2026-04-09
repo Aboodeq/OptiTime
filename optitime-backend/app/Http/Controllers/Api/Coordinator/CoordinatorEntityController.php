@@ -14,6 +14,20 @@ use Illuminate\Http\Request;
 
 class CoordinatorEntityController extends Controller
 {
+    private function resourceKey(Request $request): string
+    {
+        $key = $request->route()?->parameter('resource');
+        if (is_string($key) && $key !== '') {
+            return $key;
+        }
+        $path = '/'.$request->path();
+        if (preg_match('#/coordinator/([^/]+)#', $path, $m)) {
+            return $m[1];
+        }
+
+        abort(404);
+    }
+
     private function meta(string $resource): array
     {
         return match ($resource) {
@@ -69,8 +83,9 @@ class CoordinatorEntityController extends Controller
         };
     }
 
-    public function index(Request $request, string $resource): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+        $resource = $this->resourceKey($request);
         $m = $this->meta($resource);
         $q = $m['model']::query();
         if ($resource === 'sections' && $request->filled('semester_id')) {
@@ -83,8 +98,9 @@ class CoordinatorEntityController extends Controller
         return response()->json($q->orderBy('created_at')->get());
     }
 
-    public function store(Request $request, string $resource): JsonResponse
+    public function store(Request $request): JsonResponse
     {
+        $resource = $this->resourceKey($request);
         $m = $this->meta($resource);
         $data = $request->validate($m['rules']);
         $row = $m['model']::query()->create($data);
@@ -93,15 +109,17 @@ class CoordinatorEntityController extends Controller
         return response()->json($row, 201);
     }
 
-    public function show(string $resource, string $id): JsonResponse
+    public function show(Request $request, string $id): JsonResponse
     {
+        $resource = $this->resourceKey($request);
         $m = $this->meta($resource);
 
         return response()->json($m['model']::query()->findOrFail($id));
     }
 
-    public function update(Request $request, string $resource, string $id): JsonResponse
+    public function update(Request $request, string $id): JsonResponse
     {
+        $resource = $this->resourceKey($request);
         $m = $this->meta($resource);
         $row = $m['model']::query()->findOrFail($id);
         $rules = [];
@@ -115,8 +133,9 @@ class CoordinatorEntityController extends Controller
         return response()->json($row->fresh());
     }
 
-    public function destroy(Request $request, string $resource, string $id): JsonResponse
+    public function destroy(Request $request, string $id): JsonResponse
     {
+        $resource = $this->resourceKey($request);
         $m = $this->meta($resource);
         $row = $m['model']::query()->findOrFail($id);
         $row->delete();
