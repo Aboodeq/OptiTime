@@ -25,15 +25,6 @@
         <strong>{{ t('pages.coordinatorWeeklySchedule.details.time') }}:</strong>
         <span>{{ lecture.start }} - {{ lecture.end }}</span>
       </div>
-      <div class="lecture-details__row">
-        <strong>{{ t('pages.coordinatorWeeklySchedule.details.ids') }}:</strong>
-        <span>
-          C: {{ lecture.course_id || '-' }},
-          S: {{ lecture.section_id || '-' }},
-          I: {{ lecture.instructor_id || '-' }},
-          R: {{ lecture.room_id || '-' }}
-        </span>
-      </div>
       <div v-if="canRequestApology || canRequestMakeup" class="lecture-details__actions">
         <AppButton
           v-if="canRequestApology"
@@ -52,7 +43,7 @@
           {{ t('pages.coordinatorWeeklySchedule.details.actions.requestMakeup') }}
         </AppButton>
       </div>
-      <div class="lecture-details__students">
+      <div v-if="showStudents" class="lecture-details__students">
         <h6 class="mb-2">{{ t('pages.coordinatorWeeklySchedule.details.studentsTitle') }}</h6>
         <AppSearchField
           v-model="query"
@@ -84,6 +75,7 @@ const props = defineProps({
   lecture: { type: Object, default: null },
   dayLabel: { type: String, default: '-' },
   students: { type: Array, default: () => [] },
+  showStudents: { type: Boolean, default: true },
   canRequestApology: { type: Boolean, default: false },
   canRequestMakeup: { type: Boolean, default: false },
 })

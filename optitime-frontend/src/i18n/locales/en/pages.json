@@ -485,6 +485,12 @@
       "title": "My weekly schedule",
       "subtitle": "View your assigned lectures for the current semester.",
       "activeSemester": "Active semester: {name}",
+      "actions": {
+        "exportPdf": "Download PDF"
+      },
+      "errors": {
+        "pdfFailed": "Could not download the schedule PDF."
+      },
       "sections": {
         "board": "My weekly board"
       },
@@ -539,6 +545,12 @@
       "title": "My weekly schedule",
       "subtitle": "View your lecture schedule for the current semester.",
       "activeSemester": "Active semester: {name}",
+      "actions": {
+        "exportPdf": "Download PDF"
+      },
+      "errors": {
+        "pdfFailed": "Could not download the schedule PDF."
+      },
       "sections": {
         "board": "My weekly board"
       }

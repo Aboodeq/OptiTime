@@ -13,7 +13,7 @@
       <AppButton type="button" variant="outline" @click="$emit('cancel')">
         {{ t('pages.coordinatorWeeklySchedule.actions.cancelPreview') }}
       </AppButton>
-      <AppButton type="button" @click="$emit('confirm')">
+      <AppButton type="button" :disabled="!canConfirm" @click="$emit('confirm')">
         {{ t('pages.coordinatorWeeklySchedule.actions.confirmGenerated') }}
       </AppButton>
     </div>
@@ -33,6 +33,7 @@ defineProps({
   timeSlots: { type: Array, default: () => [] },
   blockedSlotStarts: { type: Array, default: () => [] },
   conflictSessionIds: { type: Array, default: () => [] },
+  canConfirm: { type: Boolean, default: true },
 })
 
 defineEmits(['confirm', 'cancel'])

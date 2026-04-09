@@ -485,6 +485,12 @@
       "title": "جدولي الأسبوعي",
       "subtitle": "عرض المحاضرات المسندة إليك في الفصل الحالي.",
       "activeSemester": "الفصل النشط: {name}",
+      "actions": {
+        "exportPdf": "تنزيل PDF"
+      },
+      "errors": {
+        "pdfFailed": "تعذّر تنزيل ملف الجدول."
+      },
       "sections": {
         "board": "لوحتي الأسبوعية"
       },
@@ -539,6 +545,12 @@
       "title": "جدولي الأسبوعي",
       "subtitle": "عرض جدول محاضراتك للفصل الحالي.",
       "activeSemester": "الفصل النشط: {name}",
+      "actions": {
+        "exportPdf": "تنزيل PDF"
+      },
+      "errors": {
+        "pdfFailed": "تعذّر تنزيل ملف الجدول."
+      },
       "sections": {
         "board": "لوحتي الأسبوعية"
       }
