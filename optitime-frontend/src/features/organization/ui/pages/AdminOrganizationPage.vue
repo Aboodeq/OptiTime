@@ -215,27 +215,30 @@ function requestDeleteDepartmentFromFaculty(faculty, department) {
   }
 }
 
-function confirmDelete() {
+async function confirmDelete() {
   if (!canDeleteOrganization.value || !pendingDelete.value) return
 
-  if (pendingDelete.value.kind === 'faculty') {
-    removeFaculty(pendingDelete.value.facultyId)
-  } else if (pendingDelete.value.kind === 'department') {
-    removeDepartment(pendingDelete.value.facultyId, pendingDelete.value.departmentId)
+  try {
+    if (pendingDelete.value.kind === 'faculty') {
+      await removeFaculty(pendingDelete.value.facultyId)
+    } else if (pendingDelete.value.kind === 'department') {
+      await removeDepartment(pendingDelete.value.facultyId, pendingDelete.value.departmentId)
+    }
+  } finally {
+    pendingDelete.value = null
   }
-  pendingDelete.value = null
 }
 
-function handleSaveFaculty() {
+async function handleSaveFaculty() {
   if (editingFaculty.value && !canUpdateOrganization.value) return
   if (!editingFaculty.value && !canCreateOrganization.value) return
-  saveFaculty()
+  await saveFaculty()
 }
 
-function handleSaveDepartment() {
+async function handleSaveDepartment() {
   if (editingDepartment.value && !canUpdateOrganization.value) return
   if (!editingDepartment.value && !canCreateOrganization.value) return
-  saveDepartment()
+  await saveDepartment()
 }
 
 function getFilteredDepartmentsForFaculty(faculty) {

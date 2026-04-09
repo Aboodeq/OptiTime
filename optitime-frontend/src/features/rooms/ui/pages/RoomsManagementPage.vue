@@ -123,12 +123,15 @@
       :can-edit="canCreateResources"
       @cancel="closeResourceDialog"
       @save="handleSaveResource"
-      @update:name="resourceDraft.name = $event"
+      @update:name_ar="resourceDraft.name_ar = $event"
+      @update:name_en="resourceDraft.name_en = $event"
       @update:type="resourceDraft.type = $event"
       @update:quantity="resourceDraft.quantity = $event"
-      @update:location="resourceDraft.location = $event"
+      @update:location_ar="resourceDraft.location_ar = $event"
+      @update:location_en="resourceDraft.location_en = $event"
       @update:status="resourceDraft.status = $event"
-      @update:notes="resourceDraft.notes = $event"
+      @update:notes_ar="resourceDraft.notes_ar = $event"
+      @update:notes_en="resourceDraft.notes_en = $event"
     />
 
     <AppConfirmDialog
@@ -293,12 +296,17 @@ function openResourceCreateDialog(name) {
   if (!canCreateResources.value) return
   roomDialogWasOpen.value = isDialogOpen.value
   closeDialog()
+  const label = typeof name === 'string' ? name.trim() : ''
+  const locationEn = draft.value.location_en?.trim() || ''
+  const locationAr = draft.value.location_ar?.trim() || ''
   resourceDraft.value = {
     ...resourcesStore.createEmptyDraft(),
-    name,
+    name_ar: label || locationAr,
+    name_en: label || locationEn,
     type: 'equipment',
     quantity: 1,
-    location: draft.value.location_en || '',
+    location_ar: locationAr,
+    location_en: locationEn,
   }
   isResourceDialogOpen.value = true
 }

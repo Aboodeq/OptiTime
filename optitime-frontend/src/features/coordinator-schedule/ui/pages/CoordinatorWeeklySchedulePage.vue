@@ -67,10 +67,12 @@
     <GeneratedSchedulePreviewDialog
       :open="previewOpen"
       :sessions="generatedDraft?.sessions ?? []"
+      :evaluation-meta="generatedDraft?.meta ?? {}"
       :day-options="localizedDayOptions"
       :time-slots="timeSlots"
       :blocked-slot-starts="blockedSlotStarts"
       :conflict-session-ids="conflictSessionIds"
+      :can-confirm="canPublishSchedule"
       @confirm="handleConfirmGenerated"
       @cancel="cancelPreview"
     />
@@ -129,6 +131,8 @@ const {
   moveSession,
   getLectureStudents,
 } = useCoordinatorWeeklySchedulePage()
+
+const canPublishSchedule = computed(() => authStore.hasPermission('schedules.publish'))
 
 const localizedDayOptions = computed(() => {
   const labels = {
@@ -194,7 +198,7 @@ async function handleGenerate() {
 }
 
 async function handleConfirmGenerated() {
-  if (!canUpdateSchedule.value) return
+  if (!canPublishSchedule.value) return
   if (validationErrors.value.length > 0) {
     toast.error(t('pages.coordinatorWeeklySchedule.errors.invalidSchedule'))
     return

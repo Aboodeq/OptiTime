@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { authService } from '@/features/auth/api/auth.service'
+import { useResourcesStore } from '@/features/resources/model/stores/resources.store'
+import { useRoomsStore } from '@/features/rooms/model/stores/rooms.store'
 import { loadAuthSession, saveAuthSession } from '@/lib/authSession'
 
 function normalizePermissions(permissions) {
@@ -54,10 +56,16 @@ export const useAuthStore = defineStore('auth', () => {
     codeSentAt: 0,
   })
 
+  function clearEntityCaches() {
+    useRoomsStore().resetCache()
+    useResourcesStore().resetCache()
+  }
+
   function setUser(userData) {
     if (!userData) {
       user.value = null
       saveAuthSession(null, null)
+      clearEntityCaches()
       return
     }
 
@@ -83,6 +91,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function login(credentials) {
+    clearEntityCaches()
     const { token, user: loggedInUser } = await authService.login(credentials)
     const normalizedUser = normalizeUser(loggedInUser)
     user.value = normalizedUser
@@ -91,6 +100,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function loginAsDemoRole(roleKey) {
+    clearEntityCaches()
     const { token, user: loggedInUser } = await authService.loginAsDemoRole(roleKey)
     const normalizedUser = normalizeUser(loggedInUser)
     user.value = normalizedUser
@@ -191,6 +201,7 @@ export const useAuthStore = defineStore('auth', () => {
     await authService.logout()
     user.value = null
     saveAuthSession(null, null)
+    clearEntityCaches()
   }
 
   return {

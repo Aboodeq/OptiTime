@@ -276,10 +276,20 @@ async function handleUpdatePassword() {
   toast.error(t(errorMap[result.code] ?? 'pages.userSettings.errors.passwordUpdateFailed'))
 }
 
+const notificationsErrorKeys = {
+  NO_TOKEN: 'pages.userSettings.errors.notificationsSaveNeedLogin',
+  UNAUTHORIZED: 'pages.userSettings.errors.notificationsSaveNeedLogin',
+  FORBIDDEN: 'pages.userSettings.errors.notificationsSaveForbidden',
+  NETWORK_OR_SERVER: 'pages.userSettings.errors.notificationsSaveServer',
+  INVALID: 'pages.userSettings.errors.notificationsSaveFailed',
+  NO_USER: 'pages.userSettings.errors.notificationsSaveFailed',
+}
+
 async function handleSaveNotifications() {
-  const saved = await saveNotifications()
-  if (!saved) {
-    toast.error(t('pages.userSettings.errors.notificationsSaveFailed'))
+  const result = await saveNotifications()
+  if (!result.ok) {
+    const key = notificationsErrorKeys[result.code] ?? 'pages.userSettings.errors.notificationsSaveFailed'
+    toast.error(t(key))
     return
   }
   toast.success(t('pages.userSettings.toasts.notificationsSaved'))

@@ -9,15 +9,19 @@
       </div>
 
       <div class="constraints-control-row">
-        <AppButton type="button" class="save-all-legacy-btn" icon="bi bi-check2-circle" @click="handleSave">
-          {{ t('pages.constraintsManagement.actions.saveAll') }}
-        </AppButton>
+        <AppCan permission="schedule_settings.update">
+          <AppButton type="button" class="save-all-legacy-btn" icon="bi bi-check2-circle" @click="handleSave">
+            {{ t('pages.constraintsManagement.actions.saveAll') }}
+          </AppButton>
+        </AppCan>
         <AppButton type="button" variant="outline" @click="handleResetToSaved">
           {{ t('pages.constraintsManagement.actions.resetUnsaved') }}
         </AppButton>
-        <AppButton type="button" variant="outline" @click="handleResetToDefaults">
-          {{ t('pages.constraintsManagement.actions.resetDefaults') }}
-        </AppButton>
+        <AppCan permission="schedule_settings.update">
+          <AppButton type="button" variant="outline" @click="handleResetToDefaults">
+            {{ t('pages.constraintsManagement.actions.resetDefaults') }}
+          </AppButton>
+        </AppCan>
       </div>
 
       <div v-if="draft" class="constraints-body">
@@ -49,6 +53,7 @@ import { computed } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useI18n } from 'vue-i18n'
 import AppButton from '@/components/common/AppButton.vue'
+import AppCan from '@/components/common/AppCan.vue'
 import AppShell from '@/components/layout/AppShell.vue'
 import { useConstraintsManagementPage } from '@/features/constraints/model/composables/useConstraintsManagementPage'
 import ConstraintsOverviewCards from '@/features/constraints/ui/components/ConstraintsOverviewCards.vue'
@@ -90,6 +95,9 @@ const constraintIcons = Object.freeze({
   student_gap: 'bi bi-arrows-collapse',
   morning_preference: 'bi bi-sunrise',
   department_proximity: 'bi bi-diagram-3',
+  max_daily_lectures: 'bi bi-calendar-week',
+  instructor_availability: 'bi bi-person-check',
+  capacity_threshold: 'bi bi-sliders',
   match_type: 'bi bi-building',
   room_proximity: 'bi bi-geo-alt',
   avoid_floor_scatter: 'bi bi-layers',
@@ -97,8 +105,8 @@ const constraintIcons = Object.freeze({
   max_occupancy_threshold: 'bi bi-speedometer2',
 })
 
-function handleSave() {
-  const saved = saveDraft()
+async function handleSave() {
+  const saved = await saveDraft()
   if (!saved) {
     toast.error(t('pages.constraintsManagement.errors.invalidForm'))
     return
@@ -106,8 +114,8 @@ function handleSave() {
   toast.success(t('pages.constraintsManagement.toasts.saved'))
 }
 
-function handleResetToDefaults() {
-  const reset = resetToDefault()
+async function handleResetToDefaults() {
+  const reset = await resetToDefault()
   if (!reset) return
   toast.success(t('pages.constraintsManagement.toasts.defaultsReset'))
 }

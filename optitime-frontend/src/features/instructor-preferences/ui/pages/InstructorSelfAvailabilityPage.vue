@@ -6,12 +6,19 @@
           <h1 class="h4 fw-bold mb-0">{{ t('pages.instructorSelfAvailability.title') }}</h1>
           <p class="dashboard-card__meta mb-0">{{ t('pages.instructorSelfAvailability.subtitle') }}</p>
         </div>
-        <AppButton type="button" :tone-color="authStore.roleColor" @click="handleSave">
+        <AppButton
+          type="button"
+          :tone-color="authStore.roleColor"
+          :disabled="pageLoading || saving"
+          @click="handleSave"
+        >
           {{ t('pages.instructorSelfAvailability.actions.save') }}
         </AppButton>
       </div>
 
-      <div class="self-availability-grid">
+      <p v-if="pageLoading" class="dashboard-card__meta mb-2">{{ t('pages.instructorSelfAvailability.loading') }}</p>
+
+      <div v-else class="self-availability-grid">
         <AppSectionPanel
           :title="t('pages.instructorSelfAvailability.sections.days')"
           :subtitle="t('pages.instructorSelfAvailability.hints.days')"
@@ -68,6 +75,8 @@ const {
   breakTimes,
   weeklyHoursRange,
   draft,
+  pageLoading,
+  saving,
   saveAvailability,
 } = useInstructorSelfAvailabilityPage()
 
@@ -177,12 +186,20 @@ async function handleSave() {
     )
     return
   }
-  const saved = await saveAvailability()
-  if (!saved) {
-    toast.error(t('pages.instructorSelfAvailability.errors.invalidForm'))
-    return
+  try {
+    const saved = await saveAvailability()
+    if (!saved) {
+      toast.error(t('pages.instructorSelfAvailability.errors.invalidForm'))
+      return
+    }
+    toast.success(t('pages.instructorSelfAvailability.toasts.saved'))
+  } catch (err) {
+    const message =
+      err && typeof err === 'object' && typeof err.message === 'string' && err.message.trim()
+        ? err.message
+        : t('pages.instructorSelfAvailability.errors.saveFailed')
+    toast.error(message)
   }
-  toast.success(t('pages.instructorSelfAvailability.toasts.saved'))
 }
 </script>
 

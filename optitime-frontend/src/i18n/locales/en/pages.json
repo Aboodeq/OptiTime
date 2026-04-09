@@ -247,12 +247,13 @@
         "name": "Full name",
         "email": "Email",
         "password": "Password",
+        "passwordEditHint": "Leave blank to keep the current password.",
         "faculty": "Faculty",
-        "facultyPlaceholder": "Select faculty",
+        "facultyPlaceholder": "Select faculty (optional)",
         "noFacultyFound": "No matching faculty",
         "role": "Role",
         "department": "Department",
-        "departmentPlaceholder": "Select department",
+        "departmentPlaceholder": "Select department (optional)",
         "noDepartmentFound": "No matching department",
         "isActive": "Active account"
       },
@@ -269,7 +270,8 @@
         "cancel": "Cancel"
       },
       "errors": {
-        "invalidForm": "Please complete all required fields: name, email, password, faculty, department, and role."
+        "invalidForm": "Please complete all required fields: name, email, password (when creating), and role. Faculty and department are optional.",
+        "saveFailed": "Could not save the user. Check the data and try again."
       }
     },
     "instructorsManagement": {
@@ -332,6 +334,7 @@
     "instructorSelfAvailability": {
       "title": "My availability",
       "subtitle": "Set your preferred teaching days and time window.",
+      "loading": "Loading your availability…",
       "weeklyHoursRange": "Weekly chosen hours: {current}h (required {min}h - {max}h)",
       "sections": {
         "days": "Availability grid"
@@ -352,7 +355,8 @@
       },
       "errors": {
         "invalidForm": "Please set valid day intervals within configured working hours and slot boundaries.",
-        "minWeeklyHoursRequired": "You must keep at least {min} chosen hours per week."
+        "minWeeklyHoursRequired": "You must keep at least {min} chosen hours per week.",
+        "saveFailed": "Could not save availability. Please try again."
       },
       "toasts": {
         "saved": "Your availability has been saved"
@@ -481,6 +485,12 @@
       "title": "My weekly schedule",
       "subtitle": "View your assigned lectures for the current semester.",
       "activeSemester": "Active semester: {name}",
+      "actions": {
+        "exportPdf": "Download PDF"
+      },
+      "errors": {
+        "pdfFailed": "Could not download the schedule PDF."
+      },
       "sections": {
         "board": "My weekly board"
       },
@@ -535,6 +545,12 @@
       "title": "My weekly schedule",
       "subtitle": "View your lecture schedule for the current semester.",
       "activeSemester": "Active semester: {name}",
+      "actions": {
+        "exportPdf": "Download PDF"
+      },
+      "errors": {
+        "pdfFailed": "Could not download the schedule PDF."
+      },
       "sections": {
         "board": "My weekly board"
       }
@@ -986,7 +1002,7 @@
     },
     "constraintsManagement": {
       "title": "Constraints management",
-      "subtitle": "Configure global timetable constraints using local presets.",
+      "subtitle": "Configure global scheduling rules. Changes are saved to the server.",
       "sections": {
         "general": "General settings",
         "hardConstraints": "Hard constraints",
@@ -1037,6 +1053,9 @@
         "avoid_back_to_back": "Avoid back-to-back lectures",
         "morning_preference": "Prefer morning times",
         "department_proximity": "Department lecture proximity",
+        "max_daily_lectures": "Daily lecture limit (soft)",
+        "instructor_availability": "Instructor availability windows",
+        "capacity_threshold": "Room capacity threshold",
         "prayer_noon": "Noon break",
         "prayer_asr": "Afternoon break",
         "lunch_break": "Lunch break",
@@ -1054,6 +1073,9 @@
         "room_capacity": "Ensure room seats cover enrolled students.",
         "lab_for_lab": "Place lab sessions in lab-capable rooms only.",
         "working_hours": "Keep sessions inside configured working hours.",
+        "max_daily_lectures": "Prefer schedules that respect the maximum lectures per instructor per day.",
+        "instructor_availability": "Only place sessions when the instructor has marked availability.",
+        "capacity_threshold": "Apply rules when room occupancy approaches the configured threshold.",
         "instructor_pref": "Prefer instructor availability and time choices.",
         "load_balance": "Distribute teaching load fairly across staff.",
         "student_gap": "Reduce large gaps between student classes.",
@@ -1063,8 +1085,7 @@
         "match_type": "Keep each course in the correct room type.",
         "room_proximity": "Group department sessions in nearby rooms/buildings.",
         "avoid_floor_scatter": "Avoid consecutive sessions on different floors.",
-        "equipment_match": "Ensure required equipment exists in selected rooms."
-        ,
+        "equipment_match": "Ensure required equipment exists in selected rooms.",
         "max_occupancy_threshold": "Respect the configured maximum room occupancy ratio."
       },
       "days": {
@@ -1149,7 +1170,10 @@
         "weakPassword": "New password must be at least 8 characters.",
         "samePassword": "New password must be different from current password.",
         "passwordUpdateFailed": "Unable to update password.",
-        "notificationsSaveFailed": "Unable to save notification settings."
+        "notificationsSaveFailed": "Unable to save notification settings.",
+        "notificationsSaveNeedLogin": "Cannot save: your session has no API token. Log out, sign in again, then retry.",
+        "notificationsSaveForbidden": "You do not have permission to update notification settings.",
+        "notificationsSaveServer": "Could not reach the API. Ensure the Laravel server is running and VITE_API_BASE_URL matches it (e.g. http://localhost:8000/api)."
       },
       "toasts": {
         "profileSaved": "Profile updated",

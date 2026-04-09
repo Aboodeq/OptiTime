@@ -6,6 +6,7 @@ export const useAuditLogsStore = defineStore('auditLogs', () => {
   const logs = ref([])
   const initialized = ref(false)
 
+  /** Totals reflect the batch returned by the API (paginated), not the full audit history. */
   const logsCount = computed(() => logs.value.length)
   const successCount = computed(
     () => logs.value.filter((item) => item.event_type === 'success').length,
@@ -17,7 +18,11 @@ export const useAuditLogsStore = defineStore('auditLogs', () => {
 
   async function ensureInitialized() {
     if (initialized.value) return
-    logs.value = await auditLogsService.getAuditLogs()
+    try {
+      logs.value = await auditLogsService.getAuditLogs()
+    } catch {
+      logs.value = []
+    }
     initialized.value = true
   }
 

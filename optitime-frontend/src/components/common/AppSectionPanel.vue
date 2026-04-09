@@ -41,6 +41,7 @@ const toneClass = computed(() => `section-panel--${props.tone}`)
   border: 1px solid #e7eaf6;
   border-radius: 16px;
   background: #fff;
+  min-width: 0;
 }
 
 .section-panel__head {
@@ -120,6 +121,7 @@ const toneClass = computed(() => `section-panel--${props.tone}`)
 
 .section-panel__body {
   padding: 0.55rem;
+  min-width: 0;
 }
 
 @media (max-width: 576px) {

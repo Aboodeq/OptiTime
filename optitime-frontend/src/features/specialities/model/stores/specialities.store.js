@@ -22,9 +22,17 @@ export const useSpecialitiesStore = defineStore('specialities', () => {
     () => specialitiesCount.value - activeSpecialitiesCount.value,
   )
 
+  async function reloadSpecialities() {
+    specialities.value = await specialitiesService.getSpecialities()
+  }
+
   async function ensureInitialized() {
     if (initialized.value) return
-    specialities.value = await specialitiesService.getSpecialities()
+    try {
+      await reloadSpecialities()
+    } catch {
+      specialities.value = []
+    }
     initialized.value = true
   }
 
@@ -54,27 +62,22 @@ export const useSpecialitiesStore = defineStore('specialities', () => {
   async function createSpecialityFromDraft(draft) {
     const normalized = normalizeDraft(draft)
     if (!normalized) return false
-    const created = await specialitiesService.createSpeciality(normalized)
-    specialities.value = [...specialities.value, created]
+    await specialitiesService.createSpeciality(normalized)
+    await reloadSpecialities()
     return true
   }
 
   async function updateSpecialityFromDraft(specialityId, draft) {
     const normalized = normalizeDraft(draft)
     if (!normalized) return false
-    const updated = await specialitiesService.updateSpeciality(specialityId, normalized)
-    if (!updated) return false
-    specialities.value = specialities.value.map((item) =>
-      item.id === specialityId ? updated : item,
-    )
+    await specialitiesService.updateSpeciality(specialityId, normalized)
+    await reloadSpecialities()
     return true
   }
 
   async function deleteSpeciality(specialityId) {
-    const deleted = await specialitiesService.deleteSpeciality(specialityId)
-    if (!deleted) return false
-    specialities.value = specialities.value.filter((item) => item.id !== specialityId)
-    return true
+    await specialitiesService.deleteSpeciality(specialityId)
+    await reloadSpecialities()
   }
 
   return {
@@ -83,6 +86,7 @@ export const useSpecialitiesStore = defineStore('specialities', () => {
     activeSpecialitiesCount,
     inactiveSpecialitiesCount,
     ensureInitialized,
+    reloadSpecialities,
     createEmptyDraft,
     buildDraftFromSpeciality,
     createSpecialityFromDraft,

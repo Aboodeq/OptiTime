@@ -1,12 +1,23 @@
 <template>
   <AppShell :page-title="t('routes.instructorWeeklySchedule')">
     <section class="dashboard-card w-100">
-      <div class="mb-3">
-        <h1 class="h4 fw-bold mb-0">{{ t('pages.instructorWeeklySchedule.title') }}</h1>
-        <p class="dashboard-card__meta mb-0">{{ t('pages.instructorWeeklySchedule.subtitle') }}</p>
-        <p class="dashboard-card__meta mb-0">
-          {{ t('pages.instructorWeeklySchedule.activeSemester', { name: activeSemester?.name ?? '-' }) }}
-        </p>
+      <div class="mb-3 d-flex flex-wrap align-items-start justify-content-between gap-2">
+        <div>
+          <h1 class="h4 fw-bold mb-0">{{ t('pages.instructorWeeklySchedule.title') }}</h1>
+          <p class="dashboard-card__meta mb-0">{{ t('pages.instructorWeeklySchedule.subtitle') }}</p>
+          <p class="dashboard-card__meta mb-0">
+            {{ t('pages.instructorWeeklySchedule.activeSemester', { name: activeSemester?.name ?? '-' }) }}
+          </p>
+        </div>
+        <AppButton
+          v-if="canExportPdf"
+          type="button"
+          :disabled="pdfLoading || !activeSemester?.id"
+          :tone-color="authStore.roleColor"
+          @click="handleExportPdf"
+        >
+          {{ t('pages.instructorWeeklySchedule.actions.exportPdf') }}
+        </AppButton>
       </div>
 
       <AppSectionPanel :title="t('pages.instructorWeeklySchedule.sections.board')">
@@ -54,12 +65,14 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toastification'
+import AppButton from '@/components/common/AppButton.vue'
 import AppSectionPanel from '@/components/common/AppSectionPanel.vue'
 import AppShell from '@/components/layout/AppShell.vue'
 import { useSelfWeeklySchedulePage } from '@/features/coordinator-schedule/model/composables/useSelfWeeklySchedulePage'
 import LectureApologyRequestDialog from '@/features/coordinator-schedule/ui/components/LectureApologyRequestDialog.vue'
 import LectureDetailsDialog from '@/features/coordinator-schedule/ui/components/LectureDetailsDialog.vue'
 import MakeupLectureRequestDialog from '@/features/coordinator-schedule/ui/components/MakeupLectureRequestDialog.vue'
+import { instructorWeeklyScheduleService } from '@/features/coordinator-schedule/api/instructorWeeklySchedule.service'
 import { useLectureRequestsStore } from '@/features/lecture-requests/model/stores/lectureRequests.store'
 import WeeklyScheduleBoard from '@/features/coordinator-schedule/ui/components/WeeklyScheduleBoard.vue'
 import { useAuthStore } from '@/store/auth.store'
@@ -78,6 +91,8 @@ const canRequestApologyLecture = computed(() =>
 const canRequestMakeupLecture = computed(() =>
   authStore.hasPermission('instructor.requests.create'),
 )
+const canExportPdf = computed(() => authStore.hasPermission('instructor.schedule.export'))
+const pdfLoading = ref(false)
 
 const { activeSemester, dayOptions, timeSlots, blockedSlotStarts, sessions, getLectureStudents } =
   useSelfWeeklySchedulePage('instructor')
@@ -125,7 +140,6 @@ function handleApologySubmit(form) {
   if (!canRequestApologyLecture.value) return
   const payload = buildRequestPayload('apology', form)
   lectureRequestsStore.createRequest(payload)
-  console.info(t('pages.instructorWeeklySchedule.requests.logs.apologyPrepared'), payload)
   toast.success(t('pages.instructorWeeklySchedule.requests.toasts.apologySubmitted'))
   apologyDialogOpen.value = false
 }
@@ -134,7 +148,6 @@ function handleMakeupSubmit(form) {
   if (!canRequestMakeupLecture.value) return
   const payload = buildRequestPayload('makeup', form)
   lectureRequestsStore.createRequest(payload)
-  console.info(t('pages.instructorWeeklySchedule.requests.logs.makeupPrepared'), payload)
   toast.success(t('pages.instructorWeeklySchedule.requests.toasts.makeupSubmitted'))
   makeupDialogOpen.value = false
 }
@@ -153,5 +166,23 @@ function buildRequestPayload(type, form) {
 function localizedDayLabel(day) {
   const item = localizedDayOptions.value.find((entry) => entry.value === day)
   return item?.label ?? day ?? '-'
+}
+
+async function handleExportPdf() {
+  if (!canExportPdf.value || !activeSemester.value?.id) return
+  pdfLoading.value = true
+  try {
+    const blob = await instructorWeeklyScheduleService.downloadWeeklyPdf(activeSemester.value.id)
+    const url = URL.createObjectURL(blob)
+    const anchor = document.createElement('a')
+    anchor.href = url
+    anchor.download = `weekly-schedule-${activeSemester.value.id}.pdf`
+    anchor.click()
+    URL.revokeObjectURL(url)
+  } catch {
+    toast.error(t('pages.instructorWeeklySchedule.errors.pdfFailed'))
+  } finally {
+    pdfLoading.value = false
+  }
 }
 </script>

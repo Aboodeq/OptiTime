@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { useConstraintsStore } from '@/features/constraints/model/stores/constraints.store'
-import { useInstructorsStore } from '@/features/instructors/model/stores/instructors.store'
 import {
+  defaultAvailabilityGridContext,
   instructorPreferencesService,
-  mapDraftToAvailabilityApiPayload,
 } from '@/features/instructor-preferences/api/instructorPreferences.service'
+import { useInstructorsStore } from '@/features/instructors/model/stores/instructors.store'
+import { useAuthStore } from '@/store/auth.store'
 
 const VALID_DAYS = new Set(['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'])
 const VALID_CELL_STATUSES = new Set(['preferred', 'unavailable'])
@@ -47,12 +47,16 @@ function buildConstrainedDailySlots(dayStartMinutes, dayEndMinutes, slotMinutes,
 export const useInstructorPreferencesStore = defineStore('instructorPreferences', () => {
   const instructorPreferences = ref([])
   const initialized = ref(false)
+  const availabilityGridContext = ref(null)
 
   const instructorsStore = useInstructorsStore()
-  const constraintsStore = useConstraintsStore()
+
+  const availabilityGrid = computed(
+    () => availabilityGridContext.value ?? defaultAvailabilityGridContext(),
+  )
 
   const enabledStudyDayValues = computed(() => {
-    const settings = constraintsStore.activeSettings
+    const settings = availabilityGrid.value
     return (settings?.study_days ?? [])
       .filter((item) => item.enabled)
       .map((item) => item.value)
@@ -64,6 +68,18 @@ export const useInstructorPreferencesStore = defineStore('instructorPreferences'
   function resolveInstructor(identity) {
     const key = `${identity || ''}`.trim()
     if (!key) return null
+    const authStore = useAuthStore()
+    const user = authStore.user
+    if (user?.id === key && user.instructor) {
+      const ins = user.instructor
+      return {
+        id: ins.id,
+        user_id: user.id,
+        email: user.email,
+        min_work_hours_per_week: ins.min_work_hours_per_week,
+        max_work_hours_per_week: ins.max_work_hours_per_week,
+      }
+    }
     return (
       instructorsStore.instructors.find((item) => item.id === key || item.user_id === key || item.email === key) ??
       null
@@ -72,8 +88,19 @@ export const useInstructorPreferencesStore = defineStore('instructorPreferences'
 
   async function ensureInitialized() {
     if (initialized.value) return
-    await Promise.all([instructorsStore.ensureInitialized(), constraintsStore.ensureInitialized()])
-    const payload = await instructorPreferencesService.getInstructorPreferences()
+    try {
+      availabilityGridContext.value = await instructorPreferencesService.getAvailabilityGridContext()
+    } catch {
+      availabilityGridContext.value = defaultAvailabilityGridContext()
+    }
+    const authStore = useAuthStore()
+    const userId = authStore.user?.id ? String(authStore.user.id) : ''
+    if (!userId) {
+      instructorPreferences.value = []
+      initialized.value = true
+      return
+    }
+    const payload = await instructorPreferencesService.getInstructorPreferences(userId)
     instructorPreferences.value = payload.map((item) => ({ ...item }))
     initialized.value = true
   }
@@ -91,9 +118,8 @@ export const useInstructorPreferencesStore = defineStore('instructorPreferences'
     if (!instructorIdentity) return null
     const selectedInstructor = resolveInstructor(instructorIdentity)
     if (!allowUnknownInstructor && !selectedInstructor) return null
-    const instructorId = selectedInstructor?.id ?? instructorIdentity
 
-    const settings = constraintsStore.activeSettings
+    const settings = availabilityGrid.value
     const dayStartMinutes = toMinutes(settings?.day_start)
     const dayEndMinutes = toMinutes(settings?.day_end)
     const slotMinutes = Number(settings?.slot_minutes)
@@ -131,7 +157,12 @@ export const useInstructorPreferencesStore = defineStore('instructorPreferences'
       if (startMinutes < dayStartMinutes || endMinutes > dayEndMinutes) return null
       if (!constrainedSlotSet.has(`${startMinutes}|${endMinutes}`)) return null
 
-      normalizedCellMap.set(`${day}|${start}|${end}`, { day, start, end, status })
+      const slotKey = `${day}|${start}|${end}`
+      const rawId = item?.id
+      const cellId = rawId != null && String(rawId).trim() !== '' ? String(rawId).trim() : ''
+      const entry = { day, start, end, status }
+      if (cellId) entry.id = cellId
+      normalizedCellMap.set(slotKey, entry)
     }
     const normalizedCells = [...normalizedCellMap.values()]
 
@@ -173,7 +204,7 @@ export const useInstructorPreferencesStore = defineStore('instructorPreferences'
     if (chosenMinutes > weeklyMaxHours * 60) return null
 
     return {
-      instructor_id: instructorId,
+      instructor_id: instructorIdentity,
       cells: normalizedCells,
     }
   }
@@ -202,20 +233,25 @@ export const useInstructorPreferencesStore = defineStore('instructorPreferences'
     )
     if (!normalized) return false
 
-    const payload = mapDraftToAvailabilityApiPayload(normalized)
-    const saved = await instructorPreferencesService.upsertInstructorPreferenceByInstructorId(
-      normalized.instructor_id,
-      payload,
+    const userKey = `${instructorId || ''}`.trim()
+    const previousCells = getByInstructorId(userKey)?.cells ?? []
+    const saved = await instructorPreferencesService.syncAvailabilityFromNormalizedDraft(
+      userKey,
+      previousCells,
+      normalized.cells,
     )
 
-    const existingIndex = instructorPreferences.value.findIndex(
-      (item) => item.instructor_id === normalized.instructor_id,
-    )
+    const record = {
+      ...(saved.instructor_id ? { instructor_id: saved.instructor_id } : { instructor_id: userKey }),
+      cells: Array.isArray(saved.cells) ? [...saved.cells] : [],
+    }
+
+    const existingIndex = instructorPreferences.value.findIndex((item) => item.instructor_id === userKey)
     if (existingIndex === -1) {
-      instructorPreferences.value = [...instructorPreferences.value, saved]
+      instructorPreferences.value = [...instructorPreferences.value, record]
     } else {
       const next = [...instructorPreferences.value]
-      next.splice(existingIndex, 1, saved)
+      next.splice(existingIndex, 1, record)
       instructorPreferences.value = next
     }
     return true
@@ -223,6 +259,7 @@ export const useInstructorPreferencesStore = defineStore('instructorPreferences'
 
   return {
     instructorPreferences,
+    availabilityGrid,
     enabledStudyDayValues,
     ensureInitialized,
     createEmptyDraft,

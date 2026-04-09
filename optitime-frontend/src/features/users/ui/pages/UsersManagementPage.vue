@@ -195,7 +195,6 @@ const {
   setDepartmentId,
 } = useUsersManagementPage()
 const organizationStore = useOrganizationStore()
-organizationStore.ensureInitialized()
 
 const search = ref('')
 const userPendingDelete = ref(null)
@@ -286,19 +285,26 @@ function requestDeleteUser(user) {
   userPendingDelete.value = user
 }
 
-function confirmDeleteUser() {
+async function confirmDeleteUser() {
   if (!canDeleteUsers.value) return
   if (!userPendingDelete.value) return
-  removeUser(userPendingDelete.value.id)
-  userPendingDelete.value = null
+  try {
+    await removeUser(userPendingDelete.value.id)
+  } finally {
+    userPendingDelete.value = null
+  }
 }
 
-function handleSaveUser() {
+async function handleSaveUser() {
   if (isEditing.value && !canUpdateUsers.value) return
   if (!isEditing.value && !canCreateUsers.value) return
-  const saved = saveUser()
-  if (!saved) {
-    toast.error(t('pages.usersManagement.errors.invalidForm'))
+  try {
+    const saved = await saveUser()
+    if (!saved) {
+      toast.error(t('pages.usersManagement.errors.invalidForm'))
+    }
+  } catch {
+    toast.error(t('pages.usersManagement.errors.saveFailed'))
   }
 }
 
@@ -332,11 +338,12 @@ function closeFacultyDialog() {
   }
 }
 
-function handleSaveFaculty() {
+async function handleSaveFaculty() {
   if (!canCreateOrganization.value) return
-  const created = organizationStore.createFacultyFromDraft(facultyDraft.value)
+  const codeKey = facultyDraft.value.code.trim().toLowerCase()
+  const created = await organizationStore.createFacultyFromDraft(facultyDraft.value)
   if (!created) return
-  const added = faculties.value[faculties.value.length - 1]
+  const added = faculties.value.find((f) => f.code === codeKey)
   if (added) setFacultyId(added.id)
   closeFacultyDialog()
 }
@@ -363,15 +370,16 @@ function closeDepartmentDialog() {
   }
 }
 
-function handleSaveDepartment() {
+async function handleSaveDepartment() {
   if (!canCreateOrganization.value || !draft.value.faculty_id) return
-  const created = organizationStore.createDepartmentFromDraft(
+  const codeKey = departmentDraft.value.code.trim().toLowerCase()
+  const created = await organizationStore.createDepartmentFromDraft(
     draft.value.faculty_id,
     departmentDraft.value,
   )
   if (!created) return
   const selectedFaculty = faculties.value.find((faculty) => faculty.id === draft.value.faculty_id)
-  const added = selectedFaculty?.departments[selectedFaculty.departments.length - 1]
+  const added = selectedFaculty?.departments.find((d) => d.code === codeKey)
   if (added) setDepartmentId(added.id)
   closeDepartmentDialog()
 }

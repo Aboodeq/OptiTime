@@ -1,6 +1,10 @@
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
-import { studentsService } from '@/features/students/api/students.service'
+import { computed, ref, unref } from 'vue'
+import { useOrganizationStore } from '@/features/organization/model/stores/organization.store'
+import {
+  mapApiStudentToRow,
+  studentsService,
+} from '@/features/students/api/students.service'
 
 const STUDY_STATUS_OPTIONS = Object.freeze(['regular', 'suspended', 'graduated'])
 
@@ -27,10 +31,21 @@ export const useStudentsStore = defineStore('students', () => {
   const activeStudentsCount = computed(() => students.value.filter((student) => student.is_active).length)
   const inactiveStudentsCount = computed(() => studentsCount.value - activeStudentsCount.value)
 
+  async function reloadStudents() {
+    const orgStore = useOrganizationStore()
+    await orgStore.ensureInitialized()
+    const raw = await studentsService.getStudentsRaw()
+    const facultiesList = unref(orgStore.faculties) ?? []
+    students.value = raw.map((row) => mapApiStudentToRow(row, facultiesList))
+  }
+
   async function ensureInitialized() {
     if (initialized.value) return
-    const payload = await studentsService.getStudents()
-    students.value = payload
+    try {
+      await reloadStudents()
+    } catch {
+      students.value = []
+    }
     initialized.value = true
   }
 
@@ -38,7 +53,7 @@ export const useStudentsStore = defineStore('students', () => {
     return {
       name: student.name,
       email: student.email,
-      password: student.password ?? '',
+      password: '',
       university_number: student.university_number ?? '',
       completed_hours: student.completed_hours ?? '',
       year_level: student.year_level ?? '',
@@ -49,7 +64,7 @@ export const useStudentsStore = defineStore('students', () => {
     }
   }
 
-  function normalizeDraft(draft) {
+  function normalizeCreateDraft(draft) {
     const name = draft.name?.trim() || ''
     const email = draft.email?.trim().toLowerCase() || ''
     const password = draft.password?.trim() || ''
@@ -76,27 +91,83 @@ export const useStudentsStore = defineStore('students', () => {
     }
   }
 
+  function normalizeUpdateDraft(draft) {
+    const name = draft.name?.trim() || ''
+    const email = draft.email?.trim().toLowerCase() || ''
+    const password = draft.password?.trim() || ''
+    const completedHours = Number(draft.completed_hours)
+    const yearLevel = Number(draft.year_level)
+    const studyStatus = draft.study_status?.trim() || ''
+    const facultyId = draft.faculty_id?.trim() || ''
+    const departmentId = draft.department_id?.trim() || ''
+    if (!name || !email || !facultyId || !departmentId) return null
+    if (!Number.isFinite(completedHours) || completedHours < 0) return null
+    if (!Number.isInteger(yearLevel) || yearLevel < 1 || yearLevel > 6) return null
+    if (!STUDY_STATUS_OPTIONS.includes(studyStatus)) return null
+
+    return {
+      name,
+      email,
+      password: password || undefined,
+      completed_hours: completedHours,
+      year_level: yearLevel,
+      study_status: studyStatus,
+      faculty_id: facultyId,
+      department_id: departmentId,
+      is_active: Boolean(draft.is_active),
+    }
+  }
+
+  function toApiCreatePayload(normalized) {
+    return {
+      full_name: normalized.name,
+      email: normalized.email,
+      password: normalized.password,
+      department_id: normalized.department_id || null,
+      completed_hours: normalized.completed_hours,
+      year_level: normalized.year_level,
+      study_status: normalized.study_status,
+      is_active: normalized.is_active,
+    }
+  }
+
+  function toApiUpdatePayload(normalized) {
+    const payload = {
+      full_name: normalized.name,
+      email: normalized.email,
+      department_id: normalized.department_id || null,
+      completed_hours: normalized.completed_hours,
+      year_level: normalized.year_level,
+      study_status: normalized.study_status,
+      is_active: normalized.is_active,
+    }
+    if (normalized.password) {
+      payload.password = normalized.password
+    }
+    return payload
+  }
+
   async function createStudentFromDraft(draft) {
-    const normalized = normalizeDraft(draft)
+    const normalized = normalizeCreateDraft(draft)
     if (!normalized) return false
-    const created = await studentsService.createStudent(normalized)
-    students.value = [...students.value, created]
+    const body = toApiCreatePayload(normalized)
+    await studentsService.createStudent(body)
+    await reloadStudents()
     return true
   }
 
   async function updateStudentFromDraft(studentId, draft) {
-    const normalized = normalizeDraft(draft)
+    const normalized = normalizeUpdateDraft(draft)
     if (!normalized) return false
-    const updated = await studentsService.updateStudent(studentId, normalized)
-    if (!updated) return false
-    students.value = students.value.map((item) => (item.id === studentId ? updated : item))
+    const body = toApiUpdatePayload(normalized)
+    await studentsService.updateStudent(studentId, body)
+    await reloadStudents()
     return true
   }
 
   async function deleteStudent(studentId) {
-    const deleted = await studentsService.deleteStudent(studentId)
-    if (!deleted) return false
-    students.value = students.value.filter((item) => item.id !== studentId)
+    await studentsService.deleteStudent(studentId)
+    await reloadStudents()
     return true
   }
 

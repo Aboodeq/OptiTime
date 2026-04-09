@@ -1,69 +1,83 @@
-const EXCLUDED_ROLE_KEYS = Object.freeze(['student', 'instructor'])
+import { apiJson } from '@/api/client'
 
-const MANAGEABLE_USERS = Object.freeze([
-  {
-    id: 'user-admin',
-    name: 'System Admin',
-    email: 'admin@optitime.com',
-    password: 'Admin@123',
-    role: 'admin',
-    faculty_id: 'faculty-informatics',
-    department_id: 'dept-software',
-    is_active: true,
-  },
-  {
-    id: 'user-management',
-    name: 'Academic Management',
-    email: 'management@optitime.com',
-    password: 'Manage@123',
-    role: 'management',
-    faculty_id: 'faculty-business',
-    department_id: 'dept-finance',
-    is_active: true,
-  },
-  {
-    id: 'user-coordinator',
-    name: 'Scheduling Coordinator',
-    email: 'coordinator@optitime.com',
-    password: 'Coord@123',
-    role: 'coordinator',
-    faculty_id: 'faculty-informatics',
-    department_id: 'dept-networks',
-    is_active: true,
-  },
-  {
-    id: 'user-exams',
-    name: 'Exams Office',
-    email: 'exams@optitime.com',
-    password: 'Exams@123',
-    role: 'exams',
-    faculty_id: 'faculty-business',
-    department_id: 'dept-finance',
-    is_active: false,
-  },
-])
+export const EXCLUDED_ROLE_KEYS = Object.freeze(['student', 'instructor'])
 
-const MANAGEABLE_ROLES = Object.freeze([
-  { key: 'admin', label: 'System admin' },
-  { key: 'management', label: 'Management' },
-  { key: 'coordinator', label: 'Resource coordinator' },
-  { key: 'exams', label: 'Exams office' },
-])
+/**
+ * Map Laravel user + nested faculties to the list row shape used by the UI.
+ */
+export function mapApiUserToRow(apiUser, faculties = []) {
+  const roleKey = apiUser.role?.code ?? ''
+  const departmentId = apiUser.department_id ?? ''
+  let facultyId = ''
+  if (departmentId && Array.isArray(faculties)) {
+    for (const faculty of faculties) {
+      if (faculty.departments?.some((d) => d.id === departmentId)) {
+        facultyId = faculty.id
+        break
+      }
+    }
+  }
 
-function cloneUser(user) {
-  return { ...user }
+  return {
+    id: apiUser.id,
+    name: apiUser.full_name ?? '',
+    email: apiUser.email,
+    role: roleKey,
+    role_id: apiUser.role_id,
+    department_id: departmentId || '',
+    faculty_id: facultyId,
+    is_active: Boolean(apiUser.is_active),
+  }
 }
 
 export const usersService = {
-  async getUsers() {
-    return MANAGEABLE_USERS.map(cloneUser)
-  },
-
-  async getManageableRoles() {
-    return MANAGEABLE_ROLES.map((role) => ({ ...role }))
-  },
-
   getExcludedRoleKeys() {
     return [...EXCLUDED_ROLE_KEYS]
+  },
+
+  async getUsersRaw() {
+    const { data } = await apiJson('/admin/users')
+    return Array.isArray(data) ? data : []
+  },
+
+  async getRolesRaw() {
+    const { data } = await apiJson('/admin/roles')
+    return Array.isArray(data) ? data : []
+  },
+
+  /**
+   * Roles assignable in the admin user form (excludes student/instructor).
+   */
+  async getManageableRoles() {
+    const roles = await this.getRolesRaw()
+    const excluded = new Set(EXCLUDED_ROLE_KEYS)
+    return roles
+      .filter((r) => r.code && !excluded.has(r.code))
+      .map((r) => ({
+        id: r.id,
+        key: r.code,
+        label: r.name_en ?? r.code,
+      }))
+      .sort((a, b) => a.key.localeCompare(b.key))
+  },
+
+  async createUser(body) {
+    const { data } = await apiJson('/admin/users', {
+      method: 'POST',
+      json: body,
+    })
+    return data
+  },
+
+  async updateUser(id, body) {
+    const { data } = await apiJson(`/admin/users/${id}`, {
+      method: 'PUT',
+      json: body,
+    })
+    return data
+  },
+
+  async deleteUser(id) {
+    await apiJson(`/admin/users/${id}`, { method: 'DELETE' })
   },
 }

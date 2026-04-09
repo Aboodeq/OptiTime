@@ -7,8 +7,12 @@ import { getStoredToken } from '@/lib/authSession'
  * @returns {Promise<Response>}
  */
 export async function apiFetch(path, options = {}) {
-  const base = getApiBaseUrl()
-  const normalizedPath = path.startsWith('/') ? path : `/${path}`
+  const base = getApiBaseUrl().replace(/\/+$/, '')
+  let normalizedPath = path.startsWith('/') ? path : `/${path}`
+  // Base already ends with /api; strip a duplicate /api prefix from the path (avoids /api/api/... → 404).
+  if (/^\/api(\/|$)/.test(normalizedPath) && base.toLowerCase().endsWith('/api')) {
+    normalizedPath = normalizedPath.replace(/^\/api(?=\/|$)/, '') || '/'
+  }
   const url = `${base}${normalizedPath}`
 
   const headers = new Headers(options.headers ?? {})

@@ -68,9 +68,12 @@ export function useUserSettingsPage() {
     return result
   }
 
+  /**
+   * @returns {Promise<{ ok: true } | { ok: false, code: string, status?: number }>}
+   */
   async function saveNotifications() {
-    if (!canUpdateNotifications.value) return false
-    if (!userId.value || !draftNotifications.value) return false
+    if (!canUpdateNotifications.value) return { ok: false, code: 'FORBIDDEN' }
+    if (!userId.value || !draftNotifications.value) return { ok: false, code: 'INVALID' }
     const nextSettings = {
       ...(settings.value ?? {}),
       notifications: { ...draftNotifications.value },

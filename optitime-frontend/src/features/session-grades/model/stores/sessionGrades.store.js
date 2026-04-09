@@ -1,8 +1,11 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import { useAuthStore } from '@/store/auth.store'
+import { instructorWeeklyScheduleService } from '@/features/coordinator-schedule/api/instructorWeeklySchedule.service'
+import { studentWeeklyScheduleService } from '@/features/coordinator-schedule/api/studentWeeklySchedule.service'
+import { mapWeeklyApiItemToBoardSession } from '@/features/coordinator-schedule/api/weeklyScheduleMappers'
 import { useCoordinatorScheduleStore } from '@/features/coordinator-schedule/model/stores/coordinatorSchedule.store'
 import { sessionGradesService } from '@/features/session-grades/api/sessionGrades.service'
+import { useAuthStore } from '@/store/auth.store'
 import {
   GRADE_COMPONENT_KEYS,
   MAX_COMPONENT_SCORE,
@@ -20,6 +23,8 @@ export const useSessionGradesStore = defineStore('sessionGrades', () => {
 
   const authStore = useAuthStore()
   const scheduleStore = useCoordinatorScheduleStore()
+  const instructorBoardSessions = ref([])
+  const studentBoardSessions = ref([])
 
   const recordsMap = computed(() => {
     const map = new Map()
@@ -32,13 +37,40 @@ export const useSessionGradesStore = defineStore('sessionGrades', () => {
   async function ensureInitialized() {
     if (initialized.value) return
     loading.value = true
-    await scheduleStore.ensureInitialized()
-    const payload = await sessionGradesService.getAllGrades()
-    records.value = Array.isArray(payload?.records) ? payload.records : []
-    doneSessionIds.value = Array.isArray(payload?.done_session_ids) ? payload.done_session_ids : []
-    initialized.value = true
-    loading.value = false
+    try {
+      if (authStore.hasPermission('schedules.view')) {
+        await scheduleStore.ensureInitialized()
+      } else if (authStore.hasPermission('instructor.schedule.view')) {
+        const data = await instructorWeeklyScheduleService.getWeeklySchedule()
+        const items = Array.isArray(data?.items) ? data.items : []
+        instructorBoardSessions.value = items.map((row) => mapWeeklyApiItemToBoardSession(row))
+      } else if (authStore.hasPermission('student.schedule.view')) {
+        const data = await studentWeeklyScheduleService.getWeeklySchedule()
+        const items = Array.isArray(data?.items) ? data.items : []
+        studentBoardSessions.value = items.map((row) => mapWeeklyApiItemToBoardSession(row))
+      }
+
+      const payload = await sessionGradesService.getAllGrades()
+      records.value = Array.isArray(payload?.records) ? payload.records : []
+      doneSessionIds.value = Array.isArray(payload?.done_session_ids) ? payload.done_session_ids : []
+    } finally {
+      loading.value = false
+      initialized.value = true
+    }
   }
+
+  const gradeBoardSessions = computed(() => {
+    if (authStore.hasPermission('schedules.view')) {
+      return scheduleStore.editableDraft?.sessions ?? []
+    }
+    if (authStore.hasPermission('instructor.schedule.view')) {
+      return instructorBoardSessions.value
+    }
+    if (authStore.hasPermission('student.schedule.view')) {
+      return studentBoardSessions.value
+    }
+    return []
+  })
 
   function isSessionDone(sessionId) {
     const normalized = `${sessionId || ''}`.trim()
@@ -116,7 +148,7 @@ export const useSessionGradesStore = defineStore('sessionGrades', () => {
   }
 
   const sessionRows = computed(() =>
-    (scheduleStore.editableDraft?.sessions ?? []).map((session) => ({
+    gradeBoardSessions.value.map((session) => ({
       id: session.id,
       schedule_session_id: session.id,
       course_code: session.course_code,
@@ -126,7 +158,9 @@ export const useSessionGradesStore = defineStore('sessionGrades', () => {
       day: session.day,
       start: session.start,
       end: session.end,
-      student_count: scheduleStore.getLectureStudents(session).length,
+      student_count: Array.isArray(session.students)
+        ? session.students.length
+        : scheduleStore.getLectureStudents(session).length,
       is_done: isSessionDone(session.id),
     })),
   )
@@ -135,7 +169,7 @@ export const useSessionGradesStore = defineStore('sessionGrades', () => {
     const studentId = `${authStore.user?.id || ''}`.trim()
     if (!studentId) return []
 
-    const sessionsById = new Map((scheduleStore.editableDraft?.sessions ?? []).map((item) => [item.id, item]))
+    const sessionsById = new Map(gradeBoardSessions.value.map((item) => [item.id, item]))
     return records.value
       .filter((item) => item.student_id === studentId)
       .map((item) => {

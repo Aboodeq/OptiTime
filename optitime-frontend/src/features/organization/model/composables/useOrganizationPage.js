@@ -4,7 +4,7 @@ import { useOrganizationStore } from '@/features/organization/model/stores/organ
 
 export function useOrganizationPage() {
   const organizationStore = useOrganizationStore()
-  organizationStore.ensureInitialized()
+  void organizationStore.ensureInitialized()
 
   const {
     faculties,
@@ -42,9 +42,9 @@ export function useOrganizationPage() {
     facultyDialogOpen.value = false
   }
 
-  function saveFaculty() {
+  async function saveFaculty() {
     if (activeFacultyId.value) {
-      const updated = organizationStore.updateFacultyFromDraft(
+      const updated = await organizationStore.updateFacultyFromDraft(
         activeFacultyId.value,
         facultyDraft.value,
       )
@@ -53,14 +53,14 @@ export function useOrganizationPage() {
       return true
     }
 
-    const created = organizationStore.createFacultyFromDraft(facultyDraft.value)
+    const created = await organizationStore.createFacultyFromDraft(facultyDraft.value)
     if (!created) return false
     closeFacultyDialog()
     return true
   }
 
-  function removeFaculty(facultyId) {
-    organizationStore.deleteFaculty(facultyId)
+  async function removeFaculty(facultyId) {
+    await organizationStore.deleteFaculty(facultyId)
   }
 
   function startCreateDepartment(facultyId) {
@@ -81,11 +81,11 @@ export function useOrganizationPage() {
     departmentDialogOpen.value = false
   }
 
-  function saveDepartment() {
+  async function saveDepartment() {
     if (!departmentFacultyId.value) return false
 
     if (activeDepartmentId.value) {
-      const updated = organizationStore.updateDepartmentFromDraft(
+      const updated = await organizationStore.updateDepartmentFromDraft(
         departmentFacultyId.value,
         activeDepartmentId.value,
         departmentDraft.value,
@@ -95,7 +95,7 @@ export function useOrganizationPage() {
       return true
     }
 
-    const created = organizationStore.createDepartmentFromDraft(
+    const created = await organizationStore.createDepartmentFromDraft(
       departmentFacultyId.value,
       departmentDraft.value,
     )
@@ -104,8 +104,8 @@ export function useOrganizationPage() {
     return true
   }
 
-  function removeDepartment(facultyId, departmentId) {
-    organizationStore.deleteDepartment(facultyId, departmentId)
+  async function removeDepartment(facultyId, departmentId) {
+    await organizationStore.deleteDepartment(facultyId, departmentId)
   }
 
   return {

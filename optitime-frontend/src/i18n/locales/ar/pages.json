@@ -247,12 +247,13 @@
         "name": "الاسم الكامل",
         "email": "البريد الإلكتروني",
         "password": "كلمة المرور",
+        "passwordEditHint": "اتركه فارغًا للإبقاء على كلمة المرور الحالية.",
         "faculty": "الكلية",
-        "facultyPlaceholder": "اختر الكلية",
+        "facultyPlaceholder": "اختر الكلية (اختياري)",
         "noFacultyFound": "لا توجد كلية مطابقة",
         "role": "الدور",
         "department": "القسم",
-        "departmentPlaceholder": "اختر القسم",
+        "departmentPlaceholder": "اختر القسم (اختياري)",
         "noDepartmentFound": "لا يوجد قسم مطابق",
         "isActive": "حساب نشط"
       },
@@ -269,7 +270,8 @@
         "cancel": "إلغاء"
       },
       "errors": {
-        "invalidForm": "يرجى تعبئة جميع الحقول المطلوبة: الاسم، البريد الإلكتروني، كلمة المرور، الكلية، القسم، والدور."
+        "invalidForm": "يرجى تعبئة الحقول المطلوبة: الاسم، البريد الإلكتروني، كلمة المرور (عند الإنشاء)، والدور. الكلية والقسم اختياريان.",
+        "saveFailed": "تعذر حفظ المستخدم. تحقق من البيانات وحاول مرة أخرى."
       }
     },
     "instructorsManagement": {
@@ -332,6 +334,7 @@
     "instructorSelfAvailability": {
       "title": "توفري",
       "subtitle": "حدد أيام التدريس والوقت المفضل لك.",
+      "loading": "جاري تحميل التوفر…",
       "weeklyHoursRange": "الساعات المختارة أسبوعيا: {current} س (المطلوب بين {min} و{max} س)",
       "sections": {
         "days": "شبكة التوفر"
@@ -352,7 +355,8 @@
       },
       "errors": {
         "invalidForm": "يرجى إدخال فترات صحيحة ضمن ساعات العمل المسموح بها وحدود أوقات المحاضرات.",
-        "minWeeklyHoursRequired": "يجب أن لا تقل الساعات المختارة أسبوعيا عن {min} ساعة."
+        "minWeeklyHoursRequired": "يجب أن لا تقل الساعات المختارة أسبوعيا عن {min} ساعة.",
+        "saveFailed": "تعذر حفظ التوفر. يرجى المحاولة مرة أخرى."
       },
       "toasts": {
         "saved": "تم حفظ توفرك"
@@ -481,6 +485,12 @@
       "title": "جدولي الأسبوعي",
       "subtitle": "عرض المحاضرات المسندة إليك في الفصل الحالي.",
       "activeSemester": "الفصل النشط: {name}",
+      "actions": {
+        "exportPdf": "تنزيل PDF"
+      },
+      "errors": {
+        "pdfFailed": "تعذّر تنزيل ملف الجدول."
+      },
       "sections": {
         "board": "لوحتي الأسبوعية"
       },
@@ -535,6 +545,12 @@
       "title": "جدولي الأسبوعي",
       "subtitle": "عرض جدول محاضراتك للفصل الحالي.",
       "activeSemester": "الفصل النشط: {name}",
+      "actions": {
+        "exportPdf": "تنزيل PDF"
+      },
+      "errors": {
+        "pdfFailed": "تعذّر تنزيل ملف الجدول."
+      },
       "sections": {
         "board": "لوحتي الأسبوعية"
       }
@@ -986,7 +1002,7 @@
     },
     "constraintsManagement": {
       "title": "إدارة القيود",
-      "subtitle": "إعدادات القيود العامة لضبط الجدولة الذكية.",
+      "subtitle": "ضبط قواعد الجدولة العامة. تُحفظ التغييرات على الخادم.",
       "sections": {
         "general": "إعدادات الوقت",
         "hardConstraints": "القيود الصارمة",
@@ -1037,6 +1053,9 @@
         "avoid_back_to_back": "تجنب المحاضرات المتتالية",
         "morning_preference": "تفضيل الأوقات الصباحية",
         "department_proximity": "تقارب محاضرات القسم",
+        "max_daily_lectures": "حد المحاضرات اليومية (مرن)",
+        "instructor_availability": "أوقات توفر المدرس",
+        "capacity_threshold": "عتبة سعة القاعة",
         "prayer_noon": "استراحة الظهر",
         "prayer_asr": "استراحة العصر",
         "lunch_break": "استراحة الغداء",
@@ -1054,6 +1073,9 @@
         "room_capacity": "عدد الطلاب يجب ألا يتجاوز سعة القاعة",
         "lab_for_lab": "المواد المختبرية تُجدوَل في مختبرات فقط",
         "working_hours": "المحاضرات ضمن ساعات العمل المحددة فقط",
+        "max_daily_lectures": "تفضيل جداول تحترم الحد الأقصى للمحاضرات اليومية لكل مدرس.",
+        "instructor_availability": "جدولة المحاضرات فقط ضمن أوقات التوفر التي حددها المدرس.",
+        "capacity_threshold": "تطبيق قواعد إضافية عند اقتراب إشغال القاعة من العتبة المحددة.",
         "instructor_pref": "مراعاة الأيام والأوقات المفضلة للمدرسين",
         "load_balance": "توزيع المحاضرات بشكل متوازن على الأسبوع",
         "student_gap": "تجنب تكدس المحاضرات في يوم واحد للطالب",
@@ -1148,7 +1170,10 @@
         "weakPassword": "يجب أن تكون كلمة المرور الجديدة 8 أحرف على الأقل.",
         "samePassword": "يجب أن تختلف كلمة المرور الجديدة عن الحالية.",
         "passwordUpdateFailed": "تعذر تحديث كلمة المرور.",
-        "notificationsSaveFailed": "تعذر حفظ إعدادات الإشعارات."
+        "notificationsSaveFailed": "تعذر حفظ إعدادات الإشعارات.",
+        "notificationsSaveNeedLogin": "تعذر الحفظ: لا يوجد رمز API. سجّل الخروج ثم الدخول مجدداً (أو امسح بيانات الموقع)، وتأكد أن الخادم يعمل على العنوان المحدد في VITE_API_BASE_URL.",
+        "notificationsSaveForbidden": "ليس لديك صلاحية لتحديث إعدادات الإشعارات.",
+        "notificationsSaveServer": "تعذر الاتصال بالواجهة البرمجية. تأكد من تشغيل خادم Laravel وأن VITE_API_BASE_URL يطابقه (مثلاً http://localhost:8000/api)."
       },
       "toasts": {
         "profileSaved": "تم تحديث الملف الشخصي",
