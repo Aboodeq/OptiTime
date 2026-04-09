@@ -317,7 +317,8 @@
       "sections": {
         "board": "Weekly schedule board",
         "generation": "Generation controls",
-        "kpis": "Key indicators"
+        "kpis": "Key indicators",
+        "requests": "Lecture requests"
       },
       "hints": {
         "board": "Drag and drop sessions between valid slots. Break slots are blocked."
@@ -347,6 +348,10 @@
         "day": "Day",
         "time": "Time",
         "ids": "Reference IDs",
+        "actions": {
+          "requestApology": "Request Apology",
+          "requestMakeup": "Request Makeup"
+        },
         "studentsTitle": "Assigned students",
         "students": {
           "name": "Student",
@@ -373,6 +378,55 @@
         "saved": "Schedule updated successfully",
         "generated": "New schedule generated. Please review before saving.",
         "generatedSaved": "Generated schedule confirmed and saved"
+      },
+      "requests": {
+        "empty": "No lecture requests found.",
+        "columns": {
+          "type": "Type",
+          "instructor": "Instructor",
+          "course": "Course",
+          "lectureDay": "Lecture day",
+          "requestedDate": "Requested date",
+          "status": "Status",
+          "actions": "Actions"
+        },
+        "types": {
+          "apology": "Apology",
+          "makeup": "Makeup"
+        },
+        "statuses": {
+          "pending": "Pending",
+          "approved": "Approved",
+          "rejected": "Rejected"
+        },
+        "actions": {
+          "check": "Check",
+          "modify": "Modify",
+          "delete": "Delete",
+          "saveReview": "Save review",
+          "saveChanges": "Save changes"
+        },
+        "reviewDialog": {
+          "title": "Review request",
+          "status": "Status",
+          "note": "Review note",
+          "notePlaceholder": "Write a review note..."
+        },
+        "editDialog": {
+          "title": "Modify request",
+          "requestedDate": "Requested date",
+          "note": "Reason",
+          "notePlaceholder": "Update request reason..."
+        },
+        "deleteDialog": {
+          "title": "Delete request",
+          "message": "Are you sure you want to delete this request?"
+        },
+        "toasts": {
+          "reviewSaved": "Request review saved.",
+          "requestUpdated": "Request updated successfully.",
+          "requestDeleted": "Request deleted successfully."
+        }
       }
     },
     "instructorWeeklySchedule": {
@@ -381,7 +435,53 @@
       "activeSemester": "Active semester: {name}",
       "sections": {
         "board": "My weekly board"
+      },
+      "requests": {
+        "fields": {
+          "requestedDate": "Requested Date",
+          "reason": "Reason"
+        },
+        "actions": {
+          "submit": "Submit Request"
+        },
+        "errors": {
+          "requestedDateRequired": "Requested date is required.",
+          "requestedDateFuture": "Requested date must be in the future.",
+          "requestedDateDayMismatch": "Requested date must be on {day}.",
+          "reasonRequired": "Reason is required."
+        },
+        "toasts": {
+          "apologySubmitted": "Apology request submitted successfully.",
+          "makeupSubmitted": "Makeup lecture request submitted successfully."
+        },
+        "logs": {
+          "apologyPrepared": "Lecture apology request prepared:",
+          "makeupPrepared": "Makeup lecture request prepared:"
+        },
+        "apology": {
+          "title": "Apology Request",
+          "hint": "Submit an apology request for this lecture with a future date and a reason.",
+          "hintWithDay": "Submit an apology request with a future date on {day}.",
+          "reasonPlaceholder": "Enter apology reason..."
+        },
+        "makeup": {
+          "title": "Makeup Lecture Request",
+          "hint": "Submit a makeup lecture request with a future date and supporting reason.",
+          "reasonPlaceholder": "Enter makeup request reason..."
+        }
       }
+    },
+    "instructorLectureRequests": {
+      "title": "My lecture requests",
+      "subtitle": "Track apology and makeup requests submitted from your schedule.",
+      "empty": "No lecture requests submitted yet.",
+      "columns": {
+        "note": "Reason"
+      }
+    },
+    "coordinatorLectureRequests": {
+      "title": "Lecture requests management",
+      "subtitle": "Check, modify, and delete instructor lecture requests."
     },
     "studentWeeklySchedule": {
       "title": "My weekly schedule",

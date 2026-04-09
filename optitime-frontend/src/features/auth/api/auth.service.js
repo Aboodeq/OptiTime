@@ -72,6 +72,7 @@ const DEMO_USERS = Object.freeze({
       'schedule.view',
       'schedule.update',
       'schedule.generate',
+      'instructorSchedule.requests.review',
       'resources.create',
       'resources.update',
       'resources.delete',
@@ -106,6 +107,10 @@ const DEMO_USERS = Object.freeze({
       'instructorPreferences.self.view',
       'instructorPreferences.self.update',
       'instructorSchedule.self.view',
+      'instructorSchedule.apologyRequest.create',
+      'instructorSchedule.makeupRequest.create',
+      'instructorSchedule.requests.self.update',
+      'instructorSchedule.requests.self.delete',
     ],
   },
   student: {

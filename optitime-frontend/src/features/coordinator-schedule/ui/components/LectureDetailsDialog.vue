@@ -34,6 +34,24 @@
           R: {{ lecture.room_id || '-' }}
         </span>
       </div>
+      <div v-if="canRequestApology || canRequestMakeup" class="lecture-details__actions">
+        <AppButton
+          v-if="canRequestApology"
+          variant="outline"
+          type="button"
+          @click="$emit('request-apology', lecture)"
+        >
+          {{ t('pages.coordinatorWeeklySchedule.details.actions.requestApology') }}
+        </AppButton>
+        <AppButton
+          v-if="canRequestMakeup"
+          variant="outline"
+          type="button"
+          @click="$emit('request-makeup', lecture)"
+        >
+          {{ t('pages.coordinatorWeeklySchedule.details.actions.requestMakeup') }}
+        </AppButton>
+      </div>
       <div class="lecture-details__students">
         <h6 class="mb-2">{{ t('pages.coordinatorWeeklySchedule.details.studentsTitle') }}</h6>
         <AppSearchField
@@ -56,6 +74,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import AppButton from '@/components/common/AppButton.vue'
 import AppDataTable from '@/components/common/AppDataTable.vue'
 import AppDialog from '@/components/common/AppDialog.vue'
 import AppSearchField from '@/components/common/AppSearchField.vue'
@@ -65,9 +84,11 @@ const props = defineProps({
   lecture: { type: Object, default: null },
   dayLabel: { type: String, default: '-' },
   students: { type: Array, default: () => [] },
+  canRequestApology: { type: Boolean, default: false },
+  canRequestMakeup: { type: Boolean, default: false },
 })
 
-defineEmits(['close'])
+defineEmits(['close', 'request-apology', 'request-makeup'])
 
 const { t } = useI18n()
 const query = ref('')
@@ -111,6 +132,13 @@ const filteredStudents = computed(() => {
 
 .lecture-details__students {
   margin-top: 0.35rem;
+}
+
+.lecture-details__actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 0.15rem;
 }
 
 .lecture-details__search {
