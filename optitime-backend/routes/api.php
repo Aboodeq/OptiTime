@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Api\Admin\AdminAuditController;
 use App\Http\Controllers\Api\Admin\AdminEntityController;
+use App\Http\Controllers\Api\Admin\AdminInstructorController;
 use App\Http\Controllers\Api\Admin\AdminRoleController;
+use App\Http\Controllers\Api\Admin\AdminStudentController;
 use App\Http\Controllers\Api\Admin\AdminUserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Coordinator\CoordinatorCourseSemesterController;
@@ -46,6 +48,18 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::middleware('permission:users.view')->get('/users/{id}', [AdminUserController::class, 'show']);
         Route::middleware('permission:users.update')->put('/users/{id}', [AdminUserController::class, 'update']);
         Route::middleware('permission:users.delete')->delete('/users/{id}', [AdminUserController::class, 'destroy']);
+
+        Route::middleware('permission:users.view')->get('/instructors', [AdminInstructorController::class, 'index']);
+        Route::middleware('permission:users.create')->post('/instructors', [AdminInstructorController::class, 'store']);
+        Route::middleware('permission:users.view')->get('/instructors/{id}', [AdminInstructorController::class, 'show']);
+        Route::middleware('permission:users.update')->put('/instructors/{id}', [AdminInstructorController::class, 'update']);
+        Route::middleware('permission:users.delete')->delete('/instructors/{id}', [AdminInstructorController::class, 'destroy']);
+
+        Route::middleware('permission:users.view')->get('/students', [AdminStudentController::class, 'index']);
+        Route::middleware('permission:users.create')->post('/students', [AdminStudentController::class, 'store']);
+        Route::middleware('permission:users.view')->get('/students/{id}', [AdminStudentController::class, 'show']);
+        Route::middleware('permission:users.update')->put('/students/{id}', [AdminStudentController::class, 'update']);
+        Route::middleware('permission:users.delete')->delete('/students/{id}', [AdminStudentController::class, 'destroy']);
 
         Route::middleware('permission:roles.view')->get('/roles', [AdminRoleController::class, 'index']);
         Route::middleware('permission:roles.create')->post('/roles', [AdminRoleController::class, 'store']);
