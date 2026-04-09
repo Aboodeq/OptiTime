@@ -37,22 +37,22 @@ export function useRolesManagementPage() {
     draft.value.permissions = [...draft.value.permissions, permission]
   }
 
-  function saveRole() {
+  async function saveRole() {
     if (activeRoleId.value) {
-      const updated = rolesStore.updateRoleFromDraft(activeRoleId.value, draft.value)
+      const updated = await rolesStore.updateRoleFromDraft(activeRoleId.value, draft.value)
       if (!updated) return false
       closeDialog()
       return true
     }
 
-    const created = rolesStore.createRoleFromDraft(draft.value)
+    const created = await rolesStore.createRoleFromDraft(draft.value)
     if (!created) return false
     closeDialog()
     return true
   }
 
-  function deleteRole(roleId) {
-    rolesStore.deleteRole(roleId)
+  async function deleteRole(roleId) {
+    await rolesStore.deleteRole(roleId)
     if (activeRoleId.value === roleId) {
       activeRoleId.value = null
       draft.value = rolesStore.createEmptyDraft()

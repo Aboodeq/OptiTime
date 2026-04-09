@@ -53,6 +53,54 @@
         }
       }
     },
+    "forgotPassword": {
+      "email": {
+        "title": "نسيت كلمة المرور؟",
+        "subtitle": "أدخل بريدك الإلكتروني وسنرسل لك رمز تحقق.",
+        "label": "البريد الإلكتروني",
+        "placeholder": "example\\@university.edu"
+      },
+      "code": {
+        "title": "تحقق من بريدك الإلكتروني",
+        "subtitle": "أدخل رمز التحقق المكون من 6 أرقام.",
+        "label": "رمز التحقق",
+        "placeholder": "أدخل رمز التحقق",
+        "resend": "إعادة إرسال الرمز",
+        "resendDisabled": "يمكن إعادة الإرسال بعد {seconds}ث"
+      },
+      "reset": {
+        "title": "إنشاء كلمة مرور جديدة",
+        "subtitle": "اختر كلمة مرور قوية لحسابك.",
+        "passwordLabel": "كلمة المرور الجديدة",
+        "passwordPlaceholder": "أدخل كلمة المرور الجديدة",
+        "confirmPasswordLabel": "تأكيد كلمة المرور الجديدة",
+        "confirmPasswordPlaceholder": "أعد إدخال كلمة المرور الجديدة"
+      },
+      "actions": {
+        "sendCode": "إرسال الرمز",
+        "verifyCode": "تأكيد الرمز",
+        "resetPassword": "إعادة تعيين كلمة المرور",
+        "backToLogin": "العودة لتسجيل الدخول",
+        "processing": "جارٍ المعالجة..."
+      },
+      "errors": {
+        "emailRequired": "يرجى إدخال البريد الإلكتروني",
+        "emailInvalid": "يرجى إدخال بريد إلكتروني صحيح",
+        "codeRequired": "يرجى إدخال رمز التحقق",
+        "codeInvalid": "يجب أن يكون رمز التحقق 6 محارف على الأقل",
+        "passwordRequired": "يرجى إدخال كلمة المرور الجديدة",
+        "passwordMin": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+        "confirmPasswordRequired": "يرجى تأكيد كلمة المرور الجديدة",
+        "passwordMismatch": "تأكيد كلمة المرور غير مطابق",
+        "generic": "تعذر إتمام هذه الخطوة. يرجى المحاولة مرة أخرى."
+      },
+      "toasts": {
+        "codeSent": "تم إرسال رمز التحقق إلى بريدك الإلكتروني",
+        "codeResent": "تم إرسال رمز تحقق جديد",
+        "codeVerified": "تم التحقق من الرمز بنجاح",
+        "passwordResetSuccess": "تمت إعادة تعيين كلمة المرور بنجاح. سجّل الدخول الآن."
+      }
+    },
     "dashboard": {
       "title": "لوحة تحكم تجريبية",
       "subtitle": "المصادقة تعمل. هذه الصفحة موجودة فقط كنقطة وصول محمية بعد تسجيل الدخول.",
@@ -489,6 +537,69 @@
       "activeSemester": "الفصل النشط: {name}",
       "sections": {
         "board": "لوحتي الأسبوعية"
+      }
+    },
+    "examsSessionGrades": {
+      "title": "درجات الطلاب للجلسات",
+      "subtitle": "إدخال درجات الشفهي والمخبري والمنتصف والنهائي لكل طالب.",
+      "activeSemester": "الفصل النشط: {name}",
+      "searchPlaceholder": "ابحث عن جلسة حسب المقرر أو المدرس",
+      "sections": {
+        "sessions": "الجلسات",
+        "grades": "إدخال الدرجات"
+      },
+      "columns": {
+        "course": "المقرر",
+        "time": "الوقت",
+        "students": "الطلاب",
+        "student": "الطالب",
+        "oral": "شفهي",
+        "lab": "مخبري",
+        "midterm": "منتصف",
+        "final": "نهائي",
+        "total": "المجموع",
+        "grade": "التقدير",
+        "actions": "الإجراءات"
+      },
+      "actions": {
+        "save": "حفظ",
+        "markDone": "تعيين كمكتمل",
+        "reopen": "إعادة الفتح"
+      },
+      "status": {
+        "done": "تم تعيين الجلسة كمكتملة",
+        "notDone": "الجلسة غير مكتملة بعد"
+      },
+      "empty": {
+        "selectSession": "اختر جلسة للبدء بإدخال الدرجات.",
+        "noSessions": "لا توجد جلسات.",
+        "noStudents": "لا يوجد طلاب مسجلون في هذه الجلسة."
+      },
+      "toasts": {
+        "saved": "تم حفظ الدرجات بنجاح.",
+        "saveFailed": "تعذر حفظ الدرجات.",
+        "markedDone": "تم تعيين الجلسة كمكتملة.",
+        "reopened": "تمت إعادة فتح الجلسة للتعديل."
+      }
+    },
+    "studentGrades": {
+      "title": "درجاتي",
+      "subtitle": "عرض درجات الجلسات والتقدير النهائي.",
+      "sections": {
+        "grades": "الدرجات"
+      },
+      "columns": {
+        "course": "المقرر",
+        "time": "الوقت",
+        "oral": "شفهي",
+        "lab": "مخبري",
+        "midterm": "منتصف",
+        "final": "نهائي",
+        "total": "المجموع",
+        "grade": "التقدير"
+      },
+      "empty": {
+        "noGrades": "لا توجد درجات حالياً."
       }
     },
     "studentsManagement": {

@@ -5,6 +5,7 @@ import router from '@/app/router'
 import { setupDocumentTitle } from '@/app/plugins/documentTitle'
 import { setupLocaleEffects } from '@/app/plugins/localeEffects'
 import i18n from '@/i18n'
+import { useAuthStore } from '@/store/auth.store'
 import { useUiStore } from '@/store/ui.store'
 import App from './App.vue'
 import 'vue-toastification/dist/index.css'
@@ -31,4 +32,8 @@ const uiStore = useUiStore(pinia)
 setupLocaleEffects({ i18n, uiStore })
 setupDocumentTitle({ router, i18n })
 
-app.mount('#app')
+;(async () => {
+  const authStore = useAuthStore()
+  await authStore.restoreSession()
+  app.mount('#app')
+})()

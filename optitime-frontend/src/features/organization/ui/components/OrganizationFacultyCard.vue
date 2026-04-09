@@ -55,7 +55,7 @@
     </div>
 
     <div class="faculty-card__actions">
-      <AppCan permission="organization.create">
+      <AppCan permission="departments.create">
         <AppIconButton
           class="fac-btn"
           icon="bi bi-plus-circle"
@@ -67,7 +67,7 @@
           @click="$emit('add-department')"
         />
       </AppCan>
-      <AppCan permission="organization.update">
+      <AppCan permission="faculties.update">
         <AppIconButton
           class="fac-btn"
           icon="bi bi-pencil-square"
@@ -79,7 +79,7 @@
           @click="$emit('edit-faculty')"
         />
       </AppCan>
-      <AppCan permission="organization.delete">
+      <AppCan permission="faculties.delete">
         <AppIconButton
           class="fac-btn fac-btn--danger"
           icon="bi bi-trash3"
@@ -121,7 +121,7 @@
             <small class="text-secondary">{{ department.name_ar }}</small>
           </div>
           <div class="dept-actions">
-            <AppCan permission="organization.update">
+            <AppCan permission="departments.update">
               <AppIconButton
                 class="dept-btn"
                 icon="bi bi-pencil-square"
@@ -133,7 +133,7 @@
                 @click="$emit('edit-department', department)"
               />
             </AppCan>
-            <AppCan permission="organization.delete">
+            <AppCan permission="departments.delete">
               <AppIconButton
                 class="dept-btn dept-btn--danger"
                 icon="bi bi-trash3"

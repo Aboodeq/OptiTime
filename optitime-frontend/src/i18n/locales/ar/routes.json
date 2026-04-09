@@ -1,6 +1,9 @@
 {
   "routes": {
     "login": "تسجيل الدخول",
+    "forgotPasswordEmail": "نسيت كلمة المرور",
+    "forgotPasswordCode": "تأكيد الرمز",
+    "forgotPasswordReset": "إعادة تعيين كلمة المرور",
     "dashboard": "لوحة التحكم",
     "rolesManagement": "إدارة الأدوار",
     "organizationManagement": "الهيكل التنظيمي",
@@ -12,6 +15,8 @@
     "coordinatorWeeklySchedule": "الجدول الأسبوعي",
     "coordinatorLectureRequests": "طلبات المحاضرات",
     "studentWeeklySchedule": "جدولي الأسبوعي",
+    "studentGrades": "درجاتي",
+    "examsSessionGrades": "درجات الطلاب للجلسات",
     "studentsManagement": "إدارة الطلاب",
     "resourcesManagement": "إدارة الموارد",
     "roomsManagement": "إدارة القاعات",

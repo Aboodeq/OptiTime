@@ -11,6 +11,7 @@ class RbacSeeder extends Seeder
     public function run(): void
     {
         $codes = [
+            'dashboard.view',
             'roles.view', 'roles.create', 'roles.update', 'roles.delete',
             'users.view', 'users.create', 'users.update', 'users.delete',
             'faculties.view', 'faculties.create', 'faculties.update', 'faculties.delete',
@@ -62,6 +63,7 @@ class RbacSeeder extends Seeder
         $roleDefs = [
             'admin' => array_values(Permission::query()->pluck('id')->all()),
             'coordinator' => $byCode([
+                'dashboard.view',
                 'resources.view', 'resources.create', 'resources.update', 'resources.delete',
                 'coordinator_rooms.view', 'coordinator_rooms.create', 'coordinator_rooms.update', 'coordinator_rooms.delete',
                 'coordinator_courses.view', 'coordinator_courses.create', 'coordinator_courses.update', 'coordinator_courses.delete',
@@ -74,6 +76,7 @@ class RbacSeeder extends Seeder
                 'notifications.view', 'notifications.update',
             ]),
             'instructor' => $byCode([
+                'dashboard.view',
                 'instructor_availability.view', 'instructor_availability.create', 'instructor_availability.update', 'instructor_availability.delete',
                 'instructor.schedule.view', 'instructor.schedule.export',
                 'instructor.requests.view', 'instructor.requests.create',
@@ -81,18 +84,23 @@ class RbacSeeder extends Seeder
                 'notifications.view', 'notifications.update',
             ]),
             'student' => $byCode([
+                'dashboard.view',
                 'student.schedule.view', 'student.schedule.export',
                 'student.grades.view', 'student.grades.export',
                 'profile.view', 'profile.update',
                 'notifications.view', 'notifications.update',
             ]),
             'management' => $byCode([
+                'dashboard.view',
+                'courses.view',
+                'semesters.view',
                 'reports.classroom_occupancy', 'reports.study_hours', 'reports.lab_utilization',
                 'reports.peak_periods', 'reports.resource_utilization', 'reports.compliance',
                 'profile.view', 'profile.update',
                 'notifications.view', 'notifications.update',
             ]),
             'exams' => $byCode([
+                'dashboard.view',
                 'exam_sessions.view', 'exam_sessions.update',
                 'exam_grades.view', 'exam_grades.update', 'exam_grades.export',
                 'profile.view', 'profile.update',

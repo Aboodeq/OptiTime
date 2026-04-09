@@ -207,9 +207,9 @@ function goToSettings() {
   router.push({ name: 'user-settings' })
 }
 
-function handleLogout() {
+async function handleLogout() {
   closeMenus()
-  authStore.logout()
+  await authStore.logout()
   router.push('/login')
 }
 

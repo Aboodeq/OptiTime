@@ -3,7 +3,7 @@
     <section class="dashboard-card w-100">
       <div class="instructors-toolbar">
         <h1 class="h4 fw-bold mb-0">{{ t('pages.instructorsManagement.title') }}</h1>
-        <AppCan permission="instructors.create">
+        <AppCan permission="users.create">
           <AppButton
             class="new-instructor-btn"
             type="button"
@@ -64,7 +64,7 @@
 
           <template #cell-actions="{ row }">
             <div class="text-start">
-              <AppCan permission="instructors.update">
+              <AppCan permission="users.update">
                 <AppIconButton
                   class="me-2"
                   icon="bi bi-pencil-square"
@@ -74,7 +74,7 @@
                   @click="startEditInstructor(row)"
                 />
               </AppCan>
-              <AppCan permission="instructors.delete">
+              <AppCan permission="users.delete">
                 <AppIconButton
                   icon="bi bi-trash3"
                   variant="danger"
@@ -236,12 +236,12 @@ const departmentDraft = ref(organizationStore.createEmptyDepartmentDraft())
 const specialityDialogOpen = ref(false)
 const specialityDraft = ref(specialitiesStore.createEmptyDraft())
 
-const canViewInstructors = computed(() => authStore.hasPermission('instructors.view'))
-const canCreateInstructors = computed(() => authStore.hasPermission('instructors.create'))
-const canUpdateInstructors = computed(() => authStore.hasPermission('instructors.update'))
-const canDeleteInstructors = computed(() => authStore.hasPermission('instructors.delete'))
-const canCreateSpecialities = computed(() => authStore.hasPermission('specialities.create'))
-const canCreateOrganization = computed(() => authStore.hasPermission('organization.create'))
+const canViewInstructors = computed(() => authStore.hasPermission('users.view'))
+const canCreateInstructors = computed(() => authStore.hasPermission('users.create'))
+const canUpdateInstructors = computed(() => authStore.hasPermission('users.update'))
+const canDeleteInstructors = computed(() => authStore.hasPermission('users.delete'))
+const canCreateSpecialities = computed(() => authStore.hasPermission('specializations.create'))
+const canCreateOrganization = computed(() => authStore.hasPermission('faculties.create'))
 const specialityNameById = computed(() => {
   const map = new Map()
   specialities.value.forEach((speciality) => {

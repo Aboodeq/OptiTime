@@ -53,6 +53,54 @@
         }
       }
     },
+    "forgotPassword": {
+      "email": {
+        "title": "Forgot your password?",
+        "subtitle": "Enter your account email and we will send a verification code.",
+        "label": "Email",
+        "placeholder": "example\\@university.edu"
+      },
+      "code": {
+        "title": "Check your email",
+        "subtitle": "Enter the 6-digit code sent to your email address.",
+        "label": "Verification code",
+        "placeholder": "Enter verification code",
+        "resend": "Resend code",
+        "resendDisabled": "Resend available in {seconds}s"
+      },
+      "reset": {
+        "title": "Create a new password",
+        "subtitle": "Choose a strong password for your account.",
+        "passwordLabel": "New password",
+        "passwordPlaceholder": "Enter new password",
+        "confirmPasswordLabel": "Confirm new password",
+        "confirmPasswordPlaceholder": "Re-enter new password"
+      },
+      "actions": {
+        "sendCode": "Send code",
+        "verifyCode": "Verify code",
+        "resetPassword": "Reset password",
+        "backToLogin": "Back to login",
+        "processing": "Processing..."
+      },
+      "errors": {
+        "emailRequired": "Please enter your email",
+        "emailInvalid": "Please enter a valid email address",
+        "codeRequired": "Please enter the verification code",
+        "codeInvalid": "Verification code must be at least 6 characters",
+        "passwordRequired": "Please enter a new password",
+        "passwordMin": "Password must be at least 8 characters",
+        "confirmPasswordRequired": "Please confirm your new password",
+        "passwordMismatch": "Password confirmation does not match",
+        "generic": "Could not complete this step. Please try again."
+      },
+      "toasts": {
+        "codeSent": "Verification code sent to your email",
+        "codeResent": "A new verification code was sent",
+        "codeVerified": "Code verified successfully",
+        "passwordResetSuccess": "Password reset successful. Please sign in."
+      }
+    },
     "dashboard": {
       "title": "Dashboard placeholder",
       "subtitle": "Auth is working. This page only exists as a protected landing point after login.",
@@ -489,6 +537,69 @@
       "activeSemester": "Active semester: {name}",
       "sections": {
         "board": "My weekly board"
+      }
+    },
+    "examsSessionGrades": {
+      "title": "Session student grades",
+      "subtitle": "Enter Oral, Lab, Midterm, and Final grades for each student.",
+      "activeSemester": "Active semester: {name}",
+      "searchPlaceholder": "Search sessions by course or instructor",
+      "sections": {
+        "sessions": "Sessions",
+        "grades": "Grades entry"
+      },
+      "columns": {
+        "course": "Course",
+        "time": "Time",
+        "students": "Students",
+        "student": "Student",
+        "oral": "Oral",
+        "lab": "Lab",
+        "midterm": "Midterm",
+        "final": "Final",
+        "total": "Total",
+        "grade": "Grade",
+        "actions": "Actions"
+      },
+      "actions": {
+        "save": "Save",
+        "markDone": "Mark as done",
+        "reopen": "Reopen"
+      },
+      "status": {
+        "done": "Session marked as done",
+        "notDone": "Session not completed yet"
+      },
+      "empty": {
+        "selectSession": "Select a session to start entering grades.",
+        "noSessions": "No sessions found.",
+        "noStudents": "No students assigned to this session."
+      },
+      "toasts": {
+        "saved": "Grades saved successfully.",
+        "saveFailed": "Could not save grades.",
+        "markedDone": "Session marked as done.",
+        "reopened": "Session reopened for editing."
+      }
+    },
+    "studentGrades": {
+      "title": "My grades",
+      "subtitle": "View your session grades and final letter grade.",
+      "sections": {
+        "grades": "Grades"
+      },
+      "columns": {
+        "course": "Course",
+        "time": "Time",
+        "oral": "Oral",
+        "lab": "Lab",
+        "midterm": "Midterm",
+        "final": "Final",
+        "total": "Total",
+        "grade": "Grade"
+      },
+      "empty": {
+        "noGrades": "No grades available yet."
       }
     },
     "studentsManagement": {

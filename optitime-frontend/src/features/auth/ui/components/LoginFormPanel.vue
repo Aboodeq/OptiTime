@@ -58,7 +58,9 @@
       </div>
 
       <div class="text-end mb-4">
-        <a href="#" class="forgot-link" @click.prevent>{{ t('pages.login.forgotPassword') }}</a>
+        <a href="#" class="forgot-link" @click.prevent="goToForgotPassword">
+          {{ t('pages.login.forgotPassword') }}
+        </a>
       </div>
 
       <AppButton
@@ -74,11 +76,11 @@
       </AppButton>
     </form>
 
-    <div class="divider mb-4">
+    <div v-if="showDemoRoles" class="divider mb-4">
       <span>{{ t('pages.login.quickDemo') }}</span>
     </div>
 
-    <div class="demo-roles">
+    <div v-if="showDemoRoles" class="demo-roles">
       <DemoRoleButton
         v-for="role in demoRoles"
         :key="role.value"
@@ -94,16 +96,21 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import AppButton from '@/components/common/AppButton.vue'
 import AppInputField from '@/components/common/AppInputField.vue'
+import { authService } from '@/features/auth/api/auth.service'
 import { useLoginForm } from '@/features/auth/model/composables/useLoginForm'
 import { useLoginPageContent } from '@/features/auth/model/composables/useLoginPageContent'
 import DemoRoleButton from './DemoRoleButton.vue'
 import LocaleSwitcher from './LocaleSwitcher.vue'
 
 const { t } = useI18n()
+const router = useRouter()
 const { demoRoles } = useLoginPageContent()
+const showDemoRoles = computed(() => authService.isDemoMode())
 const {
   form,
   errors,
@@ -118,4 +125,8 @@ const {
   handleFieldBlur,
   togglePassword,
 } = useLoginForm()
+
+function goToForgotPassword() {
+  router.push({ name: 'forgot-password-email' })
+}
 </script>

@@ -133,9 +133,9 @@ const deleteOpen = ref(false)
 const reviewForm = ref({ status: 'pending', review_note: '' })
 const editForm = ref({ requested_date: '', note: '' })
 
-const canReview = computed(() => authStore.hasPermission('instructorSchedule.requests.review'))
-const canModify = computed(() => authStore.hasPermission('instructorSchedule.requests.update'))
-const canDelete = computed(() => authStore.hasPermission('instructorSchedule.requests.delete'))
+const canReview = computed(() => authStore.hasPermission('lecture_requests.view'))
+const canModify = computed(() => authStore.hasPermission('lecture_requests.update'))
+const canDelete = computed(() => authStore.hasPermission('lecture_requests.update'))
 
 const columns = computed(() => [
   { key: 'type', label: t('pages.coordinatorWeeklySchedule.requests.columns.type') },

@@ -96,7 +96,7 @@ const authStore = useAuthStore()
 const { logsCount, successCount, warningCount, errorCount, search, eventType, moduleKey, moduleOptions, filteredLogs } =
   useAuditLogsPage()
 
-const canViewAuditLogs = computed(() => authStore.hasPermission('auditLogs.view'))
+const canViewAuditLogs = computed(() => authStore.hasPermission('audit_logs.view'))
 const eventTypeOptions = computed(() => [
   { value: 'all', label: t('pages.auditLogs.filters.allEventTypes') },
   { value: 'success', label: t('pages.auditLogs.eventTypes.success') },
