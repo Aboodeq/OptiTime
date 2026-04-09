@@ -58,7 +58,26 @@ final class ScheduleSettingsLoader
         $roomConstraints = [];
         foreach ($root->roomConstraints as $rc) {
             if ($rc->enabled) {
-                $roomConstraints[$rc->constraint_key] = true;
+                $key = (string) $rc->constraint_key;
+                if (str_starts_with($key, 'room:')) {
+                    $roomId = substr($key, 5);
+                    if ($roomId !== '') {
+                        $roomConstraints['allowed_room_ids'][] = $roomId;
+                    }
+                    continue;
+                }
+                if (str_starts_with($key, 'course:')) {
+                    $parts = explode(':', $key, 3);
+                    if (count($parts) === 3) {
+                        [, $courseId, $roomId] = $parts;
+                        if ($courseId !== '' && $roomId !== '') {
+                            $roomConstraints['by_course_id'][$courseId][] = $roomId;
+                        }
+                        continue;
+                    }
+                }
+                // Keep legacy flags for compatibility with existing UI keys.
+                $roomConstraints['flags'][$key] = true;
             }
         }
 

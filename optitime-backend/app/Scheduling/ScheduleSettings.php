@@ -155,6 +155,7 @@ final class ScheduleSettings
             return in_array($roomId, $global, true);
         }
 
+        // Legacy boolean flag lists do not encode room IDs, so they cannot restrict placement.
         return true;
     }
 

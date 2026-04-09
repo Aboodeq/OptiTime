@@ -84,6 +84,26 @@ final class ConstraintEvaluator
             }
         }
 
+        if ($settings->isHardEnabled('max_daily_lectures')) {
+            $maxPerDay = max(1, $settings->maxDailyLectures());
+            $byInstructorDay = [];
+            foreach ($byIndex as $idx => $placement) {
+                $event = $events[$idx] ?? null;
+                if ($event === null) {
+                    continue;
+                }
+                $byInstructorDay[$event->instructorId][$placement->day] =
+                    ($byInstructorDay[$event->instructorId][$placement->day] ?? 0) + 1;
+            }
+            foreach ($byInstructorDay as $byDay) {
+                foreach ($byDay as $count) {
+                    if ($count > $maxPerDay) {
+                        $violations += ($count - $maxPerDay);
+                    }
+                }
+            }
+        }
+
         for ($i = 0; $i < $n; $i++) {
             if (! isset($byIndex[$i])) {
                 continue;

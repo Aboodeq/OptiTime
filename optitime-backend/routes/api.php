@@ -4,9 +4,9 @@ use App\Http\Controllers\Api\Admin\AdminAuditController;
 use App\Http\Controllers\Api\Admin\AdminCourseOfferingController;
 use App\Http\Controllers\Api\Admin\AdminEntityController;
 use App\Http\Controllers\Api\Admin\AdminInstructorController;
-use App\Http\Controllers\Api\Admin\AdminSectionInstructorController;
 use App\Http\Controllers\Api\Admin\AdminRoleController;
 use App\Http\Controllers\Api\Admin\AdminScheduleSettingCurrentController;
+use App\Http\Controllers\Api\Admin\AdminSectionInstructorController;
 use App\Http\Controllers\Api\Admin\AdminStudentController;
 use App\Http\Controllers\Api\Admin\AdminUserController;
 use App\Http\Controllers\Api\AuthController;
@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\Coordinator\CoordinatorCourseSemesterController;
 use App\Http\Controllers\Api\Coordinator\CoordinatorEntityController;
 use App\Http\Controllers\Api\Coordinator\CoordinatorLectureRequestController;
 use App\Http\Controllers\Api\Coordinator\CoordinatorLookupController;
+use App\Http\Controllers\Api\Coordinator\CoordinatorScheduleBoardContextController;
 use App\Http\Controllers\Api\Coordinator\CoordinatorScheduleController;
 use App\Http\Controllers\Api\Coordinator\CoordinatorSectionInstructorController;
 use App\Http\Controllers\Api\Exams\ExamGradeController;
@@ -35,9 +36,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/auth/login', [AuthController::class, 'login']);
-Route::middleware(['schedule.access'])->post('/schedule/generate', [ScheduleGenerationController::class, 'generate']);
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware(['schedule.access'])->post('/schedule/generate', [ScheduleGenerationController::class, 'generate']);
+
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::post('/auth/change-password', [AuthController::class, 'changePassword']);
 
@@ -120,8 +122,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::middleware('permission:lecture_requests.view')->get('/lecture-requests', [CoordinatorLectureRequestController::class, 'index']);
         Route::middleware('permission:lecture_requests.update')->put('/lecture-requests/{id}', [CoordinatorLectureRequestController::class, 'update']);
 
+        Route::middleware('permission:schedules.view')->get('/schedule-board-context', [CoordinatorScheduleBoardContextController::class, 'show']);
         Route::middleware('permission:schedules.view')->get('/schedules', [CoordinatorScheduleController::class, 'index']);
         Route::middleware('permission:schedules.create')->post('/schedules', [CoordinatorScheduleController::class, 'store']);
+        Route::middleware('permission:schedules.update')->put('/schedules/{id}/sessions', [CoordinatorScheduleController::class, 'syncSessions']);
         Route::middleware('permission:schedules.view')->get('/schedules/{id}', [CoordinatorScheduleController::class, 'show']);
         Route::middleware('permission:schedules.update')->put('/schedules/{id}', [CoordinatorScheduleController::class, 'update']);
         Route::middleware('permission:schedules.delete')->delete('/schedules/{id}', [CoordinatorScheduleController::class, 'destroy']);

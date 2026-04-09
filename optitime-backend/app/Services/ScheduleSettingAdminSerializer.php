@@ -255,4 +255,32 @@ final class ScheduleSettingAdminSerializer
             'break_times' => $breaks,
         ];
     }
+
+    /**
+     * Read-only weekly board + settings row id for generation (no admin constraint payloads).
+     * Safe for instructor/student/coordinator schedule UIs without schedule_settings.view.
+     *
+     * @return array<string, mixed>
+     */
+    public static function toWeeklyBoardContext(): array
+    {
+        $row = ScheduleSetting::query()->orderBy('created_at')->first();
+        if ($row === null) {
+            return [
+                'settings_id' => null,
+                'day_start' => '08:00',
+                'day_end' => '16:00',
+                'slot_minutes' => 60,
+                'gap_minutes' => 0,
+                'max_daily_lectures' => 0,
+                'study_days' => [],
+                'break_times' => [],
+            ];
+        }
+
+        return array_merge(
+            ['settings_id' => $row->id],
+            self::toInstructorAvailabilityGridContext($row)
+        );
+    }
 }
