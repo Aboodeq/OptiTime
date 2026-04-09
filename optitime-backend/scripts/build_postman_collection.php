@@ -5,7 +5,6 @@ declare(strict_types=1);
 /**
  * Generates postman/OptiTime.postman_collection.json — run: php scripts/build_postman_collection.php
  */
-
 $base = '{{base_url}}/api';
 
 $bearer = [
@@ -399,6 +398,16 @@ $authItems = [
             'full_name' => 'My Name',
             'email' => 'me@example.com',
             'avatar_url' => 'https://example.com/a.png',
+        ],
+    ]),
+    $req('Get profile settings', 'GET', "$base/profile/settings"),
+    $req('Update profile settings', 'PUT', "$base/profile/settings", [
+        'body' => [
+            'email_schedule_updates' => true,
+            'email_reminders' => true,
+            'push_announcements' => false,
+            'push_system_alerts' => true,
+            'weekly_digest' => false,
         ],
     ]),
     $req('List notifications', 'GET', "$base/notifications"),

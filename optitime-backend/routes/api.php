@@ -26,6 +26,7 @@ use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\Student\StudentGradeController;
 use App\Http\Controllers\Api\Student\StudentPdfController;
 use App\Http\Controllers\Api\Student\StudentScheduleController;
+use App\Http\Controllers\Api\UserSettingController;
 use App\Http\Controllers\ScheduleGenerationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::middleware('permission:profile.view')->get('/profile', [ProfileController::class, 'show']);
     Route::middleware('permission:profile.update')->put('/profile', [ProfileController::class, 'update']);
+
+    Route::middleware('permission:profile.view')->get('/profile/settings', [UserSettingController::class, 'show']);
+    Route::middleware('permission:profile.update')->put('/profile/settings', [UserSettingController::class, 'update']);
 
     Route::middleware('permission:notifications.view')->get('/notifications', [NotificationController::class, 'index']);
     Route::middleware('permission:notifications.update')->post('/notifications/{id}/read', [NotificationController::class, 'markRead']);
