@@ -92,6 +92,12 @@ const DEMO_USERS = Object.freeze({
     id: 'demo-instructor',
     name: 'Demo Instructor',
     email: DEMO_CREDENTIALS.email,
+    instructor: {
+      id: 'demo-instructor-profile',
+      user_id: 'demo-instructor',
+      min_work_hours_per_week: 10,
+      max_work_hours_per_week: 40,
+    },
     role: {
       key: 'instructor',
       name: 'Instructor',
@@ -217,6 +223,19 @@ function getOrCreateResetEntry(email) {
   return created
 }
 
+function mapApiInstructorToApp(apiInstructor) {
+  if (!apiInstructor || typeof apiInstructor !== 'object') return null
+  const id = apiInstructor.id
+  const userId = apiInstructor.user_id
+  if (!id || !userId) return null
+  return {
+    id: String(id),
+    user_id: String(userId),
+    min_work_hours_per_week: Number(apiInstructor.min_work_hours_per_week),
+    max_work_hours_per_week: Number(apiInstructor.max_work_hours_per_week),
+  }
+}
+
 /**
  * Map Laravel `/auth/login` or `/user` payload to the shape used by the auth store.
  */
@@ -247,6 +266,8 @@ export function mapApiUserToAppUser(apiUser) {
           color: '#334155',
         }
 
+  const instructor = mapApiInstructorToApp(apiUser.instructor)
+
   return {
     id: apiUser.id,
     name: apiUser.full_name ?? apiUser.name ?? '',
@@ -254,6 +275,7 @@ export function mapApiUserToAppUser(apiUser) {
     avatar_url: apiUser.avatar_url ?? '',
     role,
     permissions: [...new Set(permissionCodes)],
+    ...(instructor ? { instructor } : {}),
   }
 }
 

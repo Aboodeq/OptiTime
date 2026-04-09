@@ -334,6 +334,7 @@
     "instructorSelfAvailability": {
       "title": "توفري",
       "subtitle": "حدد أيام التدريس والوقت المفضل لك.",
+      "loading": "جاري تحميل التوفر…",
       "weeklyHoursRange": "الساعات المختارة أسبوعيا: {current} س (المطلوب بين {min} و{max} س)",
       "sections": {
         "days": "شبكة التوفر"
@@ -354,7 +355,8 @@
       },
       "errors": {
         "invalidForm": "يرجى إدخال فترات صحيحة ضمن ساعات العمل المسموح بها وحدود أوقات المحاضرات.",
-        "minWeeklyHoursRequired": "يجب أن لا تقل الساعات المختارة أسبوعيا عن {min} ساعة."
+        "minWeeklyHoursRequired": "يجب أن لا تقل الساعات المختارة أسبوعيا عن {min} ساعة.",
+        "saveFailed": "تعذر حفظ التوفر. يرجى المحاولة مرة أخرى."
       },
       "toasts": {
         "saved": "تم حفظ توفرك"

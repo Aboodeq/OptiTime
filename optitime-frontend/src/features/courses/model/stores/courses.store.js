@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
-import { coursesService } from '@/features/courses/api/courses.service'
+import { computed, ref, unref } from 'vue'
+import { coursesService, isUuid } from '@/features/courses/api/courses.service'
+import { useOrganizationStore } from '@/features/organization/model/stores/organization.store'
 
 function createEmptyDraft() {
   return {
@@ -55,7 +56,12 @@ function normalizeSections(values) {
         instructor_ids: instructorIds,
       }
     })
-    .filter((section) => section.hasCapacity || section.instructor_ids.length > 0)
+    .filter(
+      (section) =>
+        section.hasCapacity ||
+        section.instructor_ids.length > 0 ||
+        isUuid(String(section?.id ?? '').trim()),
+    )
 }
 
 export const useCoursesStore = defineStore('courses', () => {
@@ -76,9 +82,16 @@ export const useCoursesStore = defineStore('courses', () => {
     () => (courseId) => togglingCourseIds.value.includes(courseId),
   )
 
+  async function facultiesList() {
+    const orgStore = useOrganizationStore()
+    await orgStore.ensureInitialized()
+    return unref(orgStore.faculties) ?? []
+  }
+
   async function ensureInitialized() {
     if (initialized.value) return
-    courses.value = await coursesService.getCourses()
+    const faculties = await facultiesList()
+    courses.value = await coursesService.getCourses(faculties)
     currentSemesterId.value = await coursesService.getCurrentSemesterId()
     semesterOfferings.value = await coursesService.getCourseOfferingsBySemester(currentSemesterId.value)
     initialized.value = true
@@ -174,6 +187,9 @@ export const useCoursesStore = defineStore('courses', () => {
       return null
     }
 
+    const validLabHours =
+      hasLabConsumed && Number.isInteger(labConsumedHours) && labConsumedHours >= 0 ? labConsumedHours : null
+
     return {
       code,
       name_ar: nameAr,
@@ -182,7 +198,7 @@ export const useCoursesStore = defineStore('courses', () => {
       department_id: departmentId,
       required_hours: requiredHours,
       room_consumed_hours: roomConsumedHours,
-      lab_consumed_hours: sections.some((section) => section.section_type === 'lab') ? labConsumedHours : null,
+      lab_consumed_hours: validLabHours,
       sections: sections.map((section) => ({
         id: section.id,
         section_name: section.section_name,
@@ -199,26 +215,38 @@ export const useCoursesStore = defineStore('courses', () => {
   async function createCourseFromDraft(draft) {
     const normalized = normalizeDraft(draft)
     if (!normalized) return false
-    const created = await coursesService.createCourse(normalized)
-    courses.value = [...courses.value, created]
-    return true
+    try {
+      const faculties = await facultiesList()
+      const created = await coursesService.createCourse(normalized, faculties)
+      courses.value = [...courses.value, created]
+      return true
+    } catch {
+      return false
+    }
   }
 
   async function updateCourseFromDraft(courseId, draft) {
     const normalized = normalizeDraft(draft)
     if (!normalized) return false
-    const updated = await coursesService.updateCourse(courseId, normalized)
-    if (!updated) return false
-    courses.value = courses.value.map((item) => (item.id === courseId ? updated : item))
-    return true
+    try {
+      const faculties = await facultiesList()
+      const updated = await coursesService.updateCourse(courseId, normalized, faculties)
+      courses.value = courses.value.map((item) => (item.id === courseId ? updated : item))
+      return true
+    } catch {
+      return false
+    }
   }
 
   async function deleteCourse(courseId) {
-    const deleted = await coursesService.deleteCourse(courseId)
-    if (!deleted) return false
-    courses.value = courses.value.filter((item) => item.id !== courseId)
-    semesterOfferings.value = semesterOfferings.value.filter((item) => item.course_id !== courseId)
-    return true
+    try {
+      await coursesService.deleteCourse(courseId)
+      courses.value = courses.value.filter((item) => item.id !== courseId)
+      semesterOfferings.value = semesterOfferings.value.filter((item) => item.course_id !== courseId)
+      return true
+    } catch {
+      return false
+    }
   }
 
   async function refreshCurrentSemesterOfferings() {
@@ -238,10 +266,13 @@ export const useCoursesStore = defineStore('courses', () => {
         courseId,
         isActive: nextValue,
       })
+      if (!updated?.id) return null
       semesterOfferings.value = semesterOfferings.value.some((item) => item.id === updated.id)
         ? semesterOfferings.value.map((item) => (item.id === updated.id ? updated : item))
         : [...semesterOfferings.value, updated]
       return updated
+    } catch {
+      return null
     } finally {
       togglingCourseIds.value = togglingCourseIds.value.filter((id) => id !== courseId)
     }

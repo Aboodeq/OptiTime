@@ -1,16 +1,16 @@
 import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref } from 'vue'
 import { useAuthStore } from '@/store/auth.store'
-import { useConstraintsStore } from '@/features/constraints/model/stores/constraints.store'
 import { useInstructorPreferencesStore } from '@/features/instructor-preferences/model/stores/instructorPreferences.store'
 
 export function useInstructorSelfAvailabilityPage() {
   const authStore = useAuthStore()
-  const constraintsStore = useConstraintsStore()
   const preferencesStore = useInstructorPreferencesStore()
 
-  const { enabledStudyDayValues } = storeToRefs(preferencesStore)
+  const { enabledStudyDayValues, availabilityGrid } = storeToRefs(preferencesStore)
   const draft = ref(preferencesStore.createEmptyDraft())
+  const pageLoading = ref(true)
+  const saving = ref(false)
 
   const instructorId = computed(() => authStore.user?.id ?? '')
 
@@ -21,12 +21,12 @@ export function useInstructorSelfAvailabilityPage() {
       .map((day) => ({ value: day, label: day }))
   })
 
-  const slotMinutes = computed(() => Number(constraintsStore.activeSettings?.slot_minutes) || 60)
-  const gapMinutes = computed(() => Math.max(0, Number(constraintsStore.activeSettings?.gap_minutes) || 0))
-  const dayStart = computed(() => constraintsStore.activeSettings?.day_start || '08:00')
-  const dayEnd = computed(() => constraintsStore.activeSettings?.day_end || '16:00')
+  const slotMinutes = computed(() => Number(availabilityGrid.value?.slot_minutes) || 60)
+  const gapMinutes = computed(() => Math.max(0, Number(availabilityGrid.value?.gap_minutes) || 0))
+  const dayStart = computed(() => availabilityGrid.value?.day_start || '08:00')
+  const dayEnd = computed(() => availabilityGrid.value?.day_end || '16:00')
   const breakTimes = computed(() =>
-    (constraintsStore.activeSettings?.break_times ?? [])
+    (availabilityGrid.value?.break_times ?? [])
       .filter((item) => item?.enabled)
       .map((item) => ({ start: item.start, end: item.end })),
   )
@@ -45,12 +45,22 @@ export function useInstructorSelfAvailabilityPage() {
   }
 
   async function saveAvailability() {
-    return preferencesStore.upsertPreferenceForInstructorId(instructorId.value, draft.value)
+    saving.value = true
+    try {
+      return await preferencesStore.upsertPreferenceForInstructorId(instructorId.value, draft.value)
+    } finally {
+      saving.value = false
+    }
   }
 
   onMounted(async () => {
-    await Promise.all([constraintsStore.ensureInitialized(), preferencesStore.ensureInitialized()])
-    initializeDraft()
+    pageLoading.value = true
+    try {
+      await preferencesStore.ensureInitialized()
+      initializeDraft()
+    } finally {
+      pageLoading.value = false
+    }
   })
 
   return {
@@ -62,6 +72,8 @@ export function useInstructorSelfAvailabilityPage() {
     breakTimes,
     weeklyHoursRange,
     draft,
+    pageLoading,
+    saving,
     saveAvailability,
   }
 }

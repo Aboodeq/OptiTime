@@ -334,6 +334,7 @@
     "instructorSelfAvailability": {
       "title": "My availability",
       "subtitle": "Set your preferred teaching days and time window.",
+      "loading": "Loading your availability…",
       "weeklyHoursRange": "Weekly chosen hours: {current}h (required {min}h - {max}h)",
       "sections": {
         "days": "Availability grid"
@@ -354,7 +355,8 @@
       },
       "errors": {
         "invalidForm": "Please set valid day intervals within configured working hours and slot boundaries.",
-        "minWeeklyHoursRequired": "You must keep at least {min} chosen hours per week."
+        "minWeeklyHoursRequired": "You must keep at least {min} chosen hours per week.",
+        "saveFailed": "Could not save availability. Please try again."
       },
       "toasts": {
         "saved": "Your availability has been saved"
