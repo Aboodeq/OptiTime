@@ -1,0 +1,3750 @@
+{
+    "info": {
+        "_postman_id": "optitime-api-d1cb94e50a8b6333",
+        "name": "OptiTime API (complete)",
+        "description": "Laravel API under `/api`. Set `base_url` (e.g. http://localhost:8000) and `token` from Login.\n\nReplace `{{..._uuid}}` variables with real UUIDs from your DB or seed.\n\n`POST /schedule/generate` is open in local/testing; in production requires Bearer + `schedule.generate` permission.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8000"
+        },
+        {
+            "key": "token",
+            "value": ""
+        },
+        {
+            "key": "semester_uuid",
+            "value": ""
+        },
+        {
+            "key": "role_uuid",
+            "value": ""
+        },
+        {
+            "key": "permission_uuid",
+            "value": ""
+        },
+        {
+            "key": "user_uuid",
+            "value": ""
+        },
+        {
+            "key": "faculty_uuid",
+            "value": ""
+        },
+        {
+            "key": "department_uuid",
+            "value": ""
+        },
+        {
+            "key": "course_uuid",
+            "value": ""
+        },
+        {
+            "key": "section_uuid",
+            "value": ""
+        },
+        {
+            "key": "room_uuid",
+            "value": ""
+        },
+        {
+            "key": "entity_id",
+            "value": ""
+        },
+        {
+            "key": "schedule_settings_uuid",
+            "value": ""
+        },
+        {
+            "key": "course_offering_uuid",
+            "value": ""
+        },
+        {
+            "key": "section_instructor_uuid",
+            "value": ""
+        },
+        {
+            "key": "instructor_uuid",
+            "value": ""
+        },
+        {
+            "key": "schedule_plan_uuid",
+            "value": ""
+        },
+        {
+            "key": "schedule_session_uuid",
+            "value": ""
+        },
+        {
+            "key": "student_user_uuid",
+            "value": ""
+        },
+        {
+            "key": "notification_uuid",
+            "value": ""
+        },
+        {
+            "key": "availability_uuid",
+            "value": ""
+        },
+        {
+            "key": "lecture_request_uuid",
+            "value": ""
+        }
+    ],
+    "item": [
+        {
+            "name": "Public",
+            "item": [
+                {
+                    "name": "Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/auth/login",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "auth",
+                                "login"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"password\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "description": "Returns token. Copy value into collection variable `token`."
+                    }
+                },
+                {
+                    "name": "Generate schedule (local/testing: no auth; prod: Bearer + schedule.generate)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/schedule/generate",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "schedule",
+                                "generate"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"algorithm\": \"backtracking\",\n    \"semester_id\": \"{{semester_uuid}}\",\n    \"settings_id\": \"{{schedule_settings_uuid}}\",\n    \"schedule_settings\": {\n        \"day_start\": \"08:00\",\n        \"day_end\": \"18:00\",\n        \"slot_minutes\": 50,\n        \"gap_minutes\": 10,\n        \"max_daily_lectures\": 6,\n        \"capacity_threshold\": 80,\n        \"study_days\": {\n            \"sunday\": true,\n            \"monday\": true,\n            \"tuesday\": true,\n            \"wednesday\": true,\n            \"thursday\": true\n        },\n        \"break_times\": [\n            {\n                \"start\": \"12:00\",\n                \"end\": \"13:00\"\n            }\n        ],\n        \"constraints\": [],\n        \"room_constraints\": [],\n        \"load_ranges\": []\n    },\n    \"baseDraft\": {\n        \"sessions\": [\n            {\n                \"course_offering_id\": \"{{course_offering_uuid}}\",\n                \"section_instructor_id\": \"{{section_instructor_uuid}}\",\n                \"course_id\": \"{{course_uuid}}\",\n                \"course_section_id\": \"{{section_uuid}}\",\n                \"instructor_id\": \"{{instructor_uuid}}\",\n                \"enrollment\": 30,\n                \"is_lab\": false,\n                \"day\": \"sun\",\n                \"start\": \"08:00\",\n                \"end\": \"08:50\",\n                \"room_id\": \"{{room_uuid}}\"\n            }\n        ]\n    },\n    \"rooms_override\": [\n        {\n            \"id\": \"{{room_uuid}}\",\n            \"capacity\": 40,\n            \"is_lab\": false\n        }\n    ],\n    \"seed\": 42,\n    \"instructor_availabilities\": [\n        {\n            \"instructor_id\": \"{{instructor_uuid}}\",\n            \"day_of_week\": \"sunday\",\n            \"start\": \"08:00\",\n            \"end\": \"16:00\"\n        }\n    ]\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Authenticated",
+            "auth": {
+                "type": "bearer",
+                "bearer": [
+                    {
+                        "key": "token",
+                        "value": "{{token}}",
+                        "type": "string"
+                    }
+                ]
+            },
+            "item": [
+                {
+                    "name": "Logout",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/auth/logout",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "auth",
+                                "logout"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Change password",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/auth/change-password",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "auth",
+                                "change-password"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"current_password\": \"oldpassword\",\n    \"password\": \"newpassword\",\n    \"password_confirmation\": \"newpassword\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Current user (Sanctum)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/user",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get profile",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/profile",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "profile"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update profile",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/profile",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "profile"
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"full_name\": \"My Name\",\n    \"email\": \"me@example.com\",\n    \"avatar_url\": \"https:\\/\\/example.com\\/a.png\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "List notifications",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/notifications",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "notifications"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Mark notification read",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/notifications/{{notification_uuid}}/read",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "notifications",
+                                "{{notification_uuid}}",
+                                "read"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Admin",
+                    "auth": {
+                        "type": "bearer",
+                        "bearer": [
+                            {
+                                "key": "token",
+                                "value": "{{token}}",
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "item": [
+                        {
+                            "name": "List users",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/users",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "users"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create user",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/users",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "users"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"full_name\": \"New User\",\n    \"email\": \"newuser@example.com\",\n    \"password\": \"password12\",\n    \"role_id\": \"{{role_uuid}}\",\n    \"department_id\": \"{{department_uuid}}\",\n    \"is_active\": true\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Show user",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/users/{{user_uuid}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "users",
+                                        "{{user_uuid}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update user",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/users/{{user_uuid}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "users",
+                                        "{{user_uuid}}"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"full_name\": \"Updated Name\",\n    \"email\": \"updated@example.com\",\n    \"password\": \"newpass123\",\n    \"role_id\": \"{{role_uuid}}\",\n    \"department_id\": \"{{department_uuid}}\",\n    \"is_active\": true\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete user",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/users/{{user_uuid}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "users",
+                                        "{{user_uuid}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "List roles",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/roles",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "roles"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create role",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/roles",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "roles"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"code\": \"custom_role\",\n    \"name_ar\": \"دور مخصص\",\n    \"name_en\": \"Custom role\",\n    \"sidebar_color\": \"#ff00aa\",\n    \"permission_ids\": [\n        \"{{permission_uuid}}\"\n    ]\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Show role",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/roles/{{role_uuid}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "roles",
+                                        "{{role_uuid}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update role",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/roles/{{role_uuid}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "roles",
+                                        "{{role_uuid}}"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"code\": \"custom_role\",\n    \"name_ar\": \"دور مخصص\",\n    \"name_en\": \"Custom role\",\n    \"sidebar_color\": \"#00aa00\",\n    \"is_active\": true,\n    \"permission_ids\": [\n        \"{{permission_uuid}}\"\n    ]\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete role",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/roles/{{role_uuid}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "roles",
+                                        "{{role_uuid}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "List permissions",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/permissions",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "permissions"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "List audit logs",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/audit-logs",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "audit-logs"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "per_page",
+                                            "value": "30",
+                                            "description": "Pagination page size"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "List faculties",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/faculties",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "faculties"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create faculties",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/faculties",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "faculties"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"code\": \"ENG\",\n    \"name_ar\": \"هندسة\",\n    \"name_en\": \"Engineering\",\n    \"graduation_hours\": 160,\n    \"studying_level\": 5,\n    \"color\": \"#3366cc\",\n    \"icon_url\": \"https:\\/\\/example.com\\/icon.png\",\n    \"is_active\": true\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Show faculties",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/faculties/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "faculties",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update faculties",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/faculties/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "faculties",
+                                        "{{entity_id}}"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"code\": \"ENG\",\n    \"name_ar\": \"هندسة\",\n    \"name_en\": \"Engineering\",\n    \"graduation_hours\": 160,\n    \"studying_level\": 5,\n    \"color\": \"#3366cc\",\n    \"icon_url\": \"https:\\/\\/example.com\\/icon.png\",\n    \"is_active\": true\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete faculties",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/faculties/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "faculties",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "List departments",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/departments",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "departments"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create departments",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/departments",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "departments"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"faculty_id\": \"{{faculty_uuid}}\",\n    \"code\": \"CS\",\n    \"name_ar\": \"علوم حاسوب\",\n    \"name_en\": \"Computer Science\",\n    \"icon_url\": null,\n    \"is_active\": true\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Show departments",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/departments/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "departments",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update departments",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/departments/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "departments",
+                                        "{{entity_id}}"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"faculty_id\": \"{{faculty_uuid}}\",\n    \"code\": \"CS\",\n    \"name_ar\": \"علوم حاسوب\",\n    \"name_en\": \"Computer Science\",\n    \"icon_url\": null,\n    \"is_active\": true\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete departments",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/departments/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "departments",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "List specializations",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/specializations",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "specializations"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create specializations",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/specializations",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "specializations"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"code\": \"AI\",\n    \"name_ar\": \"ذكاء اصطناعي\",\n    \"name_en\": \"Artificial Intelligence\",\n    \"is_active\": true\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Show specializations",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/specializations/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "specializations",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update specializations",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/specializations/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "specializations",
+                                        "{{entity_id}}"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"code\": \"AI\",\n    \"name_ar\": \"ذكاء اصطناعي\",\n    \"name_en\": \"Artificial Intelligence\",\n    \"is_active\": true\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete specializations",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/specializations/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "specializations",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "List semesters",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/semesters",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "semesters"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create semesters",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/semesters",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "semesters"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"code\": \"S1-2026\",\n    \"name\": \"Spring 2026\",\n    \"academic_year\": \"2025-2026\",\n    \"start_date\": \"2026-02-01\",\n    \"end_date\": \"2026-06-30\",\n    \"is_active\": true\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Show semesters",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/semesters/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "semesters",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update semesters",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/semesters/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "semesters",
+                                        "{{entity_id}}"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"code\": \"S1-2026\",\n    \"name\": \"Spring 2026\",\n    \"academic_year\": \"2025-2026\",\n    \"start_date\": \"2026-02-01\",\n    \"end_date\": \"2026-06-30\",\n    \"is_active\": true\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete semesters",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/semesters/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "semesters",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "List rooms",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/rooms",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "rooms"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create rooms",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/rooms",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "rooms"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"name_ar\": \"قاعة 101\",\n    \"name_en\": \"Room 101\",\n    \"type\": \"class\",\n    \"capacity\": 40,\n    \"location_ar\": \"المبنى أ\",\n    \"location_en\": \"Building A\",\n    \"status\": \"available\",\n    \"notes_ar\": null,\n    \"notes_en\": null\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Show rooms",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/rooms/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "rooms",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update rooms",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/rooms/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "rooms",
+                                        "{{entity_id}}"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"name_ar\": \"قاعة 101\",\n    \"name_en\": \"Room 101\",\n    \"type\": \"class\",\n    \"capacity\": 40,\n    \"location_ar\": \"المبنى أ\",\n    \"location_en\": \"Building A\",\n    \"status\": \"available\",\n    \"notes_ar\": null,\n    \"notes_en\": null\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete rooms",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/rooms/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "rooms",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "List resources",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/resources",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "resources"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create resources",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/resources",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "resources"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"name_ar\": \"بروجكتور\",\n    \"name_en\": \"Projector\",\n    \"type\": \"av\",\n    \"quantity\": 10,\n    \"location_ar\": null,\n    \"location_en\": null,\n    \"status\": \"available\",\n    \"notes_ar\": null,\n    \"notes_en\": null\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Show resources",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/resources/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "resources",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update resources",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/resources/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "resources",
+                                        "{{entity_id}}"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"name_ar\": \"بروجكتور\",\n    \"name_en\": \"Projector\",\n    \"type\": \"av\",\n    \"quantity\": 10,\n    \"location_ar\": null,\n    \"location_en\": null,\n    \"status\": \"available\",\n    \"notes_ar\": null,\n    \"notes_en\": null\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete resources",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/resources/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "resources",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "List courses",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/courses",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "courses"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create courses",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/courses",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "courses"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"department_id\": \"{{department_uuid}}\",\n    \"code\": \"CS101\",\n    \"name_ar\": \"مقدمة في الحاسوب\",\n    \"name_en\": \"Intro to CS\",\n    \"required_hours\": 3,\n    \"room_consumed_hours\": 2,\n    \"lab_consumed_hours\": 1,\n    \"has_lab_component\": true\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Show courses",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/courses/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "courses",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update courses",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/courses/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "courses",
+                                        "{{entity_id}}"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"department_id\": \"{{department_uuid}}\",\n    \"code\": \"CS101\",\n    \"name_ar\": \"مقدمة في الحاسوب\",\n    \"name_en\": \"Intro to CS\",\n    \"required_hours\": 3,\n    \"room_consumed_hours\": 2,\n    \"lab_consumed_hours\": 1,\n    \"has_lab_component\": true\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete courses",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/courses/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "courses",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "List sections",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/sections",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "sections"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create sections",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/sections",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "sections"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"course_id\": \"{{course_uuid}}\",\n    \"section_name\": \"A\",\n    \"section_type\": \"room\",\n    \"capacity\": 35\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Show sections",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/sections/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "sections",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update sections",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/sections/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "sections",
+                                        "{{entity_id}}"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"course_id\": \"{{course_uuid}}\",\n    \"section_name\": \"A\",\n    \"section_type\": \"room\",\n    \"capacity\": 35\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete sections",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/sections/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "sections",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "List schedule-settings",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/schedule-settings",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "schedule-settings"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create schedule-settings",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/schedule-settings",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "schedule-settings"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"day_start\": \"08:00\",\n    \"day_end\": \"18:00\",\n    \"slot_minutes\": 50,\n    \"gap_minutes\": 10,\n    \"max_daily_lectures\": 6,\n    \"capacity_threshold\": 80\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Show schedule-settings",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/schedule-settings/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "schedule-settings",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update schedule-settings",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/schedule-settings/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "schedule-settings",
+                                        "{{entity_id}}"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"day_start\": \"08:00\",\n    \"day_end\": \"18:00\",\n    \"slot_minutes\": 50,\n    \"gap_minutes\": 10,\n    \"max_daily_lectures\": 6,\n    \"capacity_threshold\": 80\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete schedule-settings",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/admin/schedule-settings/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "admin",
+                                        "schedule-settings",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Coordinator",
+                    "auth": {
+                        "type": "bearer",
+                        "bearer": [
+                            {
+                                "key": "token",
+                                "value": "{{token}}",
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "item": [
+                        {
+                            "name": "Lookups — buildings",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/lookups/buildings",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "lookups",
+                                        "buildings"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Lookups — room types",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/lookups/room-types",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "lookups",
+                                        "room-types"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Lookups — course types",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/lookups/course-types",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "lookups",
+                                        "course-types"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "List coordinator resources",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/resources",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "resources"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create coordinator resources",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/resources",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "resources"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"name_ar\": \"بروجكتور\",\n    \"name_en\": \"Projector\",\n    \"type\": \"av\",\n    \"quantity\": 10,\n    \"location_ar\": null,\n    \"location_en\": null,\n    \"status\": \"available\",\n    \"notes_ar\": null,\n    \"notes_en\": null\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Show coordinator resources",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/resources/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "resources",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update coordinator resources",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/resources/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "resources",
+                                        "{{entity_id}}"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"name_ar\": \"بروجكتور\",\n    \"name_en\": \"Projector\",\n    \"type\": \"av\",\n    \"quantity\": 10,\n    \"location_ar\": null,\n    \"location_en\": null,\n    \"status\": \"available\",\n    \"notes_ar\": null,\n    \"notes_en\": null\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete coordinator resources",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/resources/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "resources",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "List coordinator rooms",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/rooms",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "rooms"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create coordinator rooms",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/rooms",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "rooms"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"name_ar\": \"قاعة 101\",\n    \"name_en\": \"Room 101\",\n    \"type\": \"class\",\n    \"capacity\": 40,\n    \"location_ar\": \"المبنى أ\",\n    \"location_en\": \"Building A\",\n    \"status\": \"available\",\n    \"notes_ar\": null,\n    \"notes_en\": null\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Show coordinator rooms",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/rooms/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "rooms",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update coordinator rooms",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/rooms/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "rooms",
+                                        "{{entity_id}}"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"name_ar\": \"قاعة 101\",\n    \"name_en\": \"Room 101\",\n    \"type\": \"class\",\n    \"capacity\": 40,\n    \"location_ar\": \"المبنى أ\",\n    \"location_en\": \"Building A\",\n    \"status\": \"available\",\n    \"notes_ar\": null,\n    \"notes_en\": null\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete coordinator rooms",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/rooms/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "rooms",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "List coordinator courses",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/courses",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "courses"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create coordinator courses",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/courses",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "courses"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"department_id\": \"{{department_uuid}}\",\n    \"code\": \"CS102\",\n    \"name_ar\": \"برمجة\",\n    \"name_en\": \"Programming\",\n    \"required_hours\": 3,\n    \"has_lab_component\": false\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Show coordinator courses",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/courses/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "courses",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update coordinator courses",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/courses/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "courses",
+                                        "{{entity_id}}"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"department_id\": \"{{department_uuid}}\",\n    \"code\": \"CS102\",\n    \"name_ar\": \"برمجة\",\n    \"name_en\": \"Programming\",\n    \"required_hours\": 3,\n    \"has_lab_component\": false\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete coordinator courses",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/courses/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "courses",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "List coordinator sections",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/sections",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "sections"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "semester_id",
+                                            "value": "{{semester_uuid}}",
+                                            "description": "Optional: filter sections by courses offered in semester"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create coordinator sections",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/sections",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "sections"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"course_id\": \"{{course_uuid}}\",\n    \"section_name\": \"A\",\n    \"section_type\": \"room\",\n    \"capacity\": 35\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Show coordinator sections",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/sections/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "sections",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update coordinator sections",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/sections/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "sections",
+                                        "{{entity_id}}"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"course_id\": \"{{course_uuid}}\",\n    \"section_name\": \"A\",\n    \"section_type\": \"room\",\n    \"capacity\": 35\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete coordinator sections",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/sections/{{entity_id}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "sections",
+                                        "{{entity_id}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Sync section instructors",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/sections/{{section_uuid}}/instructors",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "sections",
+                                        "{{section_uuid}}",
+                                        "instructors"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"instructor_ids\": [\n        \"{{instructor_uuid}}\"\n    ]\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Sync course offering (course-semester)",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/course-semester",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "course-semester"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"course_id\": \"{{course_uuid}}\",\n    \"semester_id\": \"{{semester_uuid}}\",\n    \"status\": \"active\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "List lecture requests",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/lecture-requests",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "lecture-requests"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update lecture request",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/lecture-requests/{{lecture_request_uuid}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "lecture-requests",
+                                        "{{lecture_request_uuid}}"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"status\": \"approved\",\n    \"review_note\": \"OK\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "List schedule plans",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/schedules",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "schedules"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "semester_id",
+                                            "value": "{{semester_uuid}}",
+                                            "description": "Optional filter"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create schedule plan (draft)",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/schedules",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "schedules"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"semester_id\": \"{{semester_uuid}}\",\n    \"status\": \"draft\",\n    \"notes\": \"Draft plan\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Show schedule plan + sessions",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/schedules/{{schedule_plan_uuid}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "schedules",
+                                        "{{schedule_plan_uuid}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update schedule plan",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/schedules/{{schedule_plan_uuid}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "schedules",
+                                        "{{schedule_plan_uuid}}"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"status\": \"draft\",\n    \"notes\": \"Updated notes\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete schedule plan",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/schedules/{{schedule_plan_uuid}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "schedules",
+                                        "{{schedule_plan_uuid}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Publish from generation",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/coordinator/schedules/publish-from-generation",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "coordinator",
+                                        "schedules",
+                                        "publish-from-generation"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"algorithm\": \"backtracking\",\n    \"semester_id\": \"{{semester_uuid}}\",\n    \"settings_id\": \"{{schedule_settings_uuid}}\",\n    \"schedule_settings\": null,\n    \"baseDraft\": null,\n    \"notes\": \"Published via API\",\n    \"seed\": 1,\n    \"instructor_availabilities\": [\n        {\n            \"instructor_id\": \"{{instructor_uuid}}\",\n            \"day_of_week\": \"monday\",\n            \"start\": \"08:00\",\n            \"end\": \"14:00\"\n        }\n    ]\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Instructor",
+                    "auth": {
+                        "type": "bearer",
+                        "bearer": [
+                            {
+                                "key": "token",
+                                "value": "{{token}}",
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "item": [
+                        {
+                            "name": "List availabilities",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/instructor/availabilities",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "instructor",
+                                        "availabilities"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create availability cell",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/instructor/availabilities",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "instructor",
+                                        "availabilities"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"day_of_week\": \"sunday\",\n    \"start_time\": \"08:00\",\n    \"end_time\": \"12:00\",\n    \"status\": \"preferred\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update availability cell",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/instructor/availabilities/{{availability_uuid}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "instructor",
+                                        "availabilities",
+                                        "{{availability_uuid}}"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"day_of_week\": \"monday\",\n    \"start_time\": \"09:00\",\n    \"end_time\": \"13:00\",\n    \"status\": \"blocked\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete availability cell",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/instructor/availabilities/{{availability_uuid}}",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "instructor",
+                                        "availabilities",
+                                        "{{availability_uuid}}"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Weekly schedule",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/instructor/weekly-schedule",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "instructor",
+                                        "weekly-schedule"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "semester_id",
+                                            "value": "{{semester_uuid}}"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Weekly schedule PDF",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/instructor/weekly-schedule/pdf",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "instructor",
+                                        "weekly-schedule",
+                                        "pdf"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "semester_id",
+                                            "value": "{{semester_uuid}}"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "List my lecture requests",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/instructor/lecture-requests",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "instructor",
+                                        "lecture-requests"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create lecture request",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/instructor/lecture-requests",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "instructor",
+                                        "lecture-requests"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"schedule_session_id\": \"{{schedule_session_uuid}}\",\n    \"request_type\": \"reschedule\",\n    \"requested_date\": \"2026-05-01\",\n    \"note\": \"Need different slot\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Student",
+                    "auth": {
+                        "type": "bearer",
+                        "bearer": [
+                            {
+                                "key": "token",
+                                "value": "{{token}}",
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "item": [
+                        {
+                            "name": "Weekly schedule",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/student/weekly-schedule",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "student",
+                                        "weekly-schedule"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "semester_id",
+                                            "value": "{{semester_uuid}}"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Weekly schedule PDF",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/student/weekly-schedule/pdf",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "student",
+                                        "weekly-schedule",
+                                        "pdf"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "semester_id",
+                                            "value": "{{semester_uuid}}"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Grades by semester",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/student/grades",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "student",
+                                        "grades"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "semester_id",
+                                            "value": "{{semester_uuid}}"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Grades PDF",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/student/grades/pdf",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "student",
+                                        "grades",
+                                        "pdf"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "semester_id",
+                                            "value": "{{semester_uuid}}"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Management reports",
+                    "auth": {
+                        "type": "bearer",
+                        "bearer": [
+                            {
+                                "key": "token",
+                                "value": "{{token}}",
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "item": [
+                        {
+                            "name": "Classroom occupancy",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/management/reports/classroom-occupancy",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "management",
+                                        "reports",
+                                        "classroom-occupancy"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "semester_id",
+                                            "value": "{{semester_uuid}}"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Lab utilization",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/management/reports/lab-utilization",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "management",
+                                        "reports",
+                                        "lab-utilization"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "semester_id",
+                                            "value": "{{semester_uuid}}"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Study hours distribution",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/management/reports/study-hours-distribution",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "management",
+                                        "reports",
+                                        "study-hours-distribution"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "semester_id",
+                                            "value": "{{semester_uuid}}"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Peak periods",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/management/reports/peak-periods",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "management",
+                                        "reports",
+                                        "peak-periods"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "semester_id",
+                                            "value": "{{semester_uuid}}"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Resource utilization",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/management/reports/resource-utilization",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "management",
+                                        "reports",
+                                        "resource-utilization"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "semester_id",
+                                            "value": "{{semester_uuid}}",
+                                            "description": "Optional"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Compliance restrictions",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/management/reports/compliance-restrictions",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "management",
+                                        "reports",
+                                        "compliance-restrictions"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "semester_id",
+                                            "value": "{{semester_uuid}}"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Exams",
+                    "auth": {
+                        "type": "bearer",
+                        "bearer": [
+                            {
+                                "key": "token",
+                                "value": "{{token}}",
+                                "type": "string"
+                            }
+                        ]
+                    },
+                    "item": [
+                        {
+                            "name": "List exam sessions (sections + status)",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/exams/sessions",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "exams",
+                                        "sessions"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "semester_id",
+                                            "value": "{{semester_uuid}}"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Mark section grades done",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/exams/sessions/mark-done",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "exams",
+                                        "sessions",
+                                        "mark-done"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"section_id\": \"{{section_uuid}}\",\n    \"semester_id\": \"{{semester_uuid}}\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Upsert session grade row",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/exams/grades",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "exams",
+                                        "grades"
+                                    ]
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"student_id\": \"{{student_user_uuid}}\",\n    \"schedule_session_id\": \"{{schedule_session_uuid}}\",\n    \"oral\": 5,\n    \"lab\": 10,\n    \"midterm\": 25,\n    \"final\": 40,\n    \"total\": 80,\n    \"letter_grade\": \"B\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Session grades PDF",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/api/exams/grades/session-pdf",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "exams",
+                                        "grades",
+                                        "session-pdf"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "schedule_session_id",
+                                            "value": "{{schedule_session_uuid}}"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,40 @@
+{
+  "study_days": {
+    "sunday": true,
+    "monday": true,
+    "tuesday": true,
+    "wednesday": true,
+    "thursday": true,
+    "friday": false,
+    "saturday": false
+  },
+  "day_start": "08:00",
+  "day_end": "18:00",
+  "slot_minutes": 50,
+  "gap_minutes": 10,
+  "break_times": [
+    { "day": "wednesday", "start": "12:00", "end": "13:00" }
+  ],
+  "hard_constraints": {
+    "no_instructor_overlap": { "enabled": true },
+    "no_room_overlap": { "enabled": true },
+    "room_capacity": { "enabled": true },
+    "lab_for_lab": { "enabled": true },
+    "working_hours": { "enabled": true },
+    "instructor_availability": { "enabled": false },
+    "capacity_threshold": { "enabled": false }
+  },
+  "soft_constraints": {
+    "instructor_preferences": { "enabled": false, "weight": 1 },
+    "load_balance": { "enabled": true, "weight": 3 },
+    "avoid_back_to_back": { "enabled": true, "weight": 5 },
+    "student_gaps": { "enabled": false, "weight": 2 },
+    "morning_preference": { "enabled": true, "weight": 2 },
+    "department_proximity": { "enabled": false, "weight": 1 },
+    "max_daily_lectures": { "enabled": true, "weight": 4 }
+  },
+  "room_constraints": {},
+  "load_settings": {},
+  "capacity_threshold": 0.9,
+  "max_daily_lectures": 5
+}
