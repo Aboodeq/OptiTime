@@ -4,16 +4,30 @@
       <div class="mb-3">
         <h1 class="h4 fw-bold mb-0">{{ t('pages.coordinatorLectureRequests.title') }}</h1>
         <p class="dashboard-card__meta mb-0">{{ t('pages.coordinatorLectureRequests.subtitle') }}</p>
+        <p v-if="apiModeHint" class="dashboard-card__meta mb-0 small text-secondary">
+          {{ t('pages.coordinatorLectureRequests.apiHint') }}
+        </p>
       </div>
 
+      <p v-if="requestsStore.loadingCoordinator" class="text-secondary small py-2 mb-0">
+        {{ t('common.loading') }}…
+      </p>
+
       <AppDataTable
+        v-else
         :columns="columns"
-        :rows="requestsStore.requests"
+        :rows="requestsStore.coordinatorRequests"
         row-key="id"
         :empty-text="t('pages.coordinatorLectureRequests.empty')"
       >
         <template #cell-type="{ row }">
           {{ t(`pages.coordinatorWeeklySchedule.requests.types.${row.request_type}`) }}
+        </template>
+        <template #cell-course="{ row }">
+          <span class="fw-semibold">{{ row.course_label || '—' }}</span>
+        </template>
+        <template #cell-instructor_name="{ row }">
+          {{ row.instructor_name || row.instructor_id || '—' }}
         </template>
         <template #cell-status="{ row }">
           {{ t(`pages.coordinatorWeeklySchedule.requests.statuses.${row.status}`) }}
@@ -108,9 +122,10 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toastification'
+import { authService } from '@/features/auth/api/auth.service'
 import AppButton from '@/components/common/AppButton.vue'
 import AppConfirmDialog from '@/components/common/AppConfirmDialog.vue'
 import AppDataTable from '@/components/common/AppDataTable.vue'
@@ -133,18 +148,32 @@ const deleteOpen = ref(false)
 const reviewForm = ref({ status: 'pending', review_note: '' })
 const editForm = ref({ requested_date: '', note: '' })
 
-const canReview = computed(() => authStore.hasPermission('lecture_requests.view'))
-const canModify = computed(() => authStore.hasPermission('lecture_requests.update'))
-const canDelete = computed(() => authStore.hasPermission('lecture_requests.update'))
+const apiModeHint = computed(() => !authService.isDemoMode())
+
+const canReview = computed(() => authStore.hasPermission('lecture_requests.update'))
+const canModify = computed(
+  () => authStore.hasPermission('lecture_requests.update') && authService.isDemoMode(),
+)
+const canDelete = computed(
+  () => authStore.hasPermission('lecture_requests.update') && authService.isDemoMode(),
+)
 
 const columns = computed(() => [
   { key: 'type', label: t('pages.coordinatorWeeklySchedule.requests.columns.type') },
-  { key: 'instructor_id', label: t('pages.coordinatorWeeklySchedule.requests.columns.instructor') },
-  { key: 'schedule_session_id', label: t('pages.coordinatorWeeklySchedule.requests.columns.course') },
+  { key: 'instructor_name', label: t('pages.coordinatorWeeklySchedule.requests.columns.instructor') },
+  { key: 'course', label: t('pages.coordinatorWeeklySchedule.requests.columns.course') },
   { key: 'requested_date', label: t('pages.coordinatorWeeklySchedule.requests.columns.requestedDate') },
   { key: 'status', label: t('pages.coordinatorWeeklySchedule.requests.columns.status') },
   { key: 'actions', label: t('pages.coordinatorWeeklySchedule.requests.columns.actions') },
 ])
+
+onMounted(async () => {
+  try {
+    await requestsStore.loadCoordinatorRequests()
+  } catch {
+    toast.error(t('pages.coordinatorLectureRequests.errors.loadFailed'))
+  }
+})
 
 function startReview(row) {
   if (!canReview.value || !isPendingRequest(row)) return
@@ -153,14 +182,17 @@ function startReview(row) {
   reviewOpen.value = true
 }
 
-function confirmReview() {
-  const current = requestsStore.requests.find((item) => item.id === activeId.value)
+async function confirmReview() {
+  const current = requestsStore.coordinatorRequests.find((item) => item.id === activeId.value)
   if (!current || !isPendingRequest(current)) return
-  requestsStore.updateRequest(activeId.value, {
+  const ok = await requestsStore.reviewCoordinatorRequest(activeId.value, {
     status: reviewForm.value.status,
     review_note: reviewForm.value.review_note.trim(),
-    reviewed_at: new Date().toISOString(),
   })
+  if (!ok) {
+    toast.error(t('pages.coordinatorLectureRequests.errors.reviewFailed'))
+    return
+  }
   reviewOpen.value = false
   toast.success(t('pages.coordinatorWeeklySchedule.requests.toasts.reviewSaved'))
 }
@@ -172,13 +204,14 @@ function startEdit(row) {
   editOpen.value = true
 }
 
-function confirmEdit() {
-  const current = requestsStore.requests.find((item) => item.id === activeId.value)
+async function confirmEdit() {
+  const current = requestsStore.coordinatorRequests.find((item) => item.id === activeId.value)
   if (!current || !isPendingRequest(current)) return
-  requestsStore.updateRequest(activeId.value, {
+  const updated = await requestsStore.coordinatorEditPending(activeId.value, {
     requested_date: editForm.value.requested_date,
     note: editForm.value.note.trim(),
   })
+  if (!updated) return
   editOpen.value = false
   toast.success(t('pages.coordinatorWeeklySchedule.requests.toasts.requestUpdated'))
 }
@@ -189,10 +222,11 @@ function startDelete(row) {
   deleteOpen.value = true
 }
 
-function confirmDelete() {
-  const current = requestsStore.requests.find((item) => item.id === activeId.value)
+async function confirmDelete() {
+  const current = requestsStore.coordinatorRequests.find((item) => item.id === activeId.value)
   if (!current || !isPendingRequest(current)) return
-  requestsStore.deleteRequest(activeId.value)
+  const deleted = await requestsStore.deletePending(activeId.value)
+  if (!deleted) return
   deleteOpen.value = false
   toast.success(t('pages.coordinatorWeeklySchedule.requests.toasts.requestDeleted'))
 }

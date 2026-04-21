@@ -4,6 +4,7 @@
     "language": "اللغة",
     "arabic": "العربية",
     "english": "English",
+    "loading": "جاري التحميل…",
     "actions": {
       "logout": "تسجيل الخروج",
       "close": "إغلاق",

@@ -1,3 +1,5 @@
+import { MANAGEMENT_REPORT_PERMISSIONS } from '@/features/management-reports/model/constants/reportPermissions'
+
 export const loginRoute = {
   path: '/login',
   name: 'login',
@@ -34,6 +36,17 @@ export const dashboardRoute = {
   name: 'dashboard',
   component: () => import('@/features/dashboard/ui/pages/DashboardPage.vue'),
   meta: { requiresAuth: true, titleKey: 'routes.dashboard' },
+}
+
+export const managementReportsRoute = {
+  path: '/management/reports',
+  name: 'management-reports',
+  component: () => import('@/features/management-reports/ui/pages/ManagementReportsPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: [...MANAGEMENT_REPORT_PERMISSIONS],
+    titleKey: 'routes.managementReports',
+  },
 }
 
 export const rolesManagementRoute = {
@@ -111,7 +124,12 @@ export const instructorLectureRequestsRoute = {
     import('@/features/lecture-requests/ui/pages/InstructorLectureRequestsPage.vue'),
   meta: {
     requiresAuth: true,
-    requiredPermissions: ['instructor.requests.create'],
+    requiredPermissions: [
+      'instructor.requests.view',
+      'instructor.requests.create',
+      'instructor.requests.update',
+      'instructor.requests.delete',
+    ],
     titleKey: 'routes.instructorLectureRequests',
   },
 }
@@ -135,6 +153,17 @@ export const studentGradesRoute = {
     requiresAuth: true,
     requiredPermissions: ['student.grades.view'],
     titleKey: 'routes.studentGrades',
+  },
+}
+
+export const examsDashboardRoute = {
+  path: '/exams',
+  name: 'exams-dashboard',
+  component: () => import('@/features/exams/ui/pages/ExamsDashboardPage.vue'),
+  meta: {
+    requiresAuth: true,
+    requiredPermissions: ['exam_sessions.view'],
+    titleKey: 'routes.examsDashboard',
   },
 }
 

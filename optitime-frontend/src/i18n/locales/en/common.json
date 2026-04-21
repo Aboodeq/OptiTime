@@ -4,6 +4,7 @@
     "language": "Language",
     "arabic": "Arabic",
     "english": "English",
+    "loading": "Loading…",
     "actions": {
       "logout": "Logout",
       "close": "Close",

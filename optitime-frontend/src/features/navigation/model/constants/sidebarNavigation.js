@@ -1,3 +1,5 @@
+import { MANAGEMENT_REPORT_PERMISSIONS } from '@/features/management-reports/model/constants/reportPermissions'
+
 export const BASE_SIDEBAR_SECTIONS = Object.freeze([
   {
     id: 'home',
@@ -9,6 +11,13 @@ export const BASE_SIDEBAR_SECTIONS = Object.freeze([
         icon: 'bi bi-grid-1x2-fill',
         labelKey: 'routes.dashboard',
         permissions: ['dashboard.view'],
+      },
+      {
+        id: 'management-reports',
+        routeName: 'management-reports',
+        icon: 'bi bi-graph-up-arrow',
+        labelKey: 'routes.managementReports',
+        permissions: [...MANAGEMENT_REPORT_PERMISSIONS],
       },
       {
         id: 'user-settings',
@@ -43,7 +52,12 @@ export const BASE_SIDEBAR_SECTIONS = Object.freeze([
         routeName: 'instructor-lecture-requests',
         icon: 'bi bi-envelope-paper',
         labelKey: 'routes.instructorLectureRequests',
-        permissions: ['instructor.requests.create'],
+        permissions: [
+          'instructor.requests.view',
+          'instructor.requests.create',
+          'instructor.requests.update',
+          'instructor.requests.delete',
+        ],
       },
       {
         id: 'student-weekly-schedule',
@@ -58,6 +72,13 @@ export const BASE_SIDEBAR_SECTIONS = Object.freeze([
         icon: 'bi bi-journal-check',
         labelKey: 'routes.studentGrades',
         permissions: ['student.grades.view'],
+      },
+      {
+        id: 'exams-dashboard',
+        routeName: 'exams-dashboard',
+        icon: 'bi bi-clipboard2-pulse',
+        labelKey: 'routes.examsDashboard',
+        permissions: ['exam_sessions.view'],
       },
       {
         id: 'exams-session-grades',

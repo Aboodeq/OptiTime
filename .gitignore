@@ -4,3 +4,5 @@ optitime-frontend/dist
 optitime-frontend/dist-ssr
 optitime-frontend/.env.local
 optitime-frontend/.env.*.local
+.vscode
+.cursor

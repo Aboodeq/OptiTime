@@ -144,6 +144,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::middleware('permission:instructor.requests.view')->get('/lecture-requests', [InstructorLectureRequestController::class, 'index']);
         Route::middleware('permission:instructor.requests.create')->post('/lecture-requests', [InstructorLectureRequestController::class, 'store']);
+        Route::middleware('permission:instructor.requests.update')->put('/lecture-requests/{id}', [InstructorLectureRequestController::class, 'update']);
+        Route::middleware('permission:instructor.requests.delete')->delete('/lecture-requests/{id}', [InstructorLectureRequestController::class, 'destroy']);
     });
 
     Route::prefix('student')->group(function () {
