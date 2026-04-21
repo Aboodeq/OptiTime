@@ -64,8 +64,12 @@
     :is-session-done="isSessionDone"
     :toggling-done="togglingDone"
     :saving-id="savingId"
+    :can-reopen-session="canReopenSession"
+    :show-export-pdf="showExportPdf"
+    :exporting-pdf="exportingPdf"
     @close="gradesDialogOpen = false"
     @toggle-done="toggleDone"
+    @export-pdf="exportSessionPdf"
     @update-score="({ studentId, key, value }) => updateDraft(studentId, key, value)"
     @save-row="saveRow"
   />
@@ -77,12 +81,15 @@ import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toastification'
 import AppSectionPanel from '@/components/common/AppSectionPanel.vue'
 import AppShell from '@/components/layout/AppShell.vue'
+import { examsService } from '@/features/exams/api/exams.service'
 import { computeLetterGrade, computeTotal, normalizeScore } from '@/features/session-grades/model/constants/gradeScale'
 import { useSessionGradesPage } from '@/features/session-grades/model/composables/useSessionGradesPage'
 import SessionGradesDialog from '@/features/session-grades/ui/components/SessionGradesDialog.vue'
+import { useAuthStore } from '@/store/auth.store'
 
 const { t } = useI18n()
 const toast = useToast()
+const authStore = useAuthStore()
 const {
   activeSemester,
   sessions,
@@ -92,6 +99,7 @@ const {
   buildDraft,
   saveGradeDraft,
   markSessionDone,
+  usesExamApiSync,
 } = useSessionGradesPage()
 
 const sessionSearch = ref('')
@@ -99,7 +107,12 @@ const draftsByStudent = ref({})
 const savingId = ref('')
 const gradesDialogOpen = ref(false)
 const togglingDone = ref(false)
+const exportingPdf = ref(false)
 const isSessionDone = computed(() => Boolean(selectedSession.value?.is_done))
+const canReopenSession = computed(() => !usesExamApiSync.value)
+const showExportPdf = computed(
+  () => usesExamApiSync.value && authStore.hasPermission('exam_grades.export'),
+)
 
 const filteredSessions = computed(() => {
   const query = sessionSearch.value.trim().toLowerCase()
@@ -221,8 +234,12 @@ function localizedDayLabel(day) {
 
 async function toggleDone() {
   if (!selectedSession.value?.schedule_session_id) return
-  togglingDone.value = true
   const nextDone = !isSessionDone.value
+  if (usesExamApiSync.value && !nextDone) {
+    toast.info(t('pages.examsSessionGrades.toasts.reopenNotAvailable'))
+    return
+  }
+  togglingDone.value = true
   const updated = await markSessionDone(selectedSession.value.schedule_session_id, nextDone)
   togglingDone.value = false
   if (!updated) {
@@ -234,6 +251,26 @@ async function toggleDone() {
       ? t('pages.examsSessionGrades.toasts.markedDone')
       : t('pages.examsSessionGrades.toasts.reopened'),
   )
+}
+
+async function exportSessionPdf() {
+  const sid = selectedSession.value?.schedule_session_id
+  if (!sid) return
+  exportingPdf.value = true
+  try {
+    const blob = await examsService.downloadSessionGradesPdf(sid)
+    const url = URL.createObjectURL(blob)
+    const anchor = document.createElement('a')
+    anchor.href = url
+    anchor.download = `session-grades-${sid.slice(0, 8)}.pdf`
+    anchor.click()
+    URL.revokeObjectURL(url)
+    toast.success(t('pages.examsSessionGrades.toasts.pdfDownloaded'))
+  } catch {
+    toast.error(t('pages.examsSessionGrades.toasts.pdfFailed'))
+  } finally {
+    exportingPdf.value = false
+  }
 }
 </script>
 

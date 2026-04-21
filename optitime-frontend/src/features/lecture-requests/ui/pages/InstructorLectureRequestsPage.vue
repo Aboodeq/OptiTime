@@ -6,17 +6,28 @@
         <p class="dashboard-card__meta mb-0">{{ t('pages.instructorLectureRequests.subtitle') }}</p>
       </div>
 
+      <p v-if="requestsStore.loadingInstructor" class="text-secondary small py-2 mb-0">
+        {{ t('common.loading') }}…
+      </p>
+
       <AppDataTable
+        v-else
         :columns="columns"
-        :rows="instructorRequests"
+        :rows="requestsStore.instructorRequests"
         row-key="id"
         :empty-text="t('pages.instructorLectureRequests.empty')"
       >
         <template #cell-type="{ row }">
           {{ t(`pages.coordinatorWeeklySchedule.requests.types.${row.request_type}`) }}
         </template>
+        <template #cell-course="{ row }">
+          <span class="fw-semibold">{{ row.course_label || '—' }}</span>
+        </template>
         <template #cell-status="{ row }">
           {{ t(`pages.coordinatorWeeklySchedule.requests.statuses.${row.status}`) }}
+        </template>
+        <template #cell-instructor_name="{ row }">
+          {{ row.instructor_name || '—' }}
         </template>
         <template #cell-actions="{ row }">
           <div class="actions-cell">
@@ -82,7 +93,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toastification'
 import AppButton from '@/components/common/AppButton.vue'
@@ -105,19 +116,26 @@ const editOpen = ref(false)
 const deleteOpen = ref(false)
 const editForm = ref({ requested_date: '', note: '' })
 
-const canModifyOwn = computed(() => authStore.hasPermission('instructor.requests.create'))
-const canDeleteOwn = computed(() => authStore.hasPermission('instructor.requests.create'))
-const instructorRequests = computed(() => requestsStore.requests)
+const canModifyOwn = computed(() => authStore.hasPermission('instructor.requests.update'))
+const canDeleteOwn = computed(() => authStore.hasPermission('instructor.requests.delete'))
 
 const columns = computed(() => [
   { key: 'type', label: t('pages.coordinatorWeeklySchedule.requests.columns.type') },
-  { key: 'schedule_session_id', label: t('pages.coordinatorWeeklySchedule.requests.columns.course') },
+  { key: 'course', label: t('pages.coordinatorWeeklySchedule.requests.columns.course') },
   { key: 'requested_date', label: t('pages.coordinatorWeeklySchedule.requests.columns.requestedDate') },
   { key: 'status', label: t('pages.coordinatorWeeklySchedule.requests.columns.status') },
-  { key: 'instructor_id', label: t('pages.coordinatorWeeklySchedule.requests.columns.instructor') },
+  { key: 'instructor_name', label: t('pages.coordinatorWeeklySchedule.requests.columns.instructor') },
   { key: 'note', label: t('pages.instructorLectureRequests.columns.note') },
   { key: 'actions', label: t('pages.coordinatorWeeklySchedule.requests.columns.actions') },
 ])
+
+onMounted(async () => {
+  try {
+    await requestsStore.loadInstructorRequests()
+  } catch {
+    toast.error(t('pages.instructorLectureRequests.errors.loadFailed'))
+  }
+})
 
 function startEdit(row) {
   if (!canModifyOwn.value || !isPendingRequest(row)) return
@@ -126,14 +144,17 @@ function startEdit(row) {
   editOpen.value = true
 }
 
-function confirmEdit() {
-  const current = requestsStore.requests.find((item) => item.id === activeId.value)
+async function confirmEdit() {
+  const current = requestsStore.instructorRequests.find((item) => item.id === activeId.value)
   if (!current || !isPendingRequest(current)) return
-  const updated = requestsStore.updateRequest(activeId.value, {
+  const updated = await requestsStore.instructorUpdatePending(activeId.value, {
     requested_date: editForm.value.requested_date,
     note: editForm.value.note.trim(),
   })
-  if (!updated) return
+  if (!updated) {
+    toast.error(t('pages.instructorLectureRequests.errors.updateFailed'))
+    return
+  }
   editOpen.value = false
   toast.success(t('pages.coordinatorWeeklySchedule.requests.toasts.requestUpdated'))
 }
@@ -144,11 +165,14 @@ function startDelete(row) {
   deleteOpen.value = true
 }
 
-function confirmDelete() {
-  const current = requestsStore.requests.find((item) => item.id === activeId.value)
+async function confirmDelete() {
+  const current = requestsStore.instructorRequests.find((item) => item.id === activeId.value)
   if (!current || !isPendingRequest(current)) return
-  const deleted = requestsStore.deleteRequest(activeId.value)
-  if (!deleted) return
+  const deleted = await requestsStore.deleteInstructorRequest(activeId.value)
+  if (!deleted) {
+    toast.error(t('pages.instructorLectureRequests.errors.deleteFailed'))
+    return
+  }
   deleteOpen.value = false
   toast.success(t('pages.coordinatorWeeklySchedule.requests.toasts.requestDeleted'))
 }

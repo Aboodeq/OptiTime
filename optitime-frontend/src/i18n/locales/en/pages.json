@@ -102,11 +102,104 @@
       }
     },
     "dashboard": {
-      "title": "Dashboard placeholder",
-      "subtitle": "Auth is working. This page only exists as a protected landing point after login.",
+      "title": "Home",
+      "subtitle": "Jump to the areas you can access. System tools appear below when your role allows them.",
+      "greeting": "Welcome, {name}",
+      "greetingFallback": "there",
       "role": "Role",
       "email": "Email",
-      "permissionCount": "Granted permissions: {count}"
+      "permissionCount": "Granted permissions: {count}",
+      "managementTitle": "System administration",
+      "shortcutsTitle": "Shortcuts"
+    },
+    "managementReports": {
+      "title": "Management reports",
+      "subtitle": "Figures are based on the latest published schedule plan for the selected semester.",
+      "loadingSemesters": "Loading semesters…",
+      "loadingReports": "Loading reports…",
+      "semesterLabel": "Semester",
+      "semesterPlaceholder": "Select a semester",
+      "noSemesters": "No semesters available",
+      "pdf": {
+        "download": "Download PDF",
+        "exporting": "Building PDF…",
+        "success": "Report downloaded",
+        "failed": "Could not build the PDF. Try again or scroll to load all charts first.",
+        "needSemester": "Select a semester before exporting.",
+        "metaLine": "Semester: {semester} · Exported {generatedAt}"
+      },
+      "charts": {
+        "usedRooms": "Rooms in use",
+        "unusedRooms": "Rooms not in this plan",
+        "labDataset": "Lab metrics",
+        "classroomAria": "Chart of rooms used versus not used in the published plan",
+        "labAria": "Bar chart comparing lab session count and lab room count",
+        "studyHoursAria": "Bar chart of session counts by weekday",
+        "peakAria": "Horizontal bar chart of concurrent sections by start time",
+        "resourcesAria": "Horizontal bar chart of resource quantities",
+        "resourcesByQuantity": "Top resources by recorded quantity (inventory)."
+      },
+      "empty": {
+        "noPublishedPlan": "No published schedule for this semester yet.",
+        "noResources": "No resources found."
+      },
+      "panels": {
+        "classroom": {
+          "title": "Classroom occupancy",
+          "subtitle": "Distinct rooms used in the published plan",
+          "used": "Rooms in use",
+          "total": "Total rooms",
+          "rate": "Occupancy rate"
+        },
+        "lab": {
+          "title": "Lab utilization",
+          "subtitle": "Sessions scheduled in lab rooms",
+          "sessions": "Lab sessions",
+          "rooms": "Lab rooms",
+          "sessionsPerRoom": "Avg. sessions per lab room"
+        },
+        "studyHours": {
+          "title": "Study hours distribution",
+          "subtitle": "Session count by day of week",
+          "day": "Day",
+          "sessions": "Sessions",
+          "dayValue": "Day {day}",
+          "relative": "Relative load",
+          "scaleHint": "Bars compare each day to the busiest day in this plan.",
+          "barAria": "Relative load: {value} sessions"
+        },
+        "peak": {
+          "title": "Peak periods",
+          "subtitle": "Start times with the most concurrent sections",
+          "startTime": "Start time",
+          "concurrent": "Concurrent sections",
+          "relative": "Relative load",
+          "scaleHint": "Bars compare each slot to the peak in this list.",
+          "barAria": "Relative load: {value} concurrent sections"
+        },
+        "resources": {
+          "title": "Resources",
+          "subtitle": "Institution resource catalog (inventory)",
+          "catalogNote": "This list is the resource master data from the database. Usage on schedules is not included in this response.",
+          "name": "Name",
+          "type": "Type",
+          "quantity": "Quantity",
+          "status": "Status",
+          "location": "Location"
+        },
+        "compliance": {
+          "title": "Schedule compliance",
+          "subtitle": "Room and instructor overlap checks on the published plan",
+          "ok": "No overlapping conflicts detected",
+          "issues": "Overlaps detected",
+          "violationCount": "Violations: {count}",
+          "sessionIds": "Schedule sessions: {ids}",
+          "types": {
+            "room_overlap": "Room double-booking",
+            "instructor_overlap": "Instructor double-booking"
+          }
+        }
+      }
     },
     "rolesManagement": {
       "title": "Roles management",
@@ -510,7 +603,8 @@
         },
         "toasts": {
           "apologySubmitted": "Apology request submitted successfully.",
-          "makeupSubmitted": "Makeup lecture request submitted successfully."
+          "makeupSubmitted": "Makeup lecture request submitted successfully.",
+          "createFailed": "Could not submit the request. Check the session and date, then try again."
         },
         "logs": {
           "apologyPrepared": "Lecture apology request prepared:",
@@ -531,15 +625,26 @@
     },
     "instructorLectureRequests": {
       "title": "My lecture requests",
-      "subtitle": "Track apology and makeup requests submitted from your schedule.",
+      "subtitle": "Track apology and makeup requests submitted from your schedule. You can update or delete requests while they are still pending.",
       "empty": "No lecture requests submitted yet.",
+      "errors": {
+        "loadFailed": "Could not load lecture requests.",
+        "updateFailed": "Could not update the request. It may no longer be pending.",
+        "deleteFailed": "Could not delete the request. It may no longer be pending."
+      },
       "columns": {
         "note": "Reason"
       }
     },
     "coordinatorLectureRequests": {
       "title": "Lecture requests management",
-      "subtitle": "Check, modify, and delete instructor lecture requests."
+      "subtitle": "Review instructor apology and makeup requests (approve or reject).",
+      "apiHint": "Connected to the server: use Review to set status and coordinator notes. Editing dates or deleting requests is only available in demo mode until the API supports it.",
+      "empty": "No lecture requests yet.",
+      "errors": {
+        "loadFailed": "Could not load lecture requests.",
+        "reviewFailed": "Could not save the review. Check permissions and try again."
+      }
     },
     "studentWeeklySchedule": {
       "title": "My weekly schedule",
@@ -553,6 +658,31 @@
       },
       "sections": {
         "board": "My weekly board"
+      }
+    },
+    "examsDashboard": {
+      "title": "Exams dashboard",
+      "subtitle": "Overview of exam sessions linked to the published schedule for the selected semester.",
+      "semesterLabel": "Semester",
+      "semesterPlaceholder": "Select a semester",
+      "loadingSessions": "Loading exam sessions…",
+      "quickActions": "Quick actions",
+      "sectionsList": "Exam sessions",
+      "kpi": {
+        "sections": "Sections with sessions",
+        "sessions": "Exam sessions",
+        "done": "Marked done",
+        "pending": "Pending"
+      },
+      "actions": {
+        "enterGrades": "Enter session grades",
+        "noGradePermission": "You can view this overview; grade entry requires the exam grades permission."
+      },
+      "table": {
+        "course": "Course",
+        "section": "Section",
+        "session": "Schedule session",
+        "status": "Status"
       }
     },
     "examsSessionGrades": {
@@ -580,7 +710,8 @@
       "actions": {
         "save": "Save",
         "markDone": "Mark as done",
-        "reopen": "Reopen"
+        "reopen": "Reopen",
+        "downloadPdf": "Download PDF"
       },
       "status": {
         "done": "Session marked as done",
@@ -595,7 +726,10 @@
         "saved": "Grades saved successfully.",
         "saveFailed": "Could not save grades.",
         "markedDone": "Session marked as done.",
-        "reopened": "Session reopened for editing."
+        "reopened": "Session reopened for editing.",
+        "reopenNotAvailable": "Reopening is not available for live data; the server only supports marking a section as done.",
+        "pdfDownloaded": "PDF downloaded.",
+        "pdfFailed": "Could not download the grades PDF."
       }
     },
     "studentGrades": {

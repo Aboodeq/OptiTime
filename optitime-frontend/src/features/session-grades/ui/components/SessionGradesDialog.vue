@@ -29,10 +29,39 @@
           </span>
         </div>
 
-        <AppButton variant="outline" size="sm" :disabled="togglingDone" @click="$emit('toggle-done')">
-          <i :class="isSessionDone ? 'bi bi-arrow-counterclockwise me-1' : 'bi bi-check2-circle me-1'"></i>
-          {{ isSessionDone ? t('pages.examsSessionGrades.actions.reopen') : t('pages.examsSessionGrades.actions.markDone') }}
-        </AppButton>
+        <div class="selected-session__buttons">
+          <AppButton
+            v-if="showExportPdf"
+            variant="outline"
+            size="sm"
+            :disabled="exportingPdf"
+            @click="$emit('export-pdf')"
+          >
+            <i class="bi bi-file-earmark-pdf me-1"></i>
+            {{ t('pages.examsSessionGrades.actions.downloadPdf') }}
+          </AppButton>
+
+          <AppButton
+            v-if="!isSessionDone"
+            variant="outline"
+            size="sm"
+            :disabled="togglingDone"
+            @click="$emit('toggle-done')"
+          >
+            <i class="bi bi-check2-circle me-1"></i>
+            {{ t('pages.examsSessionGrades.actions.markDone') }}
+          </AppButton>
+          <AppButton
+            v-else-if="canReopenSession"
+            variant="outline"
+            size="sm"
+            :disabled="togglingDone"
+            @click="$emit('toggle-done')"
+          >
+            <i class="bi bi-arrow-counterclockwise me-1"></i>
+            {{ t('pages.examsSessionGrades.actions.reopen') }}
+          </AppButton>
+        </div>
       </div>
 
       <div class="dialog-grade-table">
@@ -142,9 +171,12 @@ defineProps({
   isSessionDone: { type: Boolean, default: false },
   togglingDone: { type: Boolean, default: false },
   savingId: { type: String, default: '' },
+  canReopenSession: { type: Boolean, default: true },
+  showExportPdf: { type: Boolean, default: false },
+  exportingPdf: { type: Boolean, default: false },
 })
 
-defineEmits(['close', 'toggle-done', 'update-score', 'save-row'])
+defineEmits(['close', 'toggle-done', 'update-score', 'save-row', 'export-pdf'])
 
 const { t } = useI18n()
 
@@ -190,6 +222,14 @@ function localizedDayLabel(day) {
   justify-content: space-between;
   align-items: center;
   gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.selected-session__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
 }
 
 .done-status-text {

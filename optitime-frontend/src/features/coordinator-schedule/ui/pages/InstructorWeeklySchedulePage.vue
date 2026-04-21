@@ -136,18 +136,26 @@ function openMakeupDialog(lecture) {
   makeupDialogOpen.value = true
 }
 
-function handleApologySubmit(form) {
+async function handleApologySubmit(form) {
   if (!canRequestApologyLecture.value) return
   const payload = buildRequestPayload('apology', form)
-  lectureRequestsStore.createRequest(payload)
+  const ok = await lectureRequestsStore.createInstructorRequest(payload)
+  if (!ok) {
+    toast.error(t('pages.instructorWeeklySchedule.requests.toasts.createFailed'))
+    return
+  }
   toast.success(t('pages.instructorWeeklySchedule.requests.toasts.apologySubmitted'))
   apologyDialogOpen.value = false
 }
 
-function handleMakeupSubmit(form) {
+async function handleMakeupSubmit(form) {
   if (!canRequestMakeupLecture.value) return
   const payload = buildRequestPayload('makeup', form)
-  lectureRequestsStore.createRequest(payload)
+  const ok = await lectureRequestsStore.createInstructorRequest(payload)
+  if (!ok) {
+    toast.error(t('pages.instructorWeeklySchedule.requests.toasts.createFailed'))
+    return
+  }
   toast.success(t('pages.instructorWeeklySchedule.requests.toasts.makeupSubmitted'))
   makeupDialogOpen.value = false
 }

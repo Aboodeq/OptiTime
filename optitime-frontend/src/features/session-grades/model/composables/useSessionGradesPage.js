@@ -1,10 +1,14 @@
 import { computed, ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useCoordinatorScheduleStore } from '@/features/coordinator-schedule/model/stores/coordinatorSchedule.store'
 import { useSessionGradesStore } from '@/features/session-grades/model/stores/sessionGrades.store'
+import { useAuthStore } from '@/store/auth.store'
 
 export function useSessionGradesPage() {
   const scheduleStore = useCoordinatorScheduleStore()
   const sessionGradesStore = useSessionGradesStore()
+  const { usesExamApiSync } = storeToRefs(sessionGradesStore)
+  const authStore = useAuthStore()
   const selectedSessionId = ref('')
 
   sessionGradesStore.ensureInitialized()
@@ -18,11 +22,12 @@ export function useSessionGradesPage() {
 
   const selectedStudents = computed(() => {
     if (!selectedSession.value) return []
-    const session = (scheduleStore.editableDraft?.sessions ?? []).find(
-      (item) => item.id === selectedSession.value.schedule_session_id,
-    )
-    if (!session) return []
-    return scheduleStore.getLectureStudents(session)
+    const sid = selectedSession.value.schedule_session_id
+    const board = sessionGradesStore.findBoardSession(sid)
+    if (!board) return []
+    if (Array.isArray(board.students) && board.students.length) return board.students
+    if (authStore.hasPermission('schedules.view')) return scheduleStore.getLectureStudents(board)
+    return []
   })
 
   function selectSession(sessionId) {
@@ -37,6 +42,7 @@ export function useSessionGradesPage() {
     selectedSessionId,
     selectedSession,
     selectedStudents,
+    usesExamApiSync,
     getGradeRecord: sessionGradesStore.getGradeRecord,
     buildDraft: sessionGradesStore.buildDraft,
     saveGradeDraft: sessionGradesStore.saveGradeDraft,

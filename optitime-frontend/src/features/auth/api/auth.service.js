@@ -117,6 +117,8 @@ const DEMO_USERS = Object.freeze({
       'instructor.schedule.export',
       'instructor.requests.view',
       'instructor.requests.create',
+      'instructor.requests.update',
+      'instructor.requests.delete',
     ],
   },
   student: {
