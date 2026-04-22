@@ -36,6 +36,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/auth/login', [AuthController::class, 'login']);
+Route::post('/auth/register/request-otp', [AuthController::class, 'requestRegisterOtp']);
+Route::post('/auth/register/verify-otp', [AuthController::class, 'verifyRegisterOtp']);
+Route::post('/auth/forgot-password/request-otp', [AuthController::class, 'requestForgotPasswordOtp']);
+Route::post('/auth/forgot-password/reset', [AuthController::class, 'resetPasswordWithOtp']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::middleware(['schedule.access'])->post('/schedule/generate', [ScheduleGenerationController::class, 'generate']);
@@ -144,8 +148,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::middleware('permission:instructor.requests.view')->get('/lecture-requests', [InstructorLectureRequestController::class, 'index']);
         Route::middleware('permission:instructor.requests.create')->post('/lecture-requests', [InstructorLectureRequestController::class, 'store']);
-        Route::middleware('permission:instructor.requests.update')->put('/lecture-requests/{id}', [InstructorLectureRequestController::class, 'update']);
-        Route::middleware('permission:instructor.requests.delete')->delete('/lecture-requests/{id}', [InstructorLectureRequestController::class, 'destroy']);
     });
 
     Route::prefix('student')->group(function () {

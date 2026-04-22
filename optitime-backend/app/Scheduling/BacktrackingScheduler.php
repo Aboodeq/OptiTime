@@ -21,6 +21,10 @@ final class BacktrackingScheduler
 
     
 
+    private array $precomputedCandidates = [];
+
+    private array $dayRank = [];
+
 
 
 
@@ -38,7 +42,11 @@ final class BacktrackingScheduler
     ) {
         $this->evaluator = new ConstraintEvaluator;
         $this->dayOrder = $settings->enabledStudyDayKeys();
+        $this->dayRank = array_flip($this->dayOrder);
         $this->deadline = microtime(true) + $maxSeconds;
+        foreach ($this->events as $event) {
+            $this->precomputedCandidates[$event->index] = $this->buildCandidatesForEvent($event);
+        }
     }
 
     
@@ -131,6 +139,11 @@ final class BacktrackingScheduler
 
     private function forwardCheckingFails(array $assignments): bool
     {
+        if (count($this->events) > 120) {
+            // Forward checking is very costly on large instances.
+            return false;
+        }
+
         foreach ($this->events as $ev) {
             if (isset($assignments[$ev->index]) || $ev->isFixed()) {
                 continue;
@@ -148,6 +161,16 @@ final class BacktrackingScheduler
 
     private function pickMcvIndex(array $assignments): ?int
     {
+        if (count($this->events) > 150) {
+            foreach ($this->events as $ev) {
+                if (! isset($assignments[$ev->index])) {
+                    return $ev->index;
+                }
+            }
+
+            return null;
+        }
+
         $best = null;
         $bestCount = PHP_INT_MAX;
         foreach ($this->events as $ev) {
@@ -171,7 +194,7 @@ final class BacktrackingScheduler
     private function feasibleCandidates(PlacementEvent $event, array $assignments): array
     {
         $out = [];
-        foreach ($this->sortedCandidates($event, $assignments) as $cand) {
+        foreach ($this->precomputedCandidates[$event->index] ?? [] as $cand) {
             if ($this->evaluator->violatesHardForCandidate(
                 $event,
                 $cand,
@@ -187,13 +210,6 @@ final class BacktrackingScheduler
             $out[] = $cand;
         }
 
-        usort($out, function (Placement $a, Placement $b) use ($event) {
-            $sa = $this->evaluator->candidateValueOrderingScore($event, $a, $this->settings, $this->gridCells);
-            $sb = $this->evaluator->candidateValueOrderingScore($event, $b, $this->settings, $this->gridCells);
-
-            return $sa <=> $sb;
-        });
-
         return $out;
     }
 
@@ -201,7 +217,7 @@ final class BacktrackingScheduler
 
 
 
-    private function sortedCandidates(PlacementEvent $event, array $assignments): array
+    private function buildCandidatesForEvent(PlacementEvent $event): array
     {
         $list = [];
         foreach ($this->gridCells as $cell) {
@@ -220,9 +236,14 @@ final class BacktrackingScheduler
             }
         }
 
-        usort($list, function (Placement $a, Placement $b) {
-            $da = array_search($a->day, $this->dayOrder, true);
-            $db = array_search($b->day, $this->dayOrder, true);
+        usort($list, function (Placement $a, Placement $b) use ($event) {
+            $sa = $this->evaluator->candidateValueOrderingScore($event, $a, $this->settings, $this->gridCells);
+            $sb = $this->evaluator->candidateValueOrderingScore($event, $b, $this->settings, $this->gridCells);
+            if ($sa !== $sb) {
+                return $sa <=> $sb;
+            }
+            $da = $this->dayRank[$a->day] ?? 99;
+            $db = $this->dayRank[$b->day] ?? 99;
             $da = $da === false ? 99 : $da;
             $db = $db === false ? 99 : $db;
             if ($da !== $db) {

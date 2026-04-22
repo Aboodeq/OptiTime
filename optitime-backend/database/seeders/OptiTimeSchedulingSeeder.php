@@ -28,39 +28,10 @@ class OptiTimeSchedulingSeeder extends Seeder
 {
     public function run(): void
     {
-        $faculty = Faculty::query()->create([
-            'code' => 'informatics',
-            'name_ar' => 'هندسة معلوماتية',
-            'name_en' => 'Informatics',
-            'graduation_hours' => 160,
-            'studying_level' => 4,
-            'color' => '#4361ee',
-            'is_active' => true,
-        ]);
-
-        $dept = Department::query()->create([
-            'faculty_id' => $faculty->id,
-            'code' => 'software',
-            'name_ar' => 'البرمجيات',
-            'name_en' => 'Software',
-            'is_active' => true,
-        ]);
-
-        $spec = Specialization::query()->create([
-            'code' => 'se',
-            'name_ar' => 'هندسة برمجيات',
-            'name_en' => 'Software Engineering',
-            'is_active' => true,
-        ]);
-
-        $semester = Semester::query()->create([
-            'code' => '2026-s1',
-            'name' => 'Spring 2026',
-            'academic_year' => '2025-2026',
-            'start_date' => '2026-01-01',
-            'end_date' => '2026-06-30',
-            'is_active' => true,
-        ]);
+        $faculty = Faculty::query()->create(['code' => 'informatics', 'name_ar' => 'هندسة معلوماتية', 'name_en' => 'Informatics', 'graduation_hours' => 160, 'studying_level' => 4, 'color' => '#4361ee', 'is_active' => true]);
+        $dept = Department::query()->create(['faculty_id' => $faculty->id, 'code' => 'software', 'name_ar' => 'البرمجيات', 'name_en' => 'Software', 'is_active' => true]);
+        $spec = Specialization::query()->create(['code' => 'se', 'name_ar' => 'هندسة برمجيات', 'name_en' => 'Software Engineering', 'is_active' => true]);
+        $semester = Semester::query()->create(['code' => '2026-s1', 'name' => 'Spring 2026', 'academic_year' => '2025-2026', 'start_date' => '2026-01-01', 'end_date' => '2026-06-30', 'is_active' => true]);
 
         $ss = ScheduleSetting::query()->create([
             'day_start' => '08:00',
@@ -125,83 +96,49 @@ class OptiTimeSchedulingSeeder extends Seeder
             ]);
         }
 
-        Resource::query()->create([
-            'name_ar' => 'جهاز عرض',
-            'name_en' => 'Projector',
-            'type' => 'projector',
-            'quantity' => 4,
-            'status' => 'available',
-        ]);
+        Resource::query()->create(['name_ar' => 'جهاز عرض', 'name_en' => 'Projector', 'type' => 'projector', 'quantity' => 24, 'status' => 'available']);
+        Resource::query()->create(['name_ar' => 'حاسوب محمول', 'name_en' => 'Laptop', 'type' => 'device', 'quantity' => 24, 'status' => 'available']);
 
-        Room::query()->create([
-            'name_ar' => 'قاعة أ',
-            'name_en' => 'Hall A',
-            'type' => 'hall',
-            'capacity' => 120,
-            'status' => 'available',
-        ]);
-        Room::query()->create([
-            'name_ar' => 'قاعة ب',
-            'name_en' => 'Hall B',
-            'type' => 'class',
-            'capacity' => 80,
-            'status' => 'available',
-        ]);
-        Room::query()->create([
-            'name_ar' => 'مختبر 1',
-            'name_en' => 'Lab 1',
-            'type' => 'lab',
-            'capacity' => 40,
-            'status' => 'available',
-        ]);
+        $rooms = [];
+        for ($i = 1; $i <= 10; $i++) {
+            $rooms[] = Room::query()->create(['name_ar' => "قاعة كبيرة {$i}", 'name_en' => "Large Hall {$i}", 'type' => 'hall', 'capacity' => 130 + ($i % 3) * 20, 'status' => 'available']);
+        }
+        for ($i = 1; $i <= 14; $i++) {
+            $rooms[] = Room::query()->create(['name_ar' => "قاعة صف {$i}", 'name_en' => "Class {$i}", 'type' => 'class', 'capacity' => 50 + ($i % 4) * 10, 'status' => 'available']);
+        }
+        for ($i = 1; $i <= 8; $i++) {
+            $rooms[] = Room::query()->create(['name_ar' => "مختبر {$i}", 'name_en' => "Lab {$i}", 'type' => 'lab', 'capacity' => 35 + ($i % 3) * 5, 'status' => 'available']);
+        }
 
-        $c1 = Course::query()->create([
-            'department_id' => $dept->id,
-            'code' => 'CS101',
-            'name_ar' => 'برمجة 1',
-            'name_en' => 'Programming 1',
-            'required_hours' => 3,
-            'has_lab_component' => false,
-        ]);
-        $c2 = Course::query()->create([
-            'department_id' => $dept->id,
-            'code' => 'CS102L',
-            'name_ar' => 'مختبر برمجة',
-            'name_en' => 'Programming Lab',
-            'required_hours' => 1,
-            'has_lab_component' => true,
-        ]);
-        $c3 = Course::query()->create([
-            'department_id' => $dept->id,
-            'code' => 'MATH100',
-            'name_ar' => 'تفاضل',
-            'name_en' => 'Calculus',
-            'required_hours' => 3,
-            'has_lab_component' => false,
-        ]);
+        $courses = [];
+        for ($i = 1; $i <= 22; $i++) {
+            $hasLab = $i % 3 === 0;
+            $courses[] = Course::query()->create([
+                'department_id' => $dept->id,
+                'code' => 'CS'.str_pad((string) (100 + $i), 3, '0', STR_PAD_LEFT),
+                'name_ar' => "مقرر {$i}",
+                'name_en' => "Course {$i}",
+                'required_hours' => $hasLab ? 2 : 3,
+                'has_lab_component' => $hasLab,
+            ]);
+        }
 
-        $sec1 = CourseSection::query()->create([
-            'course_id' => $c1->id,
-            'section_name' => 'Section A',
-            'section_type' => 'room',
-            'capacity' => 40,
-        ]);
-        $sec2 = CourseSection::query()->create([
-            'course_id' => $c2->id,
-            'section_name' => 'Lab A',
-            'section_type' => 'lab',
-            'capacity' => 25,
-        ]);
-        $sec3 = CourseSection::query()->create([
-            'course_id' => $c3->id,
-            'section_name' => 'Section A',
-            'section_type' => 'room',
-            'capacity' => 50,
-        ]);
-
-        foreach ([$c1, $c2, $c3] as $c) {
+        $sections = [];
+        foreach ($courses as $courseIndex => $course) {
+            $sections[] = CourseSection::query()->create([
+                'course_id' => $course->id,
+                'section_name' => 'Section A',
+                'section_type' => 'room',
+                'capacity' => 45 + ($courseIndex % 5) * 10,
+            ]);
+            $sections[] = CourseSection::query()->create([
+                'course_id' => $course->id,
+                'section_name' => 'Section B',
+                'section_type' => $course->has_lab_component ? 'lab' : 'room',
+                'capacity' => $course->has_lab_component ? 30 : (45 + (($courseIndex + 2) % 5) * 10),
+            ]);
             CourseOffering::query()->create([
-                'course_id' => $c->id,
+                'course_id' => $course->id,
                 'semester_id' => $semester->id,
                 'is_active' => true,
             ]);
@@ -229,35 +166,44 @@ class OptiTimeSchedulingSeeder extends Seeder
         ]);
         UserSetting::query()->create(['user_id' => $coord->id]);
 
-        $uIns1 = User::query()->create([
-            'role_id' => $role('instructor')->id,
-            'department_id' => $dept->id,
-            'full_name' => 'Dr. Ali',
-            'email' => 'instructor1@optitime.local',
-            'password_hash' => Hash::make('password'),
-            'is_active' => true,
-        ]);
-        UserSetting::query()->create(['user_id' => $uIns1->id]);
+        $instructorIds = [];
+        for ($i = 1; $i <= 24; $i++) {
+            $user = User::query()->create([
+                'role_id' => $role('instructor')->id,
+                'department_id' => $dept->id,
+                'full_name' => "Dr. Instructor {$i}",
+                'email' => "instructor{$i}@optitime.local",
+                'password_hash' => Hash::make('password'),
+                'is_active' => true,
+            ]);
+            UserSetting::query()->create(['user_id' => $user->id]);
+            $instructor = Instructor::query()->create([
+                'user_id' => $user->id,
+                'specialization_id' => $spec->id,
+                'min_work_hours_per_week' => 0,
+                'max_work_hours_per_week' => 22 + ($i % 4) * 2,
+            ]);
+            $instructorIds[] = $instructor->id;
+        }
 
-        $uIns2 = User::query()->create([
-            'role_id' => $role('instructor')->id,
-            'department_id' => $dept->id,
-            'full_name' => 'Dr. Sam',
-            'email' => 'instructor2@optitime.local',
-            'password_hash' => Hash::make('password'),
-            'is_active' => true,
-        ]);
-        UserSetting::query()->create(['user_id' => $uIns2->id]);
-
-        $uStu = User::query()->create([
-            'role_id' => $role('student')->id,
-            'department_id' => $dept->id,
-            'full_name' => 'Student Demo',
-            'email' => 'student@optitime.local',
-            'password_hash' => Hash::make('password'),
-            'is_active' => true,
-        ]);
-        UserSetting::query()->create(['user_id' => $uStu->id]);
+        for ($i = 1; $i <= 400; $i++) {
+            $user = User::query()->create([
+                'role_id' => $role('student')->id,
+                'department_id' => $dept->id,
+                'full_name' => "Student {$i}",
+                'email' => "student{$i}@optitime.local",
+                'password_hash' => Hash::make('password'),
+                'is_active' => true,
+            ]);
+            UserSetting::query()->create(['user_id' => $user->id]);
+            Student::query()->create([
+                'user_id' => $user->id,
+                'university_number' => 'STU-'.str_pad((string) $i, 5, '0', STR_PAD_LEFT),
+                'completed_hours' => max(0, ($i % 140) - 10),
+                'year_level' => (($i - 1) % 4) + 1,
+                'study_status' => 'regular',
+            ]);
+        }
 
         foreach (['management', 'exams'] as $rc) {
             $u = User::query()->create([
@@ -271,31 +217,15 @@ class OptiTimeSchedulingSeeder extends Seeder
             UserSetting::query()->create(['user_id' => $u->id]);
         }
 
-        $ins1 = Instructor::query()->create([
-            'user_id' => $uIns1->id,
-            'specialization_id' => $spec->id,
-            'min_work_hours_per_week' => 0,
-            'max_work_hours_per_week' => 20,
-        ]);
-        $ins2 = Instructor::query()->create([
-            'user_id' => $uIns2->id,
-            'specialization_id' => $spec->id,
-            'min_work_hours_per_week' => 0,
-            'max_work_hours_per_week' => 20,
-        ]);
+        foreach ($sections as $index => $section) {
+            $firstInstructor = $instructorIds[$index % count($instructorIds)];
+            CourseSectionInstructor::query()->create(['section_id' => $section->id, 'instructor_id' => $firstInstructor]);
+            if ($index % 3 === 0) {
+                $secondInstructor = $instructorIds[($index + 7) % count($instructorIds)];
+                CourseSectionInstructor::query()->create(['section_id' => $section->id, 'instructor_id' => $secondInstructor]);
+            }
+        }
 
-        CourseSectionInstructor::query()->create(['section_id' => $sec1->id, 'instructor_id' => $ins1->id]);
-        CourseSectionInstructor::query()->create(['section_id' => $sec2->id, 'instructor_id' => $ins1->id]);
-        CourseSectionInstructor::query()->create(['section_id' => $sec3->id, 'instructor_id' => $ins2->id]);
-
-        Student::query()->create([
-            'user_id' => $uStu->id,
-            'university_number' => 'STU-'.substr($uStu->id, 0, 8),
-            'completed_hours' => 0,
-            'year_level' => 2,
-            'study_status' => 'regular',
-        ]);
-
-        $this->command?->info('Demo logins (password: password): admin@optitime.local, coordinator@optitime.local, student@optitime.local');
+        $this->command?->info('Seeded: 400 students, 24 instructors, 22 courses, 44 sections, 32 rooms. Password: password');
     }
 }
