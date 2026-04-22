@@ -20,6 +20,8 @@ final class GeneticScheduler
 
     
 
+    private array $candidatePoolByEvent = [];
+
 
 
 
@@ -43,6 +45,9 @@ final class GeneticScheduler
         $this->rng = new SeededRandom($seed);
         $this->cells = $gridCells;
         $this->rooms = $rooms;
+        foreach ($this->events as $event) {
+            $this->candidatePoolByEvent[$event->index] = $this->buildCandidatePool($event);
+        }
     }
 
     
@@ -57,8 +62,11 @@ final class GeneticScheduler
     public function solve(): array
     {
         $deadline = microtime(true) + $this->maxSeconds;
+        $eventCount = count($this->events);
+        $effectivePopulation = max(20, min($this->populationSize, $eventCount > 180 ? 40 : $this->populationSize));
+        $effectiveGenerations = max(40, min($this->maxGenerations, $eventCount > 180 ? 120 : $this->maxGenerations));
         $population = [];
-        for ($i = 0; $i < $this->populationSize; $i++) {
+        for ($i = 0; $i < $effectivePopulation; $i++) {
             $population[] = $this->repair($this->randomIndividual());
         }
 
@@ -68,7 +76,7 @@ final class GeneticScheduler
         $bestSoft = INF;
         $gen = 0;
 
-        while ($gen < $this->maxGenerations && microtime(true) < $deadline) {
+        while ($gen < $effectiveGenerations && microtime(true) < $deadline) {
             $scored = [];
             foreach ($population as $ind) {
                 $hard = $this->evaluator->countHardViolations($ind, $this->events, $this->settings, $this->roomById, $this->ctx);
@@ -90,7 +98,7 @@ final class GeneticScheduler
                 $next[] = $scored[$e]['d'];
             }
 
-            while (count($next) < $this->populationSize) {
+            while (count($next) < $effectivePopulation) {
                 $p1 = $this->tournamentPick($scored);
                 $p2 = $this->tournamentPick($scored);
                 $child = $p1;
@@ -140,26 +148,9 @@ final class GeneticScheduler
 
     private function randomLegalPlacement(PlacementEvent $ev): Placement
     {
-        $nc = count($this->cells);
-        $nr = count($this->rooms);
-        $tries = max(20, $nc * $nr);
-        for ($t = 0; $t < $tries; $t++) {
-            if ($nc < 1 || $nr < 1) {
-                break;
-            }
-            $cell = $this->cells[$this->rng->nextInt(0, $nc - 1)];
-            $room = $this->rooms[$this->rng->nextInt(0, $nr - 1)];
-            if (! $this->settings->isRoomAllowedForCourse($ev->courseId, $room->id)) {
-                continue;
-            }
-            if ($this->settings->isHardEnabled('room_capacity') && $ev->enrollment > $room->capacity) {
-                continue;
-            }
-            if ($this->settings->isHardEnabled('lab_for_lab') && $ev->requiresLab && ! $room->isLab) {
-                continue;
-            }
-
-            return Placement::fromGridCell($cell, $room->id);
+        $pool = $this->candidatePoolByEvent[$ev->index] ?? [];
+        if ($pool !== []) {
+            return $pool[$this->rng->nextInt(0, count($pool) - 1)];
         }
 
         $cell = $this->cells[0];
@@ -174,7 +165,7 @@ final class GeneticScheduler
 
     private function repair(array $assignments): array
     {
-        $maxIter = max(80, count($this->events) * 12);
+        $maxIter = max(60, count($this->events) * 6);
         for ($iter = 0; $iter < $maxIter; $iter++) {
             $hard = $this->evaluator->countHardViolations($assignments, $this->events, $this->settings, $this->roomById, $this->ctx);
             if ($hard === 0) {
@@ -218,11 +209,13 @@ final class GeneticScheduler
 
     private function mutatePlacements(array $ind): array
     {
+        $eventCount = count($this->events);
+        $effectiveMutationRate = $eventCount > 180 ? min(0.08, $this->mutationRate * 1.8) : $this->mutationRate;
         foreach ($this->events as $ev) {
             if ($ev->isFixed()) {
                 continue;
             }
-            if ($this->rng->nextFloat() < $this->mutationRate) {
+            if ($this->rng->nextFloat() < $effectiveMutationRate) {
                 $ind[$ev->index] = $this->randomLegalPlacement($ev);
             }
         }
@@ -248,5 +241,26 @@ final class GeneticScheduler
         }
 
         return $best;
+    }
+
+    private function buildCandidatePool(PlacementEvent $event): array
+    {
+        $pool = [];
+        foreach ($this->cells as $cell) {
+            foreach ($this->rooms as $room) {
+                if (! $this->settings->isRoomAllowedForCourse($event->courseId, $room->id)) {
+                    continue;
+                }
+                if ($this->settings->isHardEnabled('room_capacity') && $event->enrollment > $room->capacity) {
+                    continue;
+                }
+                if ($this->settings->isHardEnabled('lab_for_lab') && $event->requiresLab && ! $room->isLab) {
+                    continue;
+                }
+                $pool[] = Placement::fromGridCell($cell, $room->id);
+            }
+        }
+
+        return $pool;
     }
 }

@@ -98,7 +98,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import AppButton from '@/components/common/AppButton.vue'
 import AppInputField from '@/components/common/AppInputField.vue'
 import { authService } from '@/features/auth/api/auth.service'
@@ -109,6 +109,7 @@ import LocaleSwitcher from './LocaleSwitcher.vue'
 
 const { t } = useI18n()
 const router = useRouter()
+const route = useRoute()
 const { demoRoles } = useLoginPageContent()
 const showDemoRoles = computed(() => authService.isDemoMode())
 const {
@@ -127,6 +128,6 @@ const {
 } = useLoginForm()
 
 function goToForgotPassword() {
-  router.push({ name: 'forgot-password-email' })
+  router.push({ name: 'forgot-password-email', query: route.query })
 }
 </script>

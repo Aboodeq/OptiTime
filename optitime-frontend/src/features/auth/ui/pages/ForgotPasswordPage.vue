@@ -61,6 +61,21 @@
 
             <template v-if="step === 'reset'">
               <AppInputField
+                v-model="form.code"
+                autocomplete="one-time-code"
+                :disabled="isLoading"
+                :error="errors.code"
+                :focused="focusedField === 'code'"
+                icon="bi bi-shield-lock"
+                input-id="forgot-reset-code"
+                input-type="text"
+                :label="t('pages.forgotPassword.code.label')"
+                :placeholder="t('pages.forgotPassword.code.placeholder')"
+                @blur="handleFieldBlur('code')"
+                @focus="setFocusedField('code')"
+              />
+
+              <AppInputField
                 v-model="form.password"
                 autocomplete="new-password"
                 :disabled="isLoading"
@@ -172,8 +187,8 @@ const stepContent = computed(() => {
     return {
       titleKey: 'pages.forgotPassword.code.title',
       subtitleKey: 'pages.forgotPassword.code.subtitle',
-      buttonLabelKey: 'pages.forgotPassword.actions.verifyCode',
-      buttonIcon: 'bi bi-check2-circle',
+      buttonLabelKey: 'pages.forgotPassword.actions.continue',
+      buttonIcon: 'bi bi-arrow-right-circle',
     }
   }
 

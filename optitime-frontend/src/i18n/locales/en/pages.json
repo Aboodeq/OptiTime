@@ -62,7 +62,7 @@
       },
       "code": {
         "title": "Check your email",
-        "subtitle": "Enter the 6-digit code sent to your email address.",
+        "subtitle": "Enter the 6-digit code sent to your email address, then continue.",
         "label": "Verification code",
         "placeholder": "Enter verification code",
         "resend": "Resend code",
@@ -70,7 +70,7 @@
       },
       "reset": {
         "title": "Create a new password",
-        "subtitle": "Choose a strong password for your account.",
+        "subtitle": "Confirm the 6-digit code and choose a strong password for your account.",
         "passwordLabel": "New password",
         "passwordPlaceholder": "Enter new password",
         "confirmPasswordLabel": "Confirm new password",
@@ -78,7 +78,7 @@
       },
       "actions": {
         "sendCode": "Send code",
-        "verifyCode": "Verify code",
+        "continue": "Continue",
         "resetPassword": "Reset password",
         "backToLogin": "Back to login",
         "processing": "Processing..."
@@ -87,17 +87,18 @@
         "emailRequired": "Please enter your email",
         "emailInvalid": "Please enter a valid email address",
         "codeRequired": "Please enter the verification code",
-        "codeInvalid": "Verification code must be at least 6 characters",
+        "codeInvalid": "Verification code must be 6 digits",
         "passwordRequired": "Please enter a new password",
         "passwordMin": "Password must be at least 8 characters",
         "confirmPasswordRequired": "Please confirm your new password",
         "passwordMismatch": "Password confirmation does not match",
+        "resetFailed": "Could not reset your password. Check the code and try again.",
         "generic": "Could not complete this step. Please try again."
       },
       "toasts": {
         "codeSent": "Verification code sent to your email",
         "codeResent": "A new verification code was sent",
-        "codeVerified": "Code verified successfully",
+        "codeSaved": "Code saved. You can now create a new password.",
         "passwordResetSuccess": "Password reset successful. Please sign in."
       }
     },
