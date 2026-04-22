@@ -16,13 +16,18 @@ export function createForgotPasswordCodeSchema(t) {
       .string()
       .trim()
       .min(1, t('pages.forgotPassword.errors.codeRequired'))
-      .min(6, t('pages.forgotPassword.errors.codeInvalid')),
+      .length(6, t('pages.forgotPassword.errors.codeInvalid')),
   })
 }
 
 export function createForgotPasswordResetSchema(t) {
   return z
     .object({
+      code: z
+        .string()
+        .trim()
+        .min(1, t('pages.forgotPassword.errors.codeRequired'))
+        .length(6, t('pages.forgotPassword.errors.codeInvalid')),
       password: z
         .string()
         .min(1, t('pages.forgotPassword.errors.passwordRequired'))

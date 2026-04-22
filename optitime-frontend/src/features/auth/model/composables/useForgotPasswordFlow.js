@@ -1,7 +1,8 @@
 import { computed, onUnmounted, reactive, ref, unref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
+import { getApiFieldError, getApiMessage } from '@/features/auth/lib/authApiErrors'
 import {
   createForgotPasswordCodeSchema,
   createForgotPasswordEmailSchema,
@@ -13,6 +14,7 @@ const RESEND_COOLDOWN_SECONDS = 30
 
 export function useForgotPasswordFlow(stepRef) {
   const router = useRouter()
+  const route = useRoute()
   const toast = useToast()
   const authStore = useAuthStore()
   const { t } = useI18n()
@@ -47,6 +49,15 @@ export function useForgotPasswordFlow(stepRef) {
     const elapsedSeconds = Math.floor((nowTimestamp.value - codeSentAt.value) / 1000)
     return Math.max(0, RESEND_COOLDOWN_SECONDS - elapsedSeconds)
   })
+  const redirectTarget = computed(() => {
+    const redirect = route.query.redirect
+    return typeof redirect === 'string' && redirect.startsWith('/') && redirect !== '/login'
+      ? redirect
+      : '/dashboard'
+  })
+  const redirectQuery = computed(() =>
+    redirectTarget.value !== '/dashboard' ? { redirect: redirectTarget.value } : {},
+  )
 
   function startCountdownTicker() {
     if (typeof window === 'undefined') return
@@ -105,13 +116,16 @@ export function useForgotPasswordFlow(stepRef) {
 
   function validateResetStep() {
     const result = createForgotPasswordResetSchema(t).safeParse({
+      code: form.code,
       password: form.password,
       confirmPassword: form.confirmPassword,
     })
+    errors.code = ''
     errors.password = ''
     errors.confirmPassword = ''
     if (result.success) return true
     const fieldErrors = result.error.flatten().fieldErrors
+    errors.code = fieldErrors.code?.[0] ?? ''
     errors.password = fieldErrors.password?.[0] ?? ''
     errors.confirmPassword = fieldErrors.confirmPassword?.[0] ?? ''
     return false
@@ -133,18 +147,35 @@ export function useForgotPasswordFlow(stepRef) {
   async function ensureStepAccess() {
     const step = unref(stepRef)
     const hasEmail = Boolean(authStore.passwordRecovery.email)
-    const isCodeVerified = authStore.passwordRecovery.isCodeVerified
+    const hasCode = Boolean(authStore.passwordRecovery.code)
 
     if (step === 'email') return true
     if (step === 'code' && !hasEmail) {
-      await router.replace({ name: 'forgot-password-email' })
+      await router.replace({ name: 'forgot-password-email', query: redirectQuery.value })
       return false
     }
-    if (step === 'reset' && (!hasEmail || !isCodeVerified)) {
-      await router.replace({ name: hasEmail ? 'forgot-password-code' : 'forgot-password-email' })
+    if (step === 'reset' && (!hasEmail || !hasCode)) {
+      await router.replace({
+        name: hasEmail ? 'forgot-password-code' : 'forgot-password-email',
+        query: redirectQuery.value,
+      })
       return false
     }
     return true
+  }
+
+  function applyApiErrors(error) {
+    errors.email = getApiFieldError(error, 'email')
+    errors.code = getApiFieldError(error, 'otp')
+    errors.password = getApiFieldError(error, 'password')
+    errors.confirmPassword = getApiFieldError(error, 'password_confirmation')
+    errors.form =
+      getApiMessage(error) ||
+      t(
+        unref(stepRef) === 'reset'
+          ? 'pages.forgotPassword.errors.resetFailed'
+          : 'pages.forgotPassword.errors.generic',
+      )
   }
 
   async function submitCurrentStep() {
@@ -159,23 +190,23 @@ export function useForgotPasswordFlow(stepRef) {
         codeSentAt.value = authStore.passwordRecovery.codeSentAt || Date.now()
         nowTimestamp.value = Date.now()
         toast.success(t('pages.forgotPassword.toasts.codeSent'))
-        await router.push({ name: 'forgot-password-code' })
+        await router.push({ name: 'forgot-password-code', query: redirectQuery.value })
         return true
       }
 
       if (step === 'code') {
-        await authStore.verifyPasswordResetCode(form.code)
-        toast.success(t('pages.forgotPassword.toasts.codeVerified'))
-        await router.push({ name: 'forgot-password-reset' })
+        authStore.savePasswordResetCode(form.code)
+        toast.success(t('pages.forgotPassword.toasts.codeSaved'))
+        await router.push({ name: 'forgot-password-reset', query: redirectQuery.value })
         return true
       }
 
-      await authStore.resetPassword(form.password)
+      await authStore.resetPassword({ code: form.code, password: form.password })
       toast.success(t('pages.forgotPassword.toasts.passwordResetSuccess'))
-      await router.push({ name: 'login' })
+      await router.push({ name: 'login', query: redirectQuery.value })
       return true
-    } catch {
-      errors.form = t('pages.forgotPassword.errors.generic')
+    } catch (error) {
+      applyApiErrors(error)
       toast.error(errors.form)
       return false
     } finally {
@@ -186,6 +217,7 @@ export function useForgotPasswordFlow(stepRef) {
   async function resendCode() {
     if (isResendDisabled.value) return false
 
+    clearErrors()
     loadingMode.value = 'resend'
     try {
       await authStore.resendPasswordResetCode()
@@ -193,8 +225,8 @@ export function useForgotPasswordFlow(stepRef) {
       nowTimestamp.value = Date.now()
       toast.success(t('pages.forgotPassword.toasts.codeResent'))
       return true
-    } catch {
-      errors.form = t('pages.forgotPassword.errors.generic')
+    } catch (error) {
+      applyApiErrors(error)
       toast.error(errors.form)
       return false
     } finally {
@@ -204,7 +236,7 @@ export function useForgotPasswordFlow(stepRef) {
 
   function goToLogin() {
     authStore.clearPasswordRecovery()
-    router.push({ name: 'login' })
+    router.push({ name: 'login', query: redirectQuery.value })
   }
 
   function handleFieldBlur(field) {
@@ -247,7 +279,7 @@ export function useForgotPasswordFlow(stepRef) {
   watch(
     () => [form.password, form.confirmPassword],
     () => {
-      if (errors.password || errors.confirmPassword) validateResetStep()
+      if (errors.code || errors.password || errors.confirmPassword) validateResetStep()
       if (errors.form) errors.form = ''
     },
   )
