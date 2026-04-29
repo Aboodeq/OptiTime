@@ -1,5 +1,6 @@
 import { getApiBaseUrl } from '@/api/config'
 import { getStoredToken } from '@/lib/authSession'
+import { useLoadingStore } from '@/store/loading.store'
 
 /**
  * @param {string} path - e.g. `/auth/login` or `auth/login`
@@ -7,6 +8,8 @@ import { getStoredToken } from '@/lib/authSession'
  * @returns {Promise<Response>}
  */
 export async function apiFetch(path, options = {}) {
+  const loadingStore = useLoadingStore()
+  loadingStore.beginRequest()
   const base = getApiBaseUrl().replace(/\/+$/, '')
   let normalizedPath = path.startsWith('/') ? path : `/${path}`
   // Base already ends with /api; strip a duplicate /api prefix from the path (avoids /api/api/... → 404).
@@ -35,11 +38,15 @@ export async function apiFetch(path, options = {}) {
     headers.set('Authorization', `Bearer ${token}`)
   }
 
-  return fetch(url, {
-    ...rest,
-    headers,
-    body,
-  })
+  try {
+    return await fetch(url, {
+      ...rest,
+      headers,
+      body,
+    })
+  } finally {
+    loadingStore.endRequest()
+  }
 }
 
 /**
