@@ -14,6 +14,7 @@ import { useInstructorsStore } from '@/features/instructors/model/stores/instruc
 import { useRoomsStore } from '@/features/rooms/model/stores/rooms.store'
 import { useSemestersStore } from '@/features/semesters/model/stores/semesters.store'
 import { useStudentsStore } from '@/features/students/model/stores/students.store'
+import { useLoadingStore } from '@/store/loading.store'
 
 const PRIORITY_STUDENT_IDS = new Set(['student-4', 'student-6', 'student-8'])
 
@@ -168,6 +169,7 @@ export const useCoordinatorScheduleStore = defineStore('coordinatorSchedule', ()
   const roomsStore = useRoomsStore()
   const semestersStore = useSemestersStore()
   const studentsStore = useStudentsStore()
+  const loadingStore = useLoadingStore()
 
   const activeSemester = computed(
     () => semestersStore.semesters.find((item) => item.is_active) ?? null,
@@ -587,6 +589,7 @@ export const useCoordinatorScheduleStore = defineStore('coordinatorSchedule', ()
     generating.value = true
     try {
       const algo = algorithm === 'backtracking' ? 'backtracking' : 'genetic'
+      loadingStore.startGenerationTracking(algo)
       const seed = Math.floor(Math.random() * 2147483647)
       const baseSessions = boardSessionsToGenerateBaseSessions(editableDraft.value.sessions)
       /** @type {Record<string, unknown>} */
@@ -605,9 +608,15 @@ export const useCoordinatorScheduleStore = defineStore('coordinatorSchedule', ()
       const { ok, data } = await coordinatorScheduleService.generateSchedule(body)
       const jobId = `${data?.job_id || ''}`.trim()
       if (!ok || !jobId) {
+        loadingStore.finishGenerationTracking()
         lastGenerationRequest.value = null
         return false
       }
+      loadingStore.updateGenerationTracking({
+        jobId,
+        status: `${data?.status || 'queued'}`.toLowerCase(),
+        progress: Number(data?.progress ?? 0),
+      })
 
       const maxPollRounds = 900
       let rounds = 0
@@ -618,17 +627,29 @@ export const useCoordinatorScheduleStore = defineStore('coordinatorSchedule', ()
         const polled = await coordinatorScheduleService.getScheduleGenerationJob(jobId)
         if (!polled.ok || !polled.data) continue
         const status = `${polled.data.status || ''}`.toLowerCase()
+        loadingStore.updateGenerationTracking({
+          jobId,
+          status,
+          progress: Number(polled.data.progress ?? 0),
+        })
         if (status === 'completed') {
           finalResult = polled.data.result
+          loadingStore.updateGenerationTracking({
+            jobId,
+            status: 'completed',
+            progress: 100,
+          })
           break
         }
         if (status === 'failed') {
+          loadingStore.finishGenerationTracking()
           lastGenerationRequest.value = null
           return false
         }
       }
 
       if (!finalResult || finalResult.success !== true || !Array.isArray(finalResult.sessions)) {
+        loadingStore.finishGenerationTracking()
         lastGenerationRequest.value = null
         return false
       }
@@ -642,8 +663,12 @@ export const useCoordinatorScheduleStore = defineStore('coordinatorSchedule', ()
         ),
         meta: finalResult.meta && typeof finalResult.meta === 'object' ? { ...finalResult.meta } : {},
       }
+      loadingStore.finishGenerationTracking()
       return validateDraft(generatedDraft.value)
     } finally {
+      if (loadingStore.generationState.active) {
+        loadingStore.finishGenerationTracking()
+      }
       generating.value = false
     }
   }
