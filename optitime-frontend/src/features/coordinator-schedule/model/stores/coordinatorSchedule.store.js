@@ -46,6 +46,12 @@ function cloneDraft(draft) {
   }
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
+}
+
 function buildCourseEnrollmentPlan({ course, students }) {
   const prioritizedStudents = [...students].sort((a, b) => {
     const aPriority = PRIORITY_STUDENT_IDS.has(a.id) ? 1 : 0
@@ -597,7 +603,32 @@ export const useCoordinatorScheduleStore = defineStore('coordinatorSchedule', ()
       lastGenerationRequest.value = { ...body }
 
       const { ok, data } = await coordinatorScheduleService.generateSchedule(body)
-      if (!ok || !data || data.success !== true || !Array.isArray(data.sessions)) {
+      const jobId = `${data?.job_id || ''}`.trim()
+      if (!ok || !jobId) {
+        lastGenerationRequest.value = null
+        return false
+      }
+
+      const maxPollRounds = 900
+      let rounds = 0
+      let finalResult = null
+      while (rounds < maxPollRounds) {
+        rounds += 1
+        await sleep(2000)
+        const polled = await coordinatorScheduleService.getScheduleGenerationJob(jobId)
+        if (!polled.ok || !polled.data) continue
+        const status = `${polled.data.status || ''}`.toLowerCase()
+        if (status === 'completed') {
+          finalResult = polled.data.result
+          break
+        }
+        if (status === 'failed') {
+          lastGenerationRequest.value = null
+          return false
+        }
+      }
+
+      if (!finalResult || finalResult.success !== true || !Array.isArray(finalResult.sessions)) {
         lastGenerationRequest.value = null
         return false
       }
@@ -606,10 +637,10 @@ export const useCoordinatorScheduleStore = defineStore('coordinatorSchedule', ()
         ...sanitizeDraft(
           enrichDraftRelations({
             semester_id: activeSemester.value.id,
-            sessions: data.sessions,
+            sessions: finalResult.sessions,
           }),
         ),
-        meta: data.meta && typeof data.meta === 'object' ? { ...data.meta } : {},
+        meta: finalResult.meta && typeof finalResult.meta === 'object' ? { ...finalResult.meta } : {},
       }
       return validateDraft(generatedDraft.value)
     } finally {
@@ -627,15 +658,32 @@ export const useCoordinatorScheduleStore = defineStore('coordinatorSchedule', ()
     if (!activeSemester.value?.id) return false
     generating.value = true
     try {
-      await coordinatorScheduleService.publishFromGeneration(lastGenerationRequest.value)
-      const newDraft = await coordinatorScheduleService.createPlan({
+      // Persist exactly the previewed generated sessions as published,
+      // instead of triggering a second generation on publish.
+      const publishedPlan = await coordinatorScheduleService.createPlan({
         semester_id: activeSemester.value.id,
         status: 'draft',
       })
-      const newId = newDraft?.id
-      if (!newId) return false
+      const publishedId = publishedPlan?.id
+      if (!publishedId) return false
+      await coordinatorScheduleService.syncPlanSessions(
+        publishedId,
+        generatedDraft.value.sessions,
+      )
+      await coordinatorScheduleService.updatePlanMetadata(publishedId, {
+        status: 'published',
+      })
+
+      // Keep the existing UX: open a fresh editable draft populated
+      // with the same generated sessions.
+      const editablePlan = await coordinatorScheduleService.createPlan({
+        semester_id: activeSemester.value.id,
+        status: 'draft',
+      })
+      const editableId = editablePlan?.id
+      if (!editableId) return false
       const synced = await coordinatorScheduleService.syncPlanSessions(
-        newId,
+        editableId,
         generatedDraft.value.sessions,
       )
       const mapped = mapCoordinatorPlanToDraftShape(synced)

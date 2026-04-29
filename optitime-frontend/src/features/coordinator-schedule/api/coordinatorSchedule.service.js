@@ -78,6 +78,24 @@ export async function generateSchedule(body) {
 }
 
 /**
+ * @param {string} jobId
+ * @returns {Promise<{ ok: boolean, status: number, data: Record<string, unknown>|null }>}
+ */
+export async function getScheduleGenerationJob(jobId) {
+  const response = await apiFetch(`/schedule/generate/${encodeURIComponent(jobId)}`)
+  const text = await response.text()
+  let data = null
+  if (text) {
+    try {
+      data = JSON.parse(text)
+    } catch {
+      data = { message: text }
+    }
+  }
+  return { ok: response.ok, status: response.status, data }
+}
+
+/**
  * @param {Record<string, unknown>} body
  */
 export async function publishFromGeneration(body) {
@@ -120,6 +138,7 @@ export const coordinatorScheduleService = {
   updatePlanMetadata,
   syncPlanSessions,
   generateSchedule,
+  getScheduleGenerationJob,
   publishFromGeneration,
   resolveOrCreateDraftPlan,
 }
