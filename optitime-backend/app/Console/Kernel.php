@@ -12,7 +12,10 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule): void
     {
-        
+        $schedule
+            ->command('schedule-generation:process --limit=1')
+            ->everyMinute()
+            ->withoutOverlapping();
     }
 
     

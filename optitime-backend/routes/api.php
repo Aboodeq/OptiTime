@@ -43,6 +43,7 @@ Route::post('/auth/forgot-password/reset', [AuthController::class, 'resetPasswor
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::middleware(['schedule.access'])->post('/schedule/generate', [ScheduleGenerationController::class, 'generate']);
+    Route::middleware(['schedule.access'])->get('/schedule/generate/{id}', [ScheduleGenerationController::class, 'show']);
 
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::post('/auth/change-password', [AuthController::class, 'changePassword']);
