@@ -71,7 +71,7 @@
                 type="button"
                 class="notif-item"
                 :class="{ 'notif-item--unread': !item.is_read }"
-                @click="openNotification(item.id)"
+                @click="openNotification(item)"
               >
                 <span class="notif-item__title">{{ item.title }}</span>
                 <small class="notif-item__meta">{{ formatDate(item.created_at) }}</small>
@@ -187,10 +187,11 @@ function handleDocumentClick(event) {
   closeMenus()
 }
 
-async function openNotification(notificationId) {
-  await notificationsStore.markNotificationAsRead(notificationId)
+async function openNotification(notification) {
+  await notificationsStore.markNotificationAsRead(notification.id)
   closeMenus()
-  router.push({ name: 'notifications' })
+  const targetRoute = notification?.payload?.route || '/notifications'
+  router.push(targetRoute)
 }
 
 async function markAllAsRead() {

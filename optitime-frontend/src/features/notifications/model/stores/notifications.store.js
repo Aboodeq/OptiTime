@@ -21,7 +21,7 @@ export const useNotificationsStore = defineStore('notifications', () => {
     const updated = await notificationsService.markAsRead(notificationId)
     if (!updated) return false
     notifications.value = notifications.value.map((item) =>
-      item.id === notificationId ? updated : item,
+      item.id === notificationId ? { ...item, ...updated } : item,
     )
     return true
   }
@@ -39,6 +39,21 @@ export const useNotificationsStore = defineStore('notifications', () => {
     return true
   }
 
+  function pushRealtimeNotification(notification) {
+    if (!notification?.id) return
+    const next = {
+      ...notification,
+      payload: notification?.payload && typeof notification.payload === 'object' ? notification.payload : {},
+      is_read: Boolean(notification?.is_read),
+    }
+    const idx = notifications.value.findIndex((item) => item.id === next.id)
+    if (idx >= 0) {
+      notifications.value[idx] = { ...notifications.value[idx], ...next }
+      return
+    }
+    notifications.value.unshift(next)
+  }
+
   return {
     notifications,
     notificationsCount,
@@ -48,5 +63,6 @@ export const useNotificationsStore = defineStore('notifications', () => {
     markNotificationAsRead,
     markAllNotificationsAsRead,
     deleteNotification,
+    pushRealtimeNotification,
   }
 })

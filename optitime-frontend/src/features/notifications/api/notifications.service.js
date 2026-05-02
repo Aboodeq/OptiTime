@@ -1,62 +1,55 @@
-const NOTIFICATIONS_SEED = [
-  {
-    id: 'notif-1',
-    title: 'Schedule updated',
-    message: 'Your Tuesday lecture was moved from 10:00 to 11:00.',
-    type: 'schedule',
-    priority: 'high',
-    is_read: false,
-    created_at: '2026-03-31T07:30:00.000Z',
-  },
-  {
-    id: 'notif-2',
-    title: 'Room assignment changed',
-    message: 'Database Systems now takes place in Lab B2.',
-    type: 'announcement',
-    priority: 'medium',
-    is_read: false,
-    created_at: '2026-03-30T12:05:00.000Z',
-  },
-  {
-    id: 'notif-3',
-    title: 'Reminder',
-    message: 'Course registration closes in 2 days.',
-    type: 'reminder',
-    priority: 'low',
-    is_read: true,
-    created_at: '2026-03-29T09:15:00.000Z',
-  },
-]
+import { apiJson } from '@/api/client'
 
-let notificationsDb = NOTIFICATIONS_SEED.map((item) => ({ ...item }))
-
-function cloneNotification(item) {
-  return { ...item }
+function normalizeItem(item) {
+  return {
+    ...item,
+    payload: item?.payload && typeof item.payload === 'object' ? item.payload : {},
+  }
 }
 
 export const notificationsService = {
-  async getNotifications() {
-    return notificationsDb.map(cloneNotification)
+  async getNotifications(options = {}) {
+    const { silent = false } = options
+    const { data } = await apiJson('/notifications', { skipLoading: silent })
+    const rows = Array.isArray(data?.data) ? data.data : []
+    return rows.map(normalizeItem)
   },
 
   async markAsRead(notificationId) {
-    let changed = null
-    notificationsDb = notificationsDb.map((item) => {
-      if (item.id !== notificationId) return item
-      changed = { ...item, is_read: true }
-      return changed
-    })
-    return changed ? cloneNotification(changed) : null
+    await apiJson(`/notifications/${notificationId}/read`, { method: 'POST', skipLoading: true })
+    return { id: notificationId, is_read: true }
   },
 
   async markAllAsRead() {
-    notificationsDb = notificationsDb.map((item) => ({ ...item, is_read: true }))
-    return notificationsDb.map(cloneNotification)
+    const { data } = await apiJson('/notifications/read-all', { method: 'POST', skipLoading: true })
+    const rows = Array.isArray(data?.data) ? data.data : []
+    return rows.map(normalizeItem)
   },
 
   async deleteNotification(notificationId) {
-    const before = notificationsDb.length
-    notificationsDb = notificationsDb.filter((item) => item.id !== notificationId)
-    return notificationsDb.length < before
+    await apiJson(`/notifications/${notificationId}`, { method: 'DELETE', skipLoading: true })
+    return true
+  },
+
+  async registerDeviceToken({ fcmToken, platform, deviceLabel }) {
+    await apiJson('/notifications/devices', {
+      method: 'POST',
+      skipLoading: true,
+      json: {
+        fcm_token: fcmToken,
+        platform,
+        device_label: deviceLabel,
+      },
+    })
+  },
+
+  async unregisterDeviceToken(fcmToken) {
+    await apiJson('/notifications/devices', {
+      method: 'DELETE',
+      skipLoading: true,
+      json: {
+        fcm_token: fcmToken,
+      },
+    })
   },
 }
