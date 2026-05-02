@@ -7,9 +7,11 @@ use App\Http\Requests\SyncScheduleSessionsRequest;
 use App\Models\CourseOffering;
 use App\Models\CourseSectionInstructor;
 use App\Models\ScheduleSession;
+use App\Models\ScheduleSessionStudent;
 use App\Models\SemesterSchedulePlan;
 use App\Scheduling\DayMapping;
 use App\Services\AuditLogger;
+use App\Services\NotificationDispatchService;
 use App\Services\ScheduleGenerateService;
 use App\Services\ScheduleSessionStudentAssignmentService;
 use Illuminate\Http\JsonResponse;
@@ -136,6 +138,12 @@ class CoordinatorScheduleController extends Controller
         });
 
         $sessionStudentAssignment->syncForPlan((string) $plan->id);
+        $this->notifyPlanStakeholders(
+            (string) $plan->id,
+            'Schedule updated',
+            'Your weekly schedule has been updated. Tap to open it.',
+            'schedule_updated'
+        );
 
         AuditLogger::log($request->user(), 'schedules.update', SemesterSchedulePlan::class, $plan->id, ['sessions_synced' => count($normalized)], $request);
 
@@ -159,6 +167,12 @@ class CoordinatorScheduleController extends Controller
             'notes' => 'sometimes|nullable|string',
         ]);
         $row->update($data);
+        $this->notifyPlanStakeholders(
+            (string) $row->id,
+            'Schedule updated',
+            'A schedule plan related to your classes was updated.',
+            'schedule_updated'
+        );
         AuditLogger::log($request->user(), 'schedules.update', SemesterSchedulePlan::class, $id, $data, $request);
 
         return response()->json($row->fresh());
@@ -173,7 +187,12 @@ class CoordinatorScheduleController extends Controller
         return response()->json(['deleted' => true]);
     }
 
-    public function publishFromGeneration(Request $request, ScheduleGenerateService $generator, ScheduleSessionStudentAssignmentService $sessionStudentAssignment): JsonResponse
+    public function publishFromGeneration(
+        Request $request,
+        ScheduleGenerateService $generator,
+        ScheduleSessionStudentAssignmentService $sessionStudentAssignment,
+        NotificationDispatchService $notificationDispatch
+    ): JsonResponse
     {
         $request->validate([
             'algorithm' => 'required|in:genetic,backtracking',
@@ -226,6 +245,13 @@ class CoordinatorScheduleController extends Controller
         }
 
         $sessionStudentAssignment->syncForPlan((string) $plan->id);
+        $this->notifyPlanStakeholders(
+            (string) $plan->id,
+            'New schedule published',
+            'A new published schedule is available for your classes.',
+            'schedule_published',
+            $notificationDispatch
+        );
 
         AuditLogger::log($request->user(), 'schedules.publish', SemesterSchedulePlan::class, $plan->id, ['items' => count($result['sessions'])], $request);
 
@@ -279,5 +305,58 @@ class CoordinatorScheduleController extends Controller
         }
 
         return null;
+    }
+
+    private function notifyPlanStakeholders(
+        string $planId,
+        string $title,
+        string $message,
+        string $type,
+        ?NotificationDispatchService $notificationDispatch = null
+    ): void {
+        $dispatch = $notificationDispatch ?? app(NotificationDispatchService::class);
+
+        $instructorUserIds = ScheduleSession::query()
+            ->where('schedule_plan_id', $planId)
+            ->join('course_section_instructors', 'course_section_instructors.id', '=', 'schedule_sessions.section_instructor_id')
+            ->join('instructors', 'instructors.id', '=', 'course_section_instructors.instructor_id')
+            ->pluck('instructors.user_id')
+            ->unique()
+            ->values()
+            ->all();
+
+        $studentUserIds = ScheduleSessionStudent::query()
+            ->join('schedule_sessions', 'schedule_sessions.id', '=', 'schedule_session_students.schedule_session_id')
+            ->where('schedule_sessions.schedule_plan_id', $planId)
+            ->pluck('schedule_session_students.student_id')
+            ->unique()
+            ->values()
+            ->all();
+
+        $dispatch->notifyUsers(
+            $instructorUserIds,
+            $title,
+            $message,
+            $type,
+            'high',
+            [
+                'route' => '/instructor/weekly-schedule',
+                'link' => '/instructor/weekly-schedule',
+                'plan_id' => $planId,
+            ]
+        );
+
+        $dispatch->notifyUsers(
+            $studentUserIds,
+            $title,
+            $message,
+            $type,
+            'high',
+            [
+                'route' => '/student/weekly-schedule',
+                'link' => '/student/weekly-schedule',
+                'plan_id' => $planId,
+            ]
+        );
     }
 }

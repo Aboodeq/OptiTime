@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api\Instructor;
 use App\Http\Controllers\Controller;
 use App\Models\LectureRequest;
 use App\Models\ScheduleSession;
+use App\Models\User;
 use App\Services\AuditLogger;
+use App\Services\NotificationDispatchService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -35,7 +37,7 @@ class InstructorLectureRequestController extends Controller
         );
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(Request $request, NotificationDispatchService $notificationDispatch): JsonResponse
     {
         $id = $this->instructorId($request);
         $data = $request->validate([
@@ -57,6 +59,24 @@ class InstructorLectureRequestController extends Controller
             'note' => $data['note'] ?? null,
             'status' => 'pending',
         ]);
+
+        $coordinatorIds = User::query()
+            ->whereHas('role', fn ($q) => $q->where('code', 'coordinator'))
+            ->pluck('id')
+            ->all();
+        $notificationDispatch->notifyUsers(
+            $coordinatorIds,
+            'New lecture request',
+            'An instructor submitted a lecture request that needs your review.',
+            'lecture_request_submitted',
+            'high',
+            [
+                'route' => '/coordinator/lecture-requests',
+                'link' => '/coordinator/lecture-requests',
+                'lecture_request_id' => (string) $row->id,
+            ]
+        );
+
         AuditLogger::log($request->user(), 'instructor.requests.create', LectureRequest::class, $row->id, $data, $request);
 
         return response()->json($row->load([

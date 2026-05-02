@@ -26,6 +26,7 @@ use App\Http\Controllers\Api\Instructor\InstructorPdfController;
 use App\Http\Controllers\Api\Instructor\InstructorScheduleController;
 use App\Http\Controllers\Api\Management\ManagementReportController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\NotificationDeviceController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\Student\StudentGradeController;
 use App\Http\Controllers\Api\Student\StudentPdfController;
@@ -56,6 +57,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::middleware('permission:notifications.view')->get('/notifications', [NotificationController::class, 'index']);
     Route::middleware('permission:notifications.update')->post('/notifications/{id}/read', [NotificationController::class, 'markRead']);
+    Route::middleware('permission:notifications.update')->post('/notifications/read-all', [NotificationController::class, 'markAllRead']);
+    Route::middleware('permission:notifications.update')->delete('/notifications/{id}', [NotificationController::class, 'destroy']);
+    Route::middleware('permission:notifications.update')->post('/notifications/devices', [NotificationDeviceController::class, 'store']);
+    Route::middleware('permission:notifications.update')->delete('/notifications/devices', [NotificationDeviceController::class, 'destroy']);
 
     Route::prefix('admin')->group(function () {
         Route::middleware('permission:users.view')->get('/users', [AdminUserController::class, 'index']);

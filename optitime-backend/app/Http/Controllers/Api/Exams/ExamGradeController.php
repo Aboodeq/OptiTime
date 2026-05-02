@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Exams;
 use App\Http\Controllers\Controller;
 use App\Models\ScheduleSessionStudent;
 use App\Services\AuditLogger;
+use App\Services\NotificationDispatchService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ExamGradeController extends Controller
 {
-    public function storeOrUpdate(Request $request): JsonResponse
+    public function storeOrUpdate(Request $request, NotificationDispatchService $notificationDispatch): JsonResponse
     {
         $data = $request->validate([
             'student_id' => 'required|uuid|exists:students,user_id',
@@ -38,6 +39,20 @@ class ExamGradeController extends Controller
             ],
             $payload
         );
+
+        $notificationDispatch->notifyUsers(
+            [(string) $data['student_id']],
+            'New grade posted',
+            'A new grade was posted for one of your courses.',
+            'grade_posted',
+            'high',
+            [
+                'route' => '/student/grades',
+                'link' => '/student/grades',
+                'schedule_session_id' => (string) $data['schedule_session_id'],
+            ]
+        );
+
         AuditLogger::log($request->user(), 'exam_grades.upsert', ScheduleSessionStudent::class, $row->id, $data, $request);
 
         return response()->json(
