@@ -6,3 +6,4 @@ optitime-frontend/.env.local
 optitime-frontend/.env.*.local
 .vscode
 .cursor
+.env
