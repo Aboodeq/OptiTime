@@ -37,6 +37,9 @@
             </div>
             <h2 class="h6 mb-1">{{ notification.title }}</h2>
             <p class="mb-0 text-secondary">{{ notification.message }}</p>
+            <button class="notification-item__open" type="button" @click="openNotification(notification)">
+              {{ t('nav.topbar.viewAllNotifications') }}
+            </button>
           </div>
           <div class="notification-item__actions">
             <AppIconButton
@@ -68,6 +71,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import AppButton from '@/components/common/AppButton.vue'
 import AppIconButton from '@/components/common/AppIconButton.vue'
 import AppStatsGrid from '@/components/common/AppStatsGrid.vue'
@@ -76,6 +80,7 @@ import { useNotificationsPage } from '@/features/notifications/model/composables
 import { useAuthStore } from '@/store/auth.store'
 
 const { t, locale } = useI18n()
+const router = useRouter()
 const authStore = useAuthStore()
 const { notifications, notificationsCount, unreadCount, readCount, markAsRead, markAllAsRead, removeNotification } =
   useNotificationsPage()
@@ -126,6 +131,11 @@ async function handleMarkAsRead(notificationId) {
   await markAsRead(notificationId)
 }
 
+async function openNotification(notification) {
+  await markAsRead(notification.id)
+  router.push(notification?.payload?.route || '/notifications')
+}
+
 async function handleMarkAllAsRead() {
   await markAllAsRead()
 }
@@ -174,5 +184,14 @@ async function handleDelete(notificationId) {
   display: flex;
   align-items: flex-start;
   gap: 6px;
+}
+
+.notification-item__open {
+  margin-top: 8px;
+  border: none;
+  background: transparent;
+  color: #4361ee;
+  font-weight: 700;
+  padding: 0;
 }
 </style>

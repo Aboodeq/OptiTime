@@ -16,11 +16,13 @@ class AppNotification extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'id', 'user_id', 'title', 'message', 'type', 'priority', 'is_read', 'created_at',
+        'id', 'user_id', 'title', 'message', 'type', 'priority', 'payload', 'is_read', 'read_at', 'created_at',
     ];
 
     protected $casts = [
         'is_read' => 'boolean',
+        'payload' => 'array',
+        'read_at' => 'datetime',
         'created_at' => 'datetime',
     ];
 

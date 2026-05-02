@@ -25,8 +25,34 @@ class NotificationController extends Controller
             ->where('user_id', $request->user()->id)
             ->where('id', $id)
             ->firstOrFail();
-        $n->update(['is_read' => true]);
+        $n->update(['is_read' => true, 'read_at' => now()]);
 
         return response()->json(['read' => true]);
+    }
+
+    public function markAllRead(Request $request): JsonResponse
+    {
+        AppNotification::query()
+            ->where('user_id', $request->user()->id)
+            ->where('is_read', false)
+            ->update(['is_read' => true, 'read_at' => now()]);
+
+        $items = AppNotification::query()
+            ->where('user_id', $request->user()->id)
+            ->orderByDesc('created_at')
+            ->paginate(20);
+
+        return response()->json($items);
+    }
+
+    public function destroy(Request $request, string $id): JsonResponse
+    {
+        AppNotification::query()
+            ->where('user_id', $request->user()->id)
+            ->where('id', $id)
+            ->firstOrFail()
+            ->delete();
+
+        return response()->json(['deleted' => true]);
     }
 }

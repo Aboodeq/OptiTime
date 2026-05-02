@@ -1329,7 +1329,12 @@
       "types": {
         "schedule": "Schedule",
         "announcement": "Announcement",
-        "reminder": "Reminder"
+        "reminder": "Reminder",
+        "schedule_published": "Schedule",
+        "schedule_updated": "Schedule",
+        "lecture_request_submitted": "Lecture request",
+        "lecture_request_reviewed": "Lecture request",
+        "grade_posted": "Grades"
       },
       "priority": {
         "high": "High",

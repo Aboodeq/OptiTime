@@ -9,7 +9,10 @@ import { useLoadingStore } from '@/store/loading.store'
  */
 export async function apiFetch(path, options = {}) {
   const loadingStore = useLoadingStore()
-  loadingStore.beginRequest()
+  const shouldTrackLoading = options.skipLoading !== true
+  if (shouldTrackLoading) {
+    loadingStore.beginRequest()
+  }
   const base = getApiBaseUrl().replace(/\/+$/, '')
   let normalizedPath = path.startsWith('/') ? path : `/${path}`
   // Base already ends with /api; strip a duplicate /api prefix from the path (avoids /api/api/... → 404).
@@ -24,7 +27,7 @@ export async function apiFetch(path, options = {}) {
     headers.set('Accept', 'application/json')
   }
 
-  const { json: jsonBody, ...rest } = options
+  const { json: jsonBody, skipLoading: _skipLoading, ...rest } = options
   let body = rest.body
   if (jsonBody !== undefined) {
     body = JSON.stringify(jsonBody)
@@ -45,7 +48,9 @@ export async function apiFetch(path, options = {}) {
       body,
     })
   } finally {
-    loadingStore.endRequest()
+    if (shouldTrackLoading) {
+      loadingStore.endRequest()
+    }
   }
 }
 

@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'firebase' => [
+        'project_id' => env('FIREBASE_PROJECT_ID'),
+        'service_account_path' => env('FIREBASE_SERVICE_ACCOUNT_PATH'),
+    ],
+
 ];

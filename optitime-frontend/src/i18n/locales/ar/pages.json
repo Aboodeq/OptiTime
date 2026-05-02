@@ -1329,7 +1329,12 @@
       "types": {
         "schedule": "الجدول",
         "announcement": "إعلان",
-        "reminder": "تذكير"
+        "reminder": "تذكير",
+        "schedule_published": "الجدول",
+        "schedule_updated": "الجدول",
+        "lecture_request_submitted": "طلب محاضرة",
+        "lecture_request_reviewed": "طلب محاضرة",
+        "grade_posted": "الدرجات"
       },
       "priority": {
         "high": "مرتفعة",
