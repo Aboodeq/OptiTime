@@ -103,6 +103,13 @@ final class ScheduleSettings
         return ! empty($hc[$key]['enabled']);
     }
 
+    public function hasHardConstraint(string $key): bool
+    {
+        $hc = $this->data['hard_constraints'] ?? [];
+
+        return is_array($hc) && isset($hc[$key]) && is_array($hc[$key]);
+    }
+
     
     public function getSoft(string $key): array
     {
@@ -121,6 +128,19 @@ final class ScheduleSettings
     public function maxDailyLectures(): int
     {
         return (int) ($this->data['max_daily_lectures'] ?? 5);
+    }
+
+    public function isMaxDailyLecturesHardEnabled(): bool
+    {
+        if ($this->hasHardConstraint('max_daily_lectures')) {
+            return $this->isHardEnabled('max_daily_lectures');
+        }
+
+        // Backward compatibility: older settings stored this as soft-only,
+        // but business expects the configured daily cap to be respected.
+        $soft = $this->getSoft('max_daily_lectures');
+
+        return $soft['enabled'];
     }
 
     public function capacityThreshold(): float

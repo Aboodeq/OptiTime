@@ -61,7 +61,9 @@ class OptiTimeSchedulingSeeder extends Seeder
         $hard = [
             'no_instructor_overlap' => true,
             'no_room_overlap' => true,
+            'no_section_overlap' => true,
             'room_capacity' => true,
+            'room_status_available' => true,
             'lab_for_lab' => true,
             'working_hours' => true,
             'instructor_availability' => false,

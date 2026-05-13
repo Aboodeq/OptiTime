@@ -18,7 +18,9 @@
   "hard_constraints": {
     "no_instructor_overlap": { "enabled": true },
     "no_room_overlap": { "enabled": true },
+    "no_section_overlap": { "enabled": true },
     "room_capacity": { "enabled": true },
+    "room_status_available": { "enabled": true },
     "lab_for_lab": { "enabled": true },
     "working_hours": { "enabled": true },
     "instructor_availability": { "enabled": false },

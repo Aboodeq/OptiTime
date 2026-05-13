@@ -17,6 +17,7 @@ use App\Services\ScheduleSessionStudentAssignmentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class CoordinatorScheduleController extends Controller
 {
@@ -58,7 +59,12 @@ class CoordinatorScheduleController extends Controller
         );
     }
 
-    public function syncSessions(SyncScheduleSessionsRequest $request, string $id, ScheduleSessionStudentAssignmentService $sessionStudentAssignment): JsonResponse
+    public function syncSessions(
+        SyncScheduleSessionsRequest $request,
+        string $id,
+        ScheduleSessionStudentAssignmentService $sessionStudentAssignment,
+        ScheduleGenerateService $generator
+    ): JsonResponse
     {
         $plan = SemesterSchedulePlan::query()->findOrFail($id);
         if ($plan->status === 'published') {
@@ -117,27 +123,57 @@ class CoordinatorScheduleController extends Controller
             return response()->json(['message' => 'Validation failed.', 'errors' => $errors], 422);
         }
 
-        $overlapErr = $this->detectScheduleOverlaps($normalized);
-        if ($overlapErr !== null) {
-            return response()->json(['message' => $overlapErr, 'errors' => [$overlapErr]], 422);
+        $preFinalValidation = $generator->validateSessionsBeforePublish(
+            (string) $semesterId,
+            $sessionsIn,
+            null,
+            null,
+            null,
+            false
+        );
+        if (! $preFinalValidation['ok']) {
+            return response()->json([
+                'message' => 'Final hard-constraint validation failed.',
+                'errors' => $preFinalValidation['errors'],
+                'meta' => [
+                    'hard_violations' => $preFinalValidation['hard_count'],
+                    'hard_breakdown' => $preFinalValidation['hard_breakdown'],
+                ],
+            ], 422);
         }
 
-        DB::transaction(function () use ($plan, $normalized): void {
-            ScheduleSession::query()->where('schedule_plan_id', $plan->id)->delete();
-            foreach ($normalized as $s) {
-                ScheduleSession::query()->create([
-                    'schedule_plan_id' => $plan->id,
-                    'room_id' => $s['room_id'],
-                    'section_instructor_id' => $s['section_instructor_id'],
-                    'course_offering_id' => $s['course_offering_id'],
-                    'day_value' => $s['day_value'],
-                    'start_time' => $s['start_time'],
-                    'end_time' => $s['end_time'],
-                ]);
-            }
-        });
+        try {
+            DB::transaction(function () use ($plan, $normalized, $sessionStudentAssignment): void {
+                ScheduleSession::query()->where('schedule_plan_id', $plan->id)->delete();
+                foreach ($normalized as $s) {
+                    ScheduleSession::query()->create([
+                        'schedule_plan_id' => $plan->id,
+                        'room_id' => $s['room_id'],
+                        'section_instructor_id' => $s['section_instructor_id'],
+                        'course_offering_id' => $s['course_offering_id'],
+                        'day_value' => $s['day_value'],
+                        'start_time' => $s['start_time'],
+                        'end_time' => $s['end_time'],
+                    ]);
+                }
 
-        $sessionStudentAssignment->syncForPlan((string) $plan->id);
+                $sessionStudentAssignment->syncForPlan((string) $plan->id);
+                $postErrors = $this->postAssignmentValidationErrors(
+                    (string) $plan->id,
+                    $sessionStudentAssignment,
+                    false
+                );
+                if ($postErrors !== []) {
+                    throw ValidationException::withMessages($postErrors);
+                }
+            });
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Final validation failed after student assignment.',
+                'errors' => $this->flattenValidationErrors($e),
+            ], 422);
+        }
+
         $this->notifyPlanStakeholders(
             (string) $plan->id,
             'Schedule updated',
@@ -159,14 +195,87 @@ class CoordinatorScheduleController extends Controller
         );
     }
 
-    public function update(Request $request, string $id): JsonResponse
+    public function update(
+        Request $request,
+        string $id,
+        ScheduleGenerateService $generator,
+        ScheduleSessionStudentAssignmentService $sessionStudentAssignment
+    ): JsonResponse
     {
         $row = SemesterSchedulePlan::query()->findOrFail($id);
         $data = $request->validate([
             'status' => 'sometimes|string|max:32',
             'notes' => 'sometimes|nullable|string',
         ]);
-        $row->update($data);
+
+        $nextStatus = array_key_exists('status', $data)
+            ? strtolower(trim((string) $data['status']))
+            : strtolower(trim((string) $row->status));
+        $publishingNow = $nextStatus === 'published' && strtolower(trim((string) $row->status)) !== 'published';
+
+        if ($publishingNow) {
+            $sessions = ScheduleSession::query()
+                ->where('schedule_plan_id', $row->id)
+                ->get()
+                ->map(fn (ScheduleSession $session) => [
+                    'room_id' => (string) $session->room_id,
+                    'section_instructor_id' => (string) $session->section_instructor_id,
+                    'course_offering_id' => (string) $session->course_offering_id,
+                    'day' => (string) $session->day_value,
+                    'start' => substr((string) $session->start_time, 0, 5),
+                    'end' => substr((string) $session->end_time, 0, 5),
+                ])
+                ->values()
+                ->all();
+
+            $prePublishValidation = $generator->validateSessionsBeforePublish(
+                (string) $row->semester_id,
+                $sessions,
+                null,
+                null,
+                null,
+                true
+            );
+            if (! $prePublishValidation['ok']) {
+                return response()->json([
+                    'success' => false,
+                    'reason' => 'final hard-constraint validation failed before publish',
+                    'meta' => [
+                        'hard_violations' => $prePublishValidation['hard_count'],
+                        'hard_breakdown' => $prePublishValidation['hard_breakdown'],
+                        'validation_errors' => $prePublishValidation['errors'],
+                    ],
+                ], 422);
+            }
+        }
+
+        try {
+            DB::transaction(function () use ($row, $data, $publishingNow, $sessionStudentAssignment): void {
+                $row->update($data);
+                if (! $publishingNow) {
+                    return;
+                }
+
+                $sessionStudentAssignment->syncForPlan((string) $row->id);
+                $postErrors = $this->postAssignmentValidationErrors(
+                    (string) $row->id,
+                    $sessionStudentAssignment,
+                    true
+                );
+                if ($postErrors !== []) {
+                    throw ValidationException::withMessages($postErrors);
+                }
+            });
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'reason' => 'final validation failed after student assignment',
+                'meta' => [
+                    'validation_errors' => $this->flattenValidationErrors($e),
+                ],
+            ], 422);
+        }
+
         $this->notifyPlanStakeholders(
             (string) $row->id,
             'Schedule updated',
@@ -207,6 +316,7 @@ class CoordinatorScheduleController extends Controller
             'instructor_availabilities.*.day_of_week' => 'required|string|max:32',
             'instructor_availabilities.*.start' => 'required|string|max:8',
             'instructor_availabilities.*.end' => 'required|string|max:8',
+            'instructor_availabilities.*.status' => 'nullable|string|max:20',
         ]);
 
         $result = $generator->generate(
@@ -223,28 +333,71 @@ class CoordinatorScheduleController extends Controller
         if (! $result['success'] || empty($result['sessions'])) {
             return response()->json($result, 422);
         }
-
-        $plan = SemesterSchedulePlan::query()->create([
-            'semester_id' => $request->string('semester_id')->toString(),
-            'status' => 'published',
-            'selected_algorithm' => $request->string('algorithm')->toString(),
-            'generated_at' => now(),
-            'notes' => $request->input('notes'),
-        ]);
-
-        foreach ($result['sessions'] as $s) {
-            ScheduleSession::query()->create([
-                'schedule_plan_id' => $plan->id,
-                'room_id' => $s['room_id'],
-                'section_instructor_id' => $s['section_instructor_id'],
-                'course_offering_id' => $s['course_offering_id'],
-                'day_value' => $s['day'],
-                'start_time' => $s['start'],
-                'end_time' => $s['end'],
-            ]);
+        $finalValidation = $generator->validateSessionsBeforePublish(
+            $request->string('semester_id')->toString(),
+            $result['sessions'],
+            $request->input('schedule_settings'),
+            $request->string('settings_id')->toString() ?: null,
+            $request->input('instructor_availabilities'),
+        );
+        if (! $finalValidation['ok']) {
+            return response()->json([
+                'success' => false,
+                'reason' => 'final hard-constraint validation failed before publish',
+                'sessions' => [],
+                'meta' => [
+                    'hard_violations' => $finalValidation['hard_count'],
+                    'hard_breakdown' => $finalValidation['hard_breakdown'],
+                    'validation_errors' => $finalValidation['errors'],
+                ],
+            ], 422);
         }
 
-        $sessionStudentAssignment->syncForPlan((string) $plan->id);
+        try {
+            $plan = DB::transaction(function () use ($request, $result, $sessionStudentAssignment): SemesterSchedulePlan {
+                $plan = SemesterSchedulePlan::query()->create([
+                    'semester_id' => $request->string('semester_id')->toString(),
+                    'status' => 'published',
+                    'selected_algorithm' => $request->string('algorithm')->toString(),
+                    'generated_at' => now(),
+                    'notes' => $request->input('notes'),
+                ]);
+
+                foreach ($result['sessions'] as $session) {
+                    ScheduleSession::query()->create([
+                        'schedule_plan_id' => $plan->id,
+                        'room_id' => $session['room_id'],
+                        'section_instructor_id' => $session['section_instructor_id'],
+                        'course_offering_id' => $session['course_offering_id'],
+                        'day_value' => $session['day'],
+                        'start_time' => $session['start'],
+                        'end_time' => $session['end'],
+                    ]);
+                }
+
+                $sessionStudentAssignment->syncForPlan((string) $plan->id);
+                $postErrors = $this->postAssignmentValidationErrors(
+                    (string) $plan->id,
+                    $sessionStudentAssignment,
+                    true
+                );
+                if ($postErrors !== []) {
+                    throw ValidationException::withMessages($postErrors);
+                }
+
+                return $plan;
+            });
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'reason' => 'final validation failed after student assignment',
+                'sessions' => [],
+                'meta' => [
+                    'validation_errors' => $this->flattenValidationErrors($e),
+                ],
+            ], 422);
+        }
+
         $this->notifyPlanStakeholders(
             (string) $plan->id,
             'New schedule published',
@@ -257,7 +410,12 @@ class CoordinatorScheduleController extends Controller
 
         return response()->json([
             'schedule_plan' => $plan->load('sessions'),
-            'meta' => $result['meta'] ?? [],
+            'meta' => array_merge($result['meta'] ?? [], [
+                'final_validation' => [
+                    'hard_violations' => $finalValidation['hard_count'],
+                    'hard_breakdown' => $finalValidation['hard_breakdown'],
+                ],
+            ]),
         ], 201);
     }
 
@@ -272,39 +430,51 @@ class CoordinatorScheduleController extends Controller
     }
 
     /**
-     * @param  array<int, array{day_value: string, start_time: string, end_time: string, room_id: string, instructor_id: string}>  $normalized
+     * @return array<string, list<string>>
      */
-    private function detectScheduleOverlaps(array $normalized): ?string
-    {
-        $toMin = function (string $time): int {
-            $parts = explode(':', substr($time, 0, 8));
+    private function postAssignmentValidationErrors(
+        string $planId,
+        ScheduleSessionStudentAssignmentService $sessionStudentAssignment,
+        bool $enforceMinInstructorLoad
+    ): array {
+        $errorsByKey = [];
 
-            return ((int) $parts[0]) * 60 + ((int) ($parts[1] ?? 0));
-        };
-
-        $byRoomDay = [];
-        $byInstDay = [];
-        foreach ($normalized as $s) {
-            $rs = $toMin($s['start_time']);
-            $re = $toMin($s['end_time']);
-            $rk = $s['room_id'].'|'.$s['day_value'];
-            $ik = $s['instructor_id'].'|'.$s['day_value'];
-            $byRoomDay[$rk][] = [$rs, $re];
-            $byInstDay[$ik][] = [$rs, $re];
+        $studentOverlapErrors = $sessionStudentAssignment->detectStudentOverlapErrorsForPlan($planId);
+        if ($studentOverlapErrors !== []) {
+            $errorsByKey['student_schedule'] = $studentOverlapErrors;
         }
 
-        foreach ([$byRoomDay, $byInstDay] as $groups) {
-            foreach ($groups as $intervals) {
-                usort($intervals, fn ($a, $b) => $a[0] <=> $b[0]);
-                for ($i = 1; $i < count($intervals); $i++) {
-                    if ($intervals[$i][0] < $intervals[$i - 1][1]) {
-                        return 'Schedule has overlapping room or instructor assignments.';
-                    }
-                }
+        $roomCapacityErrors = $sessionStudentAssignment->detectRoomCapacityErrorsForPlan($planId);
+        if ($roomCapacityErrors !== []) {
+            $errorsByKey['room_capacity'] = $roomCapacityErrors;
+        }
+
+        $studentEligibilityErrors = $sessionStudentAssignment->detectStudentEligibilityErrorsForPlan($planId);
+        if ($studentEligibilityErrors !== []) {
+            $errorsByKey['student_eligibility'] = $studentEligibilityErrors;
+        }
+
+        $instructorLoadErrors = $sessionStudentAssignment->detectInstructorWeeklyLoadErrorsForPlan($planId, $enforceMinInstructorLoad);
+        if ($instructorLoadErrors !== []) {
+            $errorsByKey['instructor_workload'] = $instructorLoadErrors;
+        }
+
+        return $errorsByKey;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function flattenValidationErrors(ValidationException $e): array
+    {
+        $out = [];
+        foreach ($e->errors() as $key => $messages) {
+            foreach ($messages as $message) {
+                $out[] = "{$key}: {$message}";
             }
         }
 
-        return null;
+        return $out === [] ? ['Validation failed.'] : $out;
     }
 
     private function notifyPlanStakeholders(

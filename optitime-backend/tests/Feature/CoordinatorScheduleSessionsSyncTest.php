@@ -53,7 +53,7 @@ class CoordinatorScheduleSessionsSyncTest extends TestCase
                     'course_offering_id' => $offering->id,
                     'day' => 'sun',
                     'start' => '08:00',
-                    'end' => '09:00',
+                    'end' => '08:50',
                 ],
             ],
         ]);
@@ -61,6 +61,10 @@ class CoordinatorScheduleSessionsSyncTest extends TestCase
         $response->assertStatus(200);
         $this->assertCount(1, ScheduleSession::query()->where('schedule_plan_id', $plan->id)->get());
         $this->assertGreaterThan(0, ScheduleSessionStudent::query()->count());
+
+        $session = ScheduleSession::query()->where('schedule_plan_id', $plan->id)->with('room')->firstOrFail();
+        $assigned = ScheduleSessionStudent::query()->where('schedule_session_id', $session->id)->count();
+        $this->assertLessThanOrEqual((int) $session->room->capacity, $assigned);
     }
 
     public function test_sync_rejects_published_plan(): void
@@ -89,7 +93,7 @@ class CoordinatorScheduleSessionsSyncTest extends TestCase
                     'course_offering_id' => $offering->id,
                     'day' => 'sun',
                     'start' => '08:00',
-                    'end' => '09:00',
+                    'end' => '08:50',
                 ],
             ],
         ]);
@@ -128,15 +132,15 @@ class CoordinatorScheduleSessionsSyncTest extends TestCase
                     'course_offering_id' => $offering1->id,
                     'day' => 'sun',
                     'start' => '08:00',
-                    'end' => '09:00',
+                    'end' => '08:50',
                 ],
                 [
                     'room_id' => $roomId,
                     'section_instructor_id' => $csi2->id,
                     'course_offering_id' => $offering2->id,
                     'day' => 'sun',
-                    'start' => '08:30',
-                    'end' => '09:30',
+                    'start' => '08:00',
+                    'end' => '08:50',
                 ],
             ],
         ]);
@@ -159,6 +163,7 @@ class CoordinatorScheduleSessionsSyncTest extends TestCase
         $csiB = CourseSectionInstructor::query()
             ->where('id', '!=', $csiA->id)
             ->where('instructor_id', '!=', $csiA->instructor_id)
+            ->where('section_id', '!=', $csiA->section_id)
             ->with('section.course')
             ->firstOrFail();
 
@@ -176,14 +181,14 @@ class CoordinatorScheduleSessionsSyncTest extends TestCase
             'prerequisite_course_id' => $csiA->section->course_id,
         ]);
 
-        $studentUser = User::query()->where('email', 'student@optitime.local')->firstOrFail();
+        $studentUser = User::query()->where('email', 'student1@optitime.local')->firstOrFail();
         $student = Student::query()->where('user_id', $studentUser->id)->firstOrFail();
 
         $otherStudentUser = User::query()->create([
             'role_id' => $studentUser->role_id,
             'department_id' => $studentUser->department_id,
             'full_name' => 'Blocked Student',
-            'email' => 'blocked-student@optitime.local',
+            'email' => 'blocked-student1@optitime.local',
             'password_hash' => $studentUser->password_hash,
             'is_active' => true,
         ]);
@@ -236,8 +241,19 @@ class CoordinatorScheduleSessionsSyncTest extends TestCase
             'grade_entered_at' => now(),
         ]);
 
-        $roomOne = Room::query()->where('type', '!=', 'lab')->orderBy('capacity')->value('id');
-        $roomTwo = Room::query()->where('type', '!=', 'lab')->where('id', '!=', $roomOne)->value('id');
+        $roomOne = Room::query()
+            ->where('type', '!=', 'lab')
+            ->where('capacity', '>=', (int) $csiB->section->capacity)
+            ->orderBy('capacity')
+            ->value('id');
+        $roomTwo = Room::query()
+            ->where('type', '!=', 'lab')
+            ->where('id', '!=', $roomOne)
+            ->where('capacity', '>=', (int) $csiA->section->capacity)
+            ->orderBy('capacity')
+            ->value('id');
+        $this->assertNotNull($roomOne);
+        $this->assertNotNull($roomTwo);
 
         $response = $this->putJson("/api/coordinator/schedules/{$draftPlan->id}/sessions", [
             'sessions' => [
@@ -247,7 +263,7 @@ class CoordinatorScheduleSessionsSyncTest extends TestCase
                     'course_offering_id' => $offeringB->id,
                     'day' => 'sun',
                     'start' => '08:00',
-                    'end' => '09:00',
+                    'end' => '08:50',
                 ],
                 [
                     'room_id' => $roomTwo,
@@ -255,7 +271,7 @@ class CoordinatorScheduleSessionsSyncTest extends TestCase
                     'course_offering_id' => $offeringA->id,
                     'day' => 'sun',
                     'start' => '08:00',
-                    'end' => '09:00',
+                    'end' => '08:50',
                 ],
             ],
         ]);
@@ -288,10 +304,72 @@ class CoordinatorScheduleSessionsSyncTest extends TestCase
                 $q->where('schedule_plan_id', $draftPlan->id)
                     ->where('day_value', 'sun')
                     ->where('start_time', '08:00:00')
-                    ->where('end_time', '09:00:00');
+                    ->where('end_time', '08:50:00');
             })
             ->count();
 
         $this->assertSame(1, $sameTimeAssignedCount);
     }
+
+    public function test_update_to_published_rejects_incomplete_plan_before_post_assignment_validation(): void
+    {
+        $user = User::query()->where('email', 'coordinator@optitime.local')->firstOrFail();
+        Sanctum::actingAs($user);
+
+        $semesterId = Semester::query()->value('id');
+        $plan = SemesterSchedulePlan::query()->create([
+            'semester_id' => $semesterId,
+            'status' => 'draft',
+        ]);
+
+        $csi = CourseSectionInstructor::query()->with('section.course')->firstOrFail();
+        $offering = CourseOffering::query()
+            ->where('course_id', $csi->section->course_id)
+            ->where('semester_id', $semesterId)
+            ->firstOrFail();
+        $room = Room::query()
+            ->where('type', '!=', 'lab')
+            ->where('capacity', '>=', (int) $csi->section->capacity)
+            ->orderBy('capacity')
+            ->firstOrFail();
+
+        $session = ScheduleSession::query()->create([
+            'schedule_plan_id' => $plan->id,
+            'room_id' => $room->id,
+            'section_instructor_id' => $csi->id,
+            'course_offering_id' => $offering->id,
+            'day_value' => 'sun',
+            'start_time' => '08:00:00',
+            'end_time' => '08:50:00',
+        ]);
+
+        $studentIds = Student::query()
+            ->limit(((int) $room->capacity) + 1)
+            ->pluck('user_id')
+            ->all();
+        foreach ($studentIds as $studentId) {
+            ScheduleSessionStudent::query()->create([
+                'schedule_session_id' => $session->id,
+                'student_id' => (string) $studentId,
+                'assignment_source' => 'manual',
+                'oral' => 0,
+                'lab' => 0,
+                'midterm' => 0,
+                'final' => 0,
+                'total' => 0,
+                'letter_grade' => 'F',
+                'grade_entered_at' => null,
+            ]);
+        }
+
+        $response = $this->putJson("/api/coordinator/schedules/{$plan->id}", [
+            'status' => 'published',
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonPath('success', false);
+        $response->assertJsonPath('reason', 'final hard-constraint validation failed before publish');
+        $this->assertSame('draft', (string) $plan->fresh()->status);
+    }
 }
+

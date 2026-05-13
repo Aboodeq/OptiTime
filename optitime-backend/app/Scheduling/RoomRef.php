@@ -8,5 +8,6 @@ final class RoomRef
         public readonly string $id,
         public readonly int $capacity,
         public readonly bool $isLab,
+        public readonly string $status = 'available',
     ) {}
 }

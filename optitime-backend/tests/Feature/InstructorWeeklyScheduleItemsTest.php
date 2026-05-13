@@ -56,7 +56,7 @@ class InstructorWeeklyScheduleItemsTest extends TestCase
             'end_time' => '09:00:00',
         ]);
 
-        $studentUser = User::query()->where('email', 'student@optitime.local')->firstOrFail();
+        $studentUser = User::query()->where('email', 'student1@optitime.local')->firstOrFail();
         ScheduleSessionStudent::query()->create([
             'schedule_session_id' => $session->id,
             'student_id' => $studentUser->id,
@@ -78,3 +78,4 @@ class InstructorWeeklyScheduleItemsTest extends TestCase
         $response->assertJsonPath('items.0.students.0.id', $studentUser->id);
     }
 }
+

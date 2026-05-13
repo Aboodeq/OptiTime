@@ -53,7 +53,7 @@ class StudentWeeklyScheduleItemsTest extends TestCase
 
         $this->assertSame(0, ScheduleSessionStudent::query()->count());
 
-        $student = User::query()->where('email', 'student@optitime.local')->firstOrFail();
+        $student = User::query()->where('email', 'student1@optitime.local')->firstOrFail();
         Sanctum::actingAs($student);
 
         $response = $this->getJson('/api/student/weekly-schedule?semester_id='.$semesterId);
@@ -106,7 +106,7 @@ class StudentWeeklyScheduleItemsTest extends TestCase
             'end_time' => '12:00:00',
         ]);
 
-        $studentUser = User::query()->where('email', 'student@optitime.local')->firstOrFail();
+        $studentUser = User::query()->where('email', 'student1@optitime.local')->firstOrFail();
         $otherStudent = Student::query()
             ->where('user_id', '!=', $studentUser->id)
             ->first();
@@ -116,7 +116,7 @@ class StudentWeeklyScheduleItemsTest extends TestCase
                 'role_id' => $studentUser->role_id,
                 'department_id' => $studentUser->department_id,
                 'full_name' => 'Other Test Student',
-                'email' => 'other-student@optitime.local',
+                'email' => 'other-student1@optitime.local',
                 'password_hash' => $studentUser->password_hash,
                 'is_active' => true,
             ]);
@@ -150,3 +150,4 @@ class StudentWeeklyScheduleItemsTest extends TestCase
         $response->assertJsonMissingPath('items.0.students');
     }
 }
+

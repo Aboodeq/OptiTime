@@ -122,7 +122,7 @@ class InstructorAvailabilityTest extends TestCase
     {
         $this->getJson('/api/instructor/availability-grid-context')->assertUnauthorized();
 
-        $student = $this->user('student@optitime.local');
+        $student = $this->user('student1@optitime.local');
         Sanctum::actingAs($student);
         $this->getJson('/api/instructor/availability-grid-context')->assertForbidden();
 
@@ -147,3 +147,4 @@ class InstructorAvailabilityTest extends TestCase
         $response->assertJsonMissingPath('hard_constraints');
     }
 }
+

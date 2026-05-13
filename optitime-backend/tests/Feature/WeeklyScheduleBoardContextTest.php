@@ -53,7 +53,7 @@ class WeeklyScheduleBoardContextTest extends TestCase
 
     public function test_student_weekly_includes_board_without_settings_id(): void
     {
-        $user = User::query()->where('email', 'student@optitime.local')->firstOrFail();
+        $user = User::query()->where('email', 'student1@optitime.local')->firstOrFail();
         Sanctum::actingAs($user);
         $semesterId = Semester::query()->value('id');
 
@@ -79,3 +79,4 @@ class WeeklyScheduleBoardContextTest extends TestCase
         $this->assertNotNull($response->json('settings_id'));
     }
 }
+
