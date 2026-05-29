@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Admin\AdminRoleController;
 use App\Http\Controllers\Api\Admin\AdminScheduleSettingCurrentController;
 use App\Http\Controllers\Api\Admin\AdminSectionInstructorController;
 use App\Http\Controllers\Api\Admin\AdminStudentController;
+use App\Http\Controllers\Api\Admin\AdminSystemBackupController;
 use App\Http\Controllers\Api\Admin\AdminUserController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Coordinator\CoordinatorCourseSemesterController;
@@ -47,13 +48,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware(['schedule.access'])->get('/schedule/generate/{id}', [ScheduleGenerationController::class, 'show']);
 
     Route::post('/auth/logout', [AuthController::class, 'logout']);
-    Route::post('/auth/change-password', [AuthController::class, 'changePassword']);
+    Route::middleware('permission:profile.update')->post('/auth/change-password', [AuthController::class, 'changePassword']);
 
     Route::middleware('permission:profile.view')->get('/profile', [ProfileController::class, 'show']);
     Route::middleware('permission:profile.update')->put('/profile', [ProfileController::class, 'update']);
 
     Route::middleware('permission:profile.view')->get('/profile/settings', [UserSettingController::class, 'show']);
-    Route::middleware('permission:profile.update')->put('/profile/settings', [UserSettingController::class, 'update']);
+    Route::middleware('permission:notifications.update')->put('/profile/settings', [UserSettingController::class, 'update']);
 
     Route::middleware('permission:notifications.view')->get('/notifications', [NotificationController::class, 'index']);
     Route::middleware('permission:notifications.update')->post('/notifications/{id}/read', [NotificationController::class, 'markRead']);
@@ -104,6 +105,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::middleware('permission:courses.update')->post('/course-semester', [CoordinatorCourseSemesterController::class, 'sync']);
 
         Route::middleware('permission:audit_logs.view')->get('/audit-logs', [AdminAuditController::class, 'index']);
+        Route::middleware('permission:system_backups.create')->post('/system-backups/full', [AdminSystemBackupController::class, 'createFull']);
     });
 
     Route::prefix('coordinator')->group(function () {
@@ -154,6 +156,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::middleware('permission:instructor.requests.view')->get('/lecture-requests', [InstructorLectureRequestController::class, 'index']);
         Route::middleware('permission:instructor.requests.create')->post('/lecture-requests', [InstructorLectureRequestController::class, 'store']);
+        Route::middleware('permission:instructor.requests.update')->put('/lecture-requests/{id}', [InstructorLectureRequestController::class, 'update']);
+        Route::middleware('permission:instructor.requests.delete')->delete('/lecture-requests/{id}', [InstructorLectureRequestController::class, 'destroy']);
     });
 
     Route::prefix('student')->group(function () {
@@ -173,8 +177,10 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('exams')->group(function () {
+        Route::middleware('permission:exam_sessions.view')->get('/semesters', [ExamSessionController::class, 'semesters']);
         Route::middleware('permission:exam_sessions.view')->get('/sessions', [ExamSessionController::class, 'index']);
         Route::middleware('permission:exam_sessions.update')->post('/sessions/mark-done', [ExamSessionController::class, 'markDone']);
+        Route::middleware('permission:exam_grades.view')->get('/grades', [ExamGradeController::class, 'index']);
         Route::middleware('permission:exam_grades.update')->post('/grades', [ExamGradeController::class, 'storeOrUpdate']);
         Route::middleware('permission:exam_grades.export')->get('/grades/session-pdf', [ExamGradeController::class, 'exportSessionPdf']);
     });

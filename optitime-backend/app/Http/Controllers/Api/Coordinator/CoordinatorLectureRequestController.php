@@ -31,11 +31,24 @@ class CoordinatorLectureRequestController extends Controller
     {
         $row = LectureRequest::query()->with('instructor')->findOrFail($id);
         $data = $request->validate([
-            'status' => 'required|string|max:20',
+            'status' => 'required|in:pending,approved,rejected,accepted',
             'review_note' => 'nullable|string',
         ]);
-        $data['reviewed_at'] = now();
-        $row->update($data);
+
+        $previousStatus = (string) $row->status;
+        $nextStatus = (string) $data['status'];
+        if ($previousStatus !== 'pending' && $previousStatus !== $nextStatus) {
+            return response()->json([
+                'message' => 'Only pending lecture requests can change status.',
+            ], 422);
+        }
+
+        $payload = [
+            'status' => $nextStatus,
+            'review_note' => $data['review_note'] ?? null,
+            'reviewed_at' => $nextStatus === 'pending' ? null : now(),
+        ];
+        $row->update($payload);
 
         $row->load([
             'scheduleSession.room',
@@ -53,23 +66,28 @@ class CoordinatorLectureRequestController extends Controller
             ->all();
 
         $status = (string) $row->status;
-        $notificationDispatch->notifyUsers(
-            [(string) $row->instructor->user_id],
-            'Lecture request reviewed',
-            "Your lecture request status is now: {$status}.",
-            'lecture_request_reviewed',
-            'high',
-            [
-                'route' => '/instructor/lecture-requests',
-                'link' => '/instructor/lecture-requests',
-                'lecture_request_id' => (string) $row->id,
-                'status' => $status,
-            ]
-        );
+        $statusChanged = $previousStatus !== $nextStatus;
+        if ($statusChanged) {
+            $notificationDispatch->notifyUsers(
+                [(string) $row->instructor->user_id],
+                'Lecture request reviewed',
+                "Your lecture request status is now: {$status}.",
+                'lecture_request_reviewed',
+                'high',
+                [
+                    'route' => '/instructor/lecture-requests',
+                    'link' => '/instructor/lecture-requests',
+                    'lecture_request_id' => (string) $row->id,
+                    'status' => $status,
+                ]
+            );
+        }
 
-        if (in_array($status, ['approved', 'accepted', 'rejected'], true)) {
+        if ($statusChanged && $status === 'approved') {
             $course = $row->scheduleSession?->courseOffering?->course;
-            $courseLabel = $course ? (($course->code ? $course->code.' — ' : '').$course->name) : 'your lecture';
+            $courseName = (string) ($course?->name_en ?? $course?->name ?? '');
+            $courseLabel = $course ? (($course->code ? $course->code.' - ' : '').$courseName) : 'your lecture';
+
             $notificationDispatch->notifyUsers(
                 $studentIds,
                 'Lecture schedule change request reviewed',
@@ -80,7 +98,10 @@ class CoordinatorLectureRequestController extends Controller
             );
         }
 
-        AuditLogger::log($request->user(), 'lecture_requests.update', LectureRequest::class, $id, $data, $request);
+        AuditLogger::log($request->user(), 'lecture_requests.update', LectureRequest::class, $id, array_merge($payload, [
+            'previous_status' => $previousStatus,
+            'status_changed' => $statusChanged,
+        ]), $request);
 
         return response()->json($row->fresh()->load([
             'instructor.user',
@@ -115,7 +136,7 @@ class CoordinatorLectureRequestController extends Controller
                 'course' => $course ? [
                     'id' => (string) $course->id,
                     'code' => (string) $course->code,
-                    'name' => (string) $course->name,
+                    'name' => (string) ($course->name_en ?? $course->name ?? ''),
                 ] : null,
                 'section' => $section ? [
                     'id' => (string) $section->id,

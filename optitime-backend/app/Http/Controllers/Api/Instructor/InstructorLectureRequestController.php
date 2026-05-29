@@ -42,7 +42,7 @@ class InstructorLectureRequestController extends Controller
         $id = $this->instructorId($request);
         $data = $request->validate([
             'schedule_session_id' => 'required|uuid|exists:schedule_sessions,id',
-            'request_type' => 'required|string|max:20',
+            'request_type' => 'required|in:apology,makeup',
             'requested_date' => 'required|date',
             'note' => 'nullable|string|max:2000',
         ]);
@@ -83,5 +83,57 @@ class InstructorLectureRequestController extends Controller
             'scheduleSession.courseOffering.course',
             'scheduleSession.sectionInstructor.section',
         ]), 201);
+    }
+
+    public function update(Request $request, string $id): JsonResponse
+    {
+        $instructorId = $this->instructorId($request);
+        $row = LectureRequest::query()
+            ->where('id', $id)
+            ->where('instructor_id', $instructorId)
+            ->firstOrFail();
+
+        if ((string) $row->status !== 'pending') {
+            return response()->json([
+                'message' => 'Only pending lecture requests can be edited.',
+            ], 422);
+        }
+
+        $data = $request->validate([
+            'requested_date' => 'required|date',
+            'note' => 'nullable|string|max:2000',
+        ]);
+
+        $row->update([
+            'requested_date' => $data['requested_date'],
+            'note' => $data['note'] ?? null,
+        ]);
+
+        AuditLogger::log($request->user(), 'instructor.requests.update', LectureRequest::class, $row->id, $data, $request);
+
+        return response()->json($row->fresh()->load([
+            'scheduleSession.courseOffering.course',
+            'scheduleSession.sectionInstructor.section',
+        ]));
+    }
+
+    public function destroy(Request $request, string $id): JsonResponse
+    {
+        $instructorId = $this->instructorId($request);
+        $row = LectureRequest::query()
+            ->where('id', $id)
+            ->where('instructor_id', $instructorId)
+            ->firstOrFail();
+
+        if ((string) $row->status !== 'pending') {
+            return response()->json([
+                'message' => 'Only pending lecture requests can be deleted.',
+            ], 422);
+        }
+
+        $row->delete();
+        AuditLogger::log($request->user(), 'instructor.requests.delete', LectureRequest::class, $id, null, $request);
+
+        return response()->json(['deleted' => true]);
     }
 }

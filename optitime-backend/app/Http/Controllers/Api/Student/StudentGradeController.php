@@ -22,20 +22,28 @@ class StudentGradeController extends Controller
             ->get();
 
         $grades = $rows->map(function (ScheduleSessionStudent $g) {
-            $course = $g->session->courseOffering->course;
+            $session = $g->session;
+            $course = $session->courseOffering->course;
 
             return [
+                'id' => (string) $g->id,
+                'schedule_session_id' => (string) $session->id,
+                'student_id' => (string) $g->student_id,
                 'oral' => $g->oral,
                 'lab' => $g->lab,
                 'midterm' => $g->midterm,
                 'final' => $g->final,
+                'total' => $g->total,
                 'numeric_grade' => $g->total,
                 'letter_grade' => $g->letter_grade,
+                'day' => (string) $session->day_value,
+                'start' => substr((string) $session->start_time, 0, 5),
+                'end' => substr((string) $session->end_time, 0, 5),
                 'section' => [
-                    'section_name' => $g->session->sectionInstructor->section->section_name,
+                    'section_name' => $session->sectionInstructor->section->section_name,
                     'course' => [
                         'code' => $course->code,
-                        'name' => $course->name,
+                        'name' => $course->name_en ?? $course->name,
                     ],
                 ],
             ];

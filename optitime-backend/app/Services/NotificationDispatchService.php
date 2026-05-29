@@ -30,10 +30,14 @@ final class NotificationDispatchService
 
         $users = User::query()
             ->whereIn('id', $ids)
-            ->with('deviceTokens')
+            ->with(['deviceTokens', 'settings'])
             ->get();
 
         foreach ($users as $user) {
+            if (! $this->userAllowsNotificationType($user, $type)) {
+                continue;
+            }
+
             $notificationId = 'notif_'.Str::uuid()->toString();
             AppNotification::query()->create([
                 'id' => $notificationId,
@@ -56,5 +60,40 @@ final class NotificationDispatchService
                 );
             }
         }
+    }
+
+    private function userAllowsNotificationType(User $user, string $type): bool
+    {
+        $settings = $user->settings;
+        if (! $settings) {
+            return true;
+        }
+
+        $normalizedType = strtolower(trim($type));
+        $rules = [
+            // Coordinator-facing announcements.
+            'lecture_request_submitted' => ['push_announcements'],
+            // Student/instructor urgent alerts.
+            'lecture_request_reviewed' => ['push_system_alerts'],
+            'grade_posted' => ['push_system_alerts'],
+            // Weekly schedule changes are considered both schedule updates and system alerts.
+            'schedule_updated' => ['push_system_alerts', 'email_schedule_updates'],
+            'schedule_published' => ['push_system_alerts', 'email_schedule_updates'],
+            // Reserved for digest jobs when implemented.
+            'weekly_digest' => ['weekly_digest'],
+        ];
+
+        $requiredAny = $rules[$normalizedType] ?? null;
+        if (! is_array($requiredAny) || $requiredAny === []) {
+            return true;
+        }
+
+        foreach ($requiredAny as $key) {
+            if ((bool) ($settings->{$key} ?? false)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

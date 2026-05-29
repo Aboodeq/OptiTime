@@ -174,12 +174,17 @@ class CoordinatorScheduleController extends Controller
             ], 422);
         }
 
-        $this->notifyPlanStakeholders(
-            (string) $plan->id,
-            'Schedule updated',
-            'Your weekly schedule has been updated. Tap to open it.',
-            'schedule_updated'
-        );
+        $shouldNotify = $request->has('notify')
+            ? $request->boolean('notify')
+            : strtolower(trim((string) $plan->status)) === 'published';
+        if ($shouldNotify) {
+            $this->notifyPlanStakeholders(
+                (string) $plan->id,
+                'Schedule updated',
+                'Your weekly schedule has been updated. Tap to open it.',
+                'schedule_updated'
+            );
+        }
 
         AuditLogger::log($request->user(), 'schedules.update', SemesterSchedulePlan::class, $plan->id, ['sessions_synced' => count($normalized)], $request);
 
@@ -276,12 +281,14 @@ class CoordinatorScheduleController extends Controller
             ], 422);
         }
 
-        $this->notifyPlanStakeholders(
-            (string) $row->id,
-            'Schedule updated',
-            'A schedule plan related to your classes was updated.',
-            'schedule_updated'
-        );
+        if ($publishingNow) {
+            $this->notifyPlanStakeholders(
+                (string) $row->id,
+                'Schedule updated',
+                'A schedule plan related to your classes was updated.',
+                'schedule_updated'
+            );
+        }
         AuditLogger::log($request->user(), 'schedules.update', SemesterSchedulePlan::class, $id, $data, $request);
 
         return response()->json($row->fresh());
