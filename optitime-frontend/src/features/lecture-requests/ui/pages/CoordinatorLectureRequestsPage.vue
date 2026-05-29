@@ -32,6 +32,9 @@
         <template #cell-status="{ row }">
           {{ t(`pages.coordinatorWeeklySchedule.requests.statuses.${row.status}`) }}
         </template>
+        <template #cell-note="{ row }">
+          {{ row.note || '—' }}
+        </template>
         <template #cell-actions="{ row }">
           <div class="actions-cell">
             <AppIconButton
@@ -164,6 +167,7 @@ const columns = computed(() => [
   { key: 'course', label: t('pages.coordinatorWeeklySchedule.requests.columns.course') },
   { key: 'requested_date', label: t('pages.coordinatorWeeklySchedule.requests.columns.requestedDate') },
   { key: 'status', label: t('pages.coordinatorWeeklySchedule.requests.columns.status') },
+  { key: 'note', label: t('pages.instructorLectureRequests.columns.note') },
   { key: 'actions', label: t('pages.coordinatorWeeklySchedule.requests.columns.actions') },
 ])
 

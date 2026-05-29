@@ -2,6 +2,15 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { userSettingsService } from '@/features/user-settings/api/userSettings.service'
 
+function cloneSettings(value) {
+  if (!value || typeof value !== 'object') return null
+  try {
+    return JSON.parse(JSON.stringify(value))
+  } catch {
+    return null
+  }
+}
+
 export const useUserSettingsStore = defineStore('userSettings', () => {
   const initializedUserId = ref(null)
   const settings = ref(null)
@@ -24,14 +33,14 @@ export const useUserSettingsStore = defineStore('userSettings', () => {
     if (!userId) return { ok: false, code: 'NO_USER' }
     const result = await userSettingsService.saveSettings(userId, nextSettings)
     if (!result.ok) return result
-    settings.value = await userSettingsService.getSettings(userId)
+    settings.value = result.settings
     initializedUserId.value = userId
     return { ok: true }
   }
 
   function createDraft() {
     if (!settings.value) return null
-    return structuredClone(settings.value)
+    return cloneSettings(settings.value)
   }
 
   return {

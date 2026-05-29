@@ -298,11 +298,10 @@ async function handleSaveNotifications() {
 async function handleBackup() {
   const backup = await createBackup()
   if (!backup) return
-  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' })
-  const url = window.URL.createObjectURL(blob)
+  const url = window.URL.createObjectURL(backup.blob)
   const link = document.createElement('a')
   link.href = url
-  link.download = `optitime-backup-${new Date().toISOString().slice(0, 10)}.json`
+  link.download = backup.fileName
   link.click()
   window.URL.revokeObjectURL(url)
   toast.success(t('pages.userSettings.toasts.backupCreated'))

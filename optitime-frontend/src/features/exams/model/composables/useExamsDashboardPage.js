@@ -1,9 +1,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { storeToRefs } from 'pinia'
 import { authService } from '@/features/auth/api/auth.service'
 import { examsService, flattenExamSessionsPayload } from '@/features/exams/api/exams.service'
-import { useSemestersStore } from '@/features/semesters/model/stores/semesters.store'
 import { useAuthStore } from '@/store/auth.store'
 
 const DEMO_SEMESTER = Object.freeze({
@@ -15,8 +13,7 @@ const DEMO_SEMESTER = Object.freeze({
 export function useExamsDashboardPage() {
   const router = useRouter()
   const authStore = useAuthStore()
-  const semestersStore = useSemestersStore()
-  const { semesters: storeSemesters } = storeToRefs(semestersStore)
+  const semesters = ref([])
 
   const selectedSemesterId = ref('')
   const semestersLoading = ref(false)
@@ -27,7 +24,7 @@ export function useExamsDashboardPage() {
 
   const semestersList = computed(() => {
     if (authService.isDemoMode()) return [DEMO_SEMESTER]
-    return storeSemesters.value ?? []
+    return semesters.value ?? []
   })
 
   const semesterOptions = computed(() =>
@@ -61,10 +58,10 @@ export function useExamsDashboardPage() {
       if (authService.isDemoMode()) {
         selectedSemesterId.value = DEMO_SEMESTER.id
       } else {
-        await semestersStore.ensureInitialized()
-        if (storeSemesters.value?.length && !selectedSemesterId.value) {
-          const active = storeSemesters.value.find((s) => s.is_active)
-          selectedSemesterId.value = active?.id ?? storeSemesters.value[0].id
+        semesters.value = await examsService.getSemesters()
+        if (semesters.value?.length && !selectedSemesterId.value) {
+          const active = semesters.value.find((s) => s.is_active)
+          selectedSemesterId.value = active?.id ?? semesters.value[0].id
         }
       }
     } catch (e) {

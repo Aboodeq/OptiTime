@@ -72,6 +72,7 @@ export function flattenExamSessionsPayload(sections) {
       if (!es || typeof es !== 'object') continue
       const scheduleSessionId = `${es.schedule_session_id || es.id || ''}`.trim()
       if (!scheduleSessionId) continue
+      const rawStudents = Array.isArray(es.students) ? es.students : []
       rows.push({
         section_id: sectionId,
         schedule_session_id: scheduleSessionId,
@@ -79,11 +80,13 @@ export function flattenExamSessionsPayload(sections) {
         course_id: `${section.course_id || course.id || ''}`.trim(),
         course_code: code,
         course_name: name,
-        instructor_name: '',
-        room_name: '',
-        day: '',
-        start: '',
-        end: '',
+        instructor_name: `${es.instructor_name || ''}`.trim(),
+        room_name: `${es.room_name || ''}`.trim(),
+        day: `${es.day || ''}`.trim(),
+        start: `${es.start || ''}`.trim(),
+        end: `${es.end || ''}`.trim(),
+        student_count: Number(es.student_count) || rawStudents.length || 0,
+        students: rawStudents,
         is_done: Boolean(es.is_done),
       })
     }
@@ -117,6 +120,14 @@ function mapApiRowToGradeRecord(row) {
 }
 
 export const examsService = {
+  async getSemesters() {
+    if (authService.isDemoMode()) {
+      return [{ id: DEMO_SEMESTER_ID, name: 'Demo semester', code: 'demo', is_active: true }]
+    }
+    const { data } = await apiJson('/exams/semesters', { method: 'GET' })
+    return Array.isArray(data) ? data : []
+  },
+
   /**
    * @param {string} semesterId
    * @returns {Promise<unknown[]>} raw sections array from API
@@ -130,6 +141,44 @@ export const examsService = {
       { method: 'GET' },
     )
     return Array.isArray(data) ? data : []
+  },
+
+  /**
+   * @param {string} semesterId
+   */
+  async getExamGrades(semesterId) {
+    if (authService.isDemoMode()) return []
+    const { data } = await apiJson(
+      `/exams/grades?semester_id=${encodeURIComponent(semesterId)}`,
+      { method: 'GET' },
+    )
+    const rows = Array.isArray(data) ? data : []
+    return rows.map(mapApiRowToGradeRecord).filter(Boolean)
+  },
+
+  async getStudentGrades(semesterId) {
+    if (authService.isDemoMode()) return []
+    const { data } = await apiJson(
+      `/student/grades?semester_id=${encodeURIComponent(semesterId)}`,
+      { method: 'GET' },
+    )
+    const rows = Array.isArray(data) ? data : []
+    return rows.map((row) => ({
+      id: `${row?.id || `grade-${row?.schedule_session_id || ''}`}`,
+      schedule_session_id: `${row?.schedule_session_id || ''}`.trim(),
+      student_id: `${row?.student_id || ''}`.trim(),
+      oral: normalizeScore(row?.oral),
+      lab: normalizeScore(row?.lab),
+      midterm: normalizeScore(row?.midterm),
+      final: normalizeScore(row?.final),
+      total: Number(row?.total ?? row?.numeric_grade ?? 0) || 0,
+      letter_grade: `${row?.letter_grade || ''}`.trim(),
+      course_code: `${row?.section?.course?.code || ''}`.trim(),
+      course_name: `${row?.section?.course?.name || ''}`.trim(),
+      day: `${row?.day || ''}`.trim(),
+      start: `${row?.start || ''}`.trim(),
+      end: `${row?.end || ''}`.trim(),
+    }))
   },
 
   /**

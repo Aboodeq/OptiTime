@@ -37,6 +37,18 @@
             </div>
             <h2 class="h6 mb-1">{{ notification.title }}</h2>
             <p class="mb-0 text-secondary">{{ notification.message }}</p>
+            <div
+              v-if="approvedLectureRequestDetails(notification).length"
+              class="notification-item__details text-secondary"
+            >
+              <p
+                v-for="(line, index) in approvedLectureRequestDetails(notification)"
+                :key="`${notification.id}-detail-${index}`"
+                class="mb-0"
+              >
+                {{ line }}
+              </p>
+            </div>
             <button class="notification-item__open" type="button" @click="openNotification(notification)">
               {{ t('nav.topbar.viewAllNotifications') }}
             </button>
@@ -127,6 +139,42 @@ function formatDate(value) {
   })
 }
 
+function approvedLectureRequestDetails(notification) {
+  const payload = notification?.payload && typeof notification.payload === 'object' ? notification.payload : {}
+  const status = `${payload?.status || ''}`.trim().toLowerCase()
+  if (notification?.type !== 'lecture_request_reviewed' || status !== 'approved') {
+    return []
+  }
+
+  const lectureRequest =
+    payload?.lecture_request && typeof payload.lecture_request === 'object' ? payload.lecture_request : {}
+  const session =
+    payload?.schedule_session && typeof payload.schedule_session === 'object' ? payload.schedule_session : {}
+  const course = session?.course && typeof session.course === 'object' ? session.course : {}
+  const section = session?.section && typeof session.section === 'object' ? session.section : {}
+
+  const requestedDate = `${lectureRequest?.requested_date || ''}`.trim()
+  const courseCode = `${course?.code || ''}`.trim()
+  const courseName = `${course?.name || ''}`.trim()
+  const sectionName = `${section?.section_name || ''}`.trim()
+  const day = `${session?.day_of_week || session?.day_value || ''}`.trim()
+  const start = `${session?.start_time || ''}`.trim()
+  const end = `${session?.end_time || ''}`.trim()
+
+  const lines = []
+  if (requestedDate) lines.push(`Date: ${requestedDate}`)
+  const lectureLabel = [courseCode, courseName].filter(Boolean).join(' - ')
+  if (lectureLabel || sectionName) {
+    const sectionSuffix = sectionName ? ` (${sectionName})` : ''
+    lines.push(`Lecture: ${lectureLabel || 'Lecture'}${sectionSuffix}`)
+  }
+  if (day && start && end) {
+    lines.push(`Time: ${day}, ${start}-${end}`)
+  }
+
+  return lines
+}
+
 async function handleMarkAsRead(notificationId) {
   await markAsRead(notificationId)
 }
@@ -193,5 +241,10 @@ async function handleDelete(notificationId) {
   color: #4361ee;
   font-weight: 700;
   padding: 0;
+}
+
+.notification-item__details {
+  margin-top: 6px;
+  font-size: 0.9rem;
 }
 </style>

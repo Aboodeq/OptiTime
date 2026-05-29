@@ -159,6 +159,7 @@ export const useCoordinatorScheduleStore = defineStore('coordinatorSchedule', ()
   const conflictSessionIds = ref([])
   const activePlanId = ref('')
   const planStatus = ref('draft')
+  const lastSaveError = ref('')
   /** @type {import('vue').Ref<Record<string, unknown>|null>} */
   const lastGenerationRequest = ref(null)
   /** @type {import('vue').Ref<Record<string, unknown>|null>} */
@@ -655,12 +656,10 @@ export const useCoordinatorScheduleStore = defineStore('coordinatorSchedule', ()
       }
 
       generatedDraft.value = {
-        ...sanitizeDraft(
-          enrichDraftRelations({
-            semester_id: activeSemester.value.id,
-            sessions: finalResult.sessions,
-          }),
-        ),
+        ...enrichDraftRelations({
+          semester_id: activeSemester.value.id,
+          sessions: finalResult.sessions,
+        }),
         meta: finalResult.meta && typeof finalResult.meta === 'object' ? { ...finalResult.meta } : {},
       }
       loadingStore.finishGenerationTracking()
@@ -682,6 +681,7 @@ export const useCoordinatorScheduleStore = defineStore('coordinatorSchedule', ()
     if (!generatedDraft.value || !lastGenerationRequest.value) return false
     if (!activeSemester.value?.id) return false
     generating.value = true
+    lastSaveError.value = ''
     try {
       // Persist exactly the previewed generated sessions as published,
       // instead of triggering a second generation on publish.
@@ -699,34 +699,40 @@ export const useCoordinatorScheduleStore = defineStore('coordinatorSchedule', ()
         status: 'published',
       })
 
-      // Keep the existing UX: open a fresh editable draft populated
-      // with the same generated sessions.
-      const editablePlan = await coordinatorScheduleService.createPlan({
-        semester_id: activeSemester.value.id,
-        status: 'draft',
-      })
-      const editableId = editablePlan?.id
-      if (!editableId) return false
-      const synced = await coordinatorScheduleService.syncPlanSessions(
-        editableId,
-        generatedDraft.value.sessions,
-      )
-      const mapped = mapCoordinatorPlanToDraftShape(synced)
-      activePlanId.value = mapped.planId
-      planStatus.value = mapped.status || 'draft'
-      editableDraft.value = cloneDraft(
-        sanitizeDraft(
-          enrichDraftRelations({
-            semester_id: mapped.semester_id || activeSemester.value.id,
-            sessions: mapped.sessions,
-          }),
-        ),
-      )
-      validateDraft(editableDraft.value)
+      // Best-effort UX continuity: if this follow-up fails, keep publish success.
+      try {
+        const editablePlan = await coordinatorScheduleService.createPlan({
+          semester_id: activeSemester.value.id,
+          status: 'draft',
+        })
+        const editableId = editablePlan?.id
+        if (editableId) {
+          const synced = await coordinatorScheduleService.syncPlanSessions(
+            editableId,
+            generatedDraft.value.sessions,
+          )
+          const mapped = mapCoordinatorPlanToDraftShape(synced)
+          activePlanId.value = mapped.planId
+          planStatus.value = mapped.status || 'draft'
+          editableDraft.value = cloneDraft(
+            sanitizeDraft(
+              enrichDraftRelations({
+                semester_id: mapped.semester_id || activeSemester.value.id,
+                sessions: mapped.sessions,
+              }),
+            ),
+          )
+          validateDraft(editableDraft.value)
+        }
+      } catch {
+        lastSaveError.value = 'published_but_draft_copy_failed'
+      }
+
       generatedDraft.value = null
       lastGenerationRequest.value = null
       return true
     } catch {
+      lastSaveError.value = 'publish_failed'
       return false
     } finally {
       generating.value = false
@@ -790,6 +796,7 @@ export const useCoordinatorScheduleStore = defineStore('coordinatorSchedule', ()
     blockedSlotStarts,
     validationErrors,
     conflictSessionIds,
+    lastSaveError,
     kpis,
     enrollmentPlan,
     ensureInitialized,

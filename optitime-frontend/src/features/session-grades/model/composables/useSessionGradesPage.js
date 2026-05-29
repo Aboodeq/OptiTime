@@ -13,7 +13,9 @@ export function useSessionGradesPage() {
 
   sessionGradesStore.ensureInitialized()
 
-  const activeSemester = computed(() => scheduleStore.activeSemester)
+  const activeSemester = computed(
+    () => scheduleStore.activeSemester ?? sessionGradesStore.activeExamSemester ?? null,
+  )
   const sessions = computed(() => sessionGradesStore.sessionRows)
 
   const selectedSession = computed(() =>
@@ -22,6 +24,9 @@ export function useSessionGradesPage() {
 
   const selectedStudents = computed(() => {
     if (!selectedSession.value) return []
+    if (Array.isArray(selectedSession.value.students) && selectedSession.value.students.length) {
+      return selectedSession.value.students
+    }
     const sid = selectedSession.value.schedule_session_id
     const board = sessionGradesStore.findBoardSession(sid)
     if (!board) return []

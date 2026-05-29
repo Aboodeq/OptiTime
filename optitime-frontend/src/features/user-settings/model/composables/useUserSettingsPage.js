@@ -1,6 +1,6 @@
 import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { userSettingsService } from '@/features/user-settings/api/userSettings.service'
+import { defaultSettings, userSettingsService } from '@/features/user-settings/api/userSettings.service'
 import { useUserSettingsStore } from '@/features/user-settings/model/stores/userSettings.store'
 import { useAuthStore } from '@/store/auth.store'
 
@@ -24,8 +24,8 @@ export function useUserSettingsPage() {
   const userId = computed(() => authStore.user?.id ?? null)
   const canUpdateProfile = computed(() => authStore.hasPermission('profile.update'))
   const canUpdateSecurity = computed(() => authStore.hasPermission('profile.update'))
-  const canUpdateNotifications = computed(() => authStore.hasPermission('profile.update'))
-  const canCreateBackup = computed(() => authStore.hasPermission('profile.update'))
+  const canUpdateNotifications = computed(() => authStore.hasPermission('notifications.update'))
+  const canCreateBackup = computed(() => authStore.hasPermission('system_backups.create'))
 
   async function initialize() {
     if (!userId.value) return
@@ -35,7 +35,9 @@ export function useUserSettingsPage() {
       email: authStore.user?.email ?? '',
       avatar_url: authStore.user?.avatar_url ?? '',
     }
-    draftNotifications.value = userSettingsStore.createDraft()?.notifications ?? null
+    draftNotifications.value =
+      userSettingsStore.createDraft()?.notifications ??
+      defaultSettings().notifications
   }
 
   async function saveProfile() {

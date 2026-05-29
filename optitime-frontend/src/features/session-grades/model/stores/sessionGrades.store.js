@@ -7,7 +7,6 @@ import { mapWeeklyApiItemToBoardSession } from '@/features/coordinator-schedule/
 import { useCoordinatorScheduleStore } from '@/features/coordinator-schedule/model/stores/coordinatorSchedule.store'
 import { examsService, flattenExamSessionsPayload } from '@/features/exams/api/exams.service'
 import { sessionGradesService } from '@/features/session-grades/api/sessionGrades.service'
-import { useSemestersStore } from '@/features/semesters/model/stores/semesters.store'
 import { useAuthStore } from '@/store/auth.store'
 import {
   GRADE_COMPONENT_KEYS,
@@ -26,11 +25,11 @@ export const useSessionGradesStore = defineStore('sessionGrades', () => {
 
   const authStore = useAuthStore()
   const scheduleStore = useCoordinatorScheduleStore()
-  const semestersStore = useSemestersStore()
   const instructorBoardSessions = ref([])
   const studentBoardSessions = ref([])
   const examSessionRowsFromApi = ref([])
   const examSemesterId = ref('')
+  const examSemesters = ref([])
 
   const recordsMap = computed(() => {
     const map = new Map()
@@ -41,10 +40,12 @@ export const useSessionGradesStore = defineStore('sessionGrades', () => {
   })
 
   async function resolveExamSemesterId() {
+    if (`${examSemesterId.value || ''}`.trim() !== '') return `${examSemesterId.value}`.trim()
     const fromSchedule = scheduleStore.activeSemester?.id
     if (fromSchedule) return `${fromSchedule}`.trim()
-    await semestersStore.ensureInitialized()
-    const list = semestersStore.semesters ?? []
+    if (!authStore.hasPermission('exam_sessions.view')) return ''
+    const list = await examsService.getSemesters()
+    examSemesters.value = Array.isArray(list) ? list : []
     const active = list.find((s) => s.is_active)
     return `${active?.id || list[0]?.id || ''}`.trim()
   }
@@ -74,6 +75,7 @@ export const useSessionGradesStore = defineStore('sessionGrades', () => {
         const data = await studentWeeklyScheduleService.getWeeklySchedule()
         const items = Array.isArray(data?.items) ? data.items : []
         studentBoardSessions.value = items.map((row) => mapWeeklyApiItemToBoardSession(row))
+        examSemesterId.value = `${data?.semester?.id || ''}`.trim()
       }
 
       examSemesterId.value = await resolveExamSemesterId()
@@ -86,7 +88,9 @@ export const useSessionGradesStore = defineStore('sessionGrades', () => {
       } else if (authStore.hasPermission('exam_sessions.view') && examSemesterId.value) {
         try {
           await refreshExamSessionsFromApi()
-          records.value = []
+          records.value = authStore.hasPermission('exam_grades.view')
+            ? await examsService.getExamGrades(examSemesterId.value)
+            : []
         } catch {
           examSessionRowsFromApi.value = []
           records.value = []
@@ -94,9 +98,14 @@ export const useSessionGradesStore = defineStore('sessionGrades', () => {
         }
       } else {
         examSessionRowsFromApi.value = []
-        const payload = await sessionGradesService.getAllGrades()
-        records.value = Array.isArray(payload?.records) ? payload.records : []
-        doneSessionIds.value = Array.isArray(payload?.done_session_ids) ? payload.done_session_ids : []
+        if (!authService.isDemoMode() && authStore.hasPermission('student.grades.view') && examSemesterId.value) {
+          records.value = await examsService.getStudentGrades(examSemesterId.value)
+          doneSessionIds.value = []
+        } else {
+          const payload = await sessionGradesService.getAllGrades()
+          records.value = Array.isArray(payload?.records) ? payload.records : []
+          doneSessionIds.value = Array.isArray(payload?.done_session_ids) ? payload.done_session_ids : []
+        }
       }
     } finally {
       loading.value = false
@@ -110,6 +119,12 @@ export const useSessionGradesStore = defineStore('sessionGrades', () => {
       authStore.hasPermission('exam_sessions.view') &&
       Boolean(examSemesterId.value),
   )
+
+  const activeExamSemester = computed(() => {
+    const sid = `${examSemesterId.value || ''}`.trim()
+    if (!sid) return null
+    return examSemesters.value.find((s) => `${s?.id || ''}`.trim() === sid) ?? null
+  })
 
   const gradeBoardSessions = computed(() => {
     if (authStore.hasPermission('schedules.view')) {
@@ -288,7 +303,8 @@ export const useSessionGradesStore = defineStore('sessionGrades', () => {
         day: row.day || '',
         start: row.start || '',
         end: row.end || '',
-        student_count: 0,
+        students: Array.isArray(row.students) ? row.students : [],
+        student_count: Number(row.student_count) || (Array.isArray(row.students) ? row.students.length : 0),
         is_done: isSessionDone(sid),
       })
     }
@@ -301,17 +317,20 @@ export const useSessionGradesStore = defineStore('sessionGrades', () => {
 
     const sessionsById = new Map(gradeBoardSessions.value.map((item) => [item.id, item]))
     return records.value
-      .filter((item) => item.student_id === studentId)
+      .filter((item) => {
+        const sid = `${item.student_id || ''}`.trim()
+        return sid === '' || sid === studentId
+      })
       .map((item) => {
         const session = sessionsById.get(item.schedule_session_id) ?? {}
         return {
           ...item,
-          course_code: session.course_code ?? '',
-          course_name: session.course_name ?? '',
-          instructor_name: session.instructor_name ?? '',
-          day: session.day ?? '',
-          start: session.start ?? '',
-          end: session.end ?? '',
+          course_code: item.course_code ?? session.course_code ?? '',
+          course_name: item.course_name ?? session.course_name ?? '',
+          instructor_name: item.instructor_name ?? session.instructor_name ?? '',
+          day: item.day ?? session.day ?? '',
+          start: item.start ?? session.start ?? '',
+          end: item.end ?? session.end ?? '',
         }
       })
   })
@@ -331,5 +350,6 @@ export const useSessionGradesStore = defineStore('sessionGrades', () => {
     markSessionDone,
     findBoardSession,
     usesExamApiSync,
+    activeExamSemester,
   }
 })
